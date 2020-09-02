@@ -5,7 +5,12 @@ The app is created using [create-react-app](https://github.com/facebook/create-r
 
 ## Install and run
 
-Build and run the React app as follows:
+Copy `.env.dist` file to `.env` and specify the brX SaaS instance to fetch the page model from:
+```
+REACT_APP_BRXM_ENDPOINT=https://project.bloomreach.cloud/site/api/page
+```
+
+Then, build and run the React app as follows:
 
 ```bash
 yarn
