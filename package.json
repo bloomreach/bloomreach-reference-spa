@@ -11,18 +11,21 @@
     "react-router-dom": "^5.2"
   },
   "devDependencies": {
+    "@bloomreach/eslint-config": "^0.1",
     "@types/react": "^16.9",
     "@types/react-dom": "^16.9",
     "@types/react-router-dom": "^5.1",
+    "eslint": "^7.9",
     "react-scripts": "3.4.1",
     "typescript": "^3.8"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "lint": "eslint src/",
+    "start": "react-scripts start"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "@bloomreach/eslint-config"
   },
   "browserslist": {
     "production": [
