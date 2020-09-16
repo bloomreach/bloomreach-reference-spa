@@ -19,16 +19,19 @@ import { Link } from 'react-router-dom';
 import { Document } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrPageContext, BrProps } from '@bloomreach/react-sdk';
 
-export function NewsList(props: BrProps) {
-  const { pageable } = props.component.getModels<PageableModels>();
+export function NewsList({ component, page }: BrProps): React.ReactElement | null {
+  const { pageable } = component.getModels<PageableModels>();
 
   if (!pageable) {
     return null;
   }
 
+  /* eslint-disable react/jsx-props-no-spreading */
   return (
     <div>
-      { pageable.items.map((reference, key) => <NewsListItem key={key} item={props.page.getContent<Document>(reference)!} />) }
+      {pageable.items.map((reference) => (
+        <NewsListItem key={reference.$ref} item={page.getContent<Document>(reference)!} />
+      ))}
       <NewsListPagination {...pageable} />
     </div>
   );
@@ -38,49 +41,52 @@ interface NewsListItemProps {
   item: Document;
 }
 
-export function NewsListItem({ item }: NewsListItemProps) {
+export function NewsListItem({ item }: NewsListItemProps): React.ReactElement | null {
   const { author, date, introduction, title } = item.getData<DocumentData>();
 
   return (
     <div className="card mb-3">
       <BrManageContentButton content={item} />
       <div className="card-body">
-        { title && (
+        {title && (
           <h2 className="card-title">
             <Link to={item.getUrl()!}>{title}</Link>
           </h2>
-        ) }
-        { author && <div className="card-subtitle mb-3 text-muted">{author}</div> }
-        { date && <div className="card-subtitle mb-3 small text-muted">{new Date(date).toDateString()}</div> }
-        { introduction && <p className="card-text">{introduction}</p> }
+        )}
+        {author && <div className="card-subtitle mb-3 text-muted">{author}</div>}
+        {date && <div className="card-subtitle mb-3 small text-muted">{new Date(date).toDateString()}</div>}
+        {introduction && <p className="card-text">{introduction}</p>}
       </div>
     </div>
   );
 }
 
-export function NewsListPagination(props: Pageable) {
+export function NewsListPagination(props: Pageable): React.ReactElement | null {
   const page = React.useContext(BrPageContext);
+  const { next, nextPage, pageNumbersArray, previous, previousPage, showPagination } = props;
 
-  if (!page || !props.showPagination) {
+  if (!page || !showPagination) {
     return null;
   }
 
   return (
     <nav aria-label="News List Pagination">
       <ul className="pagination">
-        <li className={`page-item ${props.previous ? '' : 'disabled'}`}>
-          <Link to={props.previous ? page.getUrl(`?page=${props.previousPage}`) : '#'} className="page-link" aria-label="Previous">
+        <li className={`page-item ${previous ? '' : 'disabled'}`}>
+          <Link to={previous ? page.getUrl(`?page=${previousPage}`) : '#'} className="page-link" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
             <span className="sr-only">Previous</span>
           </Link>
         </li>
-        { props.pageNumbersArray.map((pageNumber, key) => (
-          <li key={key} className={`page-item ${pageNumber === props.currentPage ? 'active' : ''}`}>
-            <Link to={page.getUrl(`?page=${pageNumber}`)} className="page-link">{pageNumber}</Link>
+        {pageNumbersArray.map((number) => (
+          <li key={number} className={`page-item ${number === props.currentPage ? 'active' : ''}`}>
+            <Link to={page.getUrl(`?page=${number}`)} className="page-link">
+              {number}
+            </Link>
           </li>
-        )) }
-        <li className={`page-item ${props.next ? '' : 'disabled'}`}>
-          <Link to={props.next ? page.getUrl(`?page=${props.nextPage}`) : '#'} className="page-link" aria-label="Next">
+        ))}
+        <li className={`page-item ${next ? '' : 'disabled'}`}>
+          <Link to={next ? page.getUrl(`?page=${nextPage}`) : '#'} className="page-link" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
             <span className="sr-only">Next</span>
           </Link>

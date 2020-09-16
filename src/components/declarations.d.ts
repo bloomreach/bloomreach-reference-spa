@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-interface DocumentModels {
-  document: import('@bloomreach/spa-sdk').Reference;
+interface DocumentContent {
+  value: string;
 }
 
 interface DocumentData {
@@ -29,16 +29,12 @@ interface DocumentData {
   [property: string]: any;
 }
 
-interface DocumentContent {
-  value: string;
+interface DocumentModels {
+  document: import('@bloomreach/spa-sdk').Reference;
 }
 
 interface MenuModels {
   menu: import('@bloomreach/spa-sdk').Reference;
-}
-
-interface PageableModels {
-  pageable: Pageable;
 }
 
 interface Pageable {
@@ -61,4 +57,8 @@ interface Pageable {
   total: number;
   totalPages: number;
   visiblePages: number;
+}
+
+interface PageableModels {
+  pageable: Pageable;
 }
