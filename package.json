@@ -6,6 +6,9 @@
   "dependencies": {
     "@bloomreach/react-sdk": "^14.3.0",
     "@bloomreach/spa-sdk": "^14.3.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2",
+    "@fortawesome/free-solid-svg-icons": "^5.14",
+    "@fortawesome/react-fontawesome": "^0.1",
     "axios": "^0.19",
     "bootstrap": "^4.5",
     "react": "^16.13",
