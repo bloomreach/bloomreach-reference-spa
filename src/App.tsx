@@ -16,9 +16,9 @@
 
 import React from 'react';
 import axios from 'axios';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { BrComponent, BrPage, BrPageContext } from '@bloomreach/react-sdk';
-import { Banner, Content, Menu, NewsList } from './components';
+import { RouteComponentProps } from 'react-router-dom';
+import { BrComponent, BrPage } from '@bloomreach/react-sdk';
+import { Banner, Content, Menu, NewsList, Navbar } from './components';
 
 export default function App({ location }: RouteComponentProps): React.ReactElement {
   const configuration = {
@@ -35,22 +35,11 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
   return (
     <BrPage configuration={configuration} mapping={mapping}>
       <header>
-        <nav className="navbar navbar-expand-sm navbar-dark sticky-top bg-dark" role="navigation">
-          <div className="container">
-            <BrPageContext.Consumer>
-              {(page) => (
-                <Link to={page!.getUrl('/')} className="navbar-brand">
-                  {page!.getTitle() || 'brX SaaS + React = ♥️'}
-                </Link>
-              )}
-            </BrPageContext.Consumer>
-            <div className="collapse navbar-collapse">
-              <BrComponent path="menu">
-                <Menu />
-              </BrComponent>
-            </div>
-          </div>
-        </nav>
+        <Navbar>
+          <BrComponent path="menu">
+            <Menu />
+          </BrComponent>
+        </Navbar>
       </header>
       <section className="container flex-fill pt-3">
         <BrComponent path="main" />

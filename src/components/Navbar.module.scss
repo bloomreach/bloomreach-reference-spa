@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-export * from './Banner';
-export * from './Content';
-export * from './Menu';
-export * from './Navbar';
-export * from './NewsList';
-export * from './Search';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.navbar {
+  &__search {
+    max-width: 300px;
+
+    @include media-breakpoint-up(lg) {
+      width: 300px;
+    }
+
+    @include media-breakpoint-down(md) {
+      flex: 1 1;
+    }
+  }
+}
