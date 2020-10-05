@@ -64,7 +64,7 @@ export function Menu(): React.ReactElement | null {
 
   /* eslint-disable react/no-array-index-key */
   return (
-    <Nav as="ul" navbar className={page!.isPreview() ? 'has-edit-button' : ''}>
+    <Nav as="ul" navbar className={`w-100 ${page!.isPreview() ? 'has-edit-button' : ''}`}>
       <BrManageMenuButton menu={menu} />
       {menu.getItems().map((item, index) =>
         item.getChildren().length ? (
