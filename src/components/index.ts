@@ -15,6 +15,7 @@
  */
 
 export * from './Content';
+export * from './CtaBanner';
 export * from './Menu';
 export * from './Navbar';
 export * from './NewsList';
