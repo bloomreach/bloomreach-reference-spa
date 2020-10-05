@@ -41,6 +41,11 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
           </BrComponent>
         </Navbar>
       </header>
+      <BrComponent path="top">
+        <section>
+          <BrComponent />
+        </section>
+      </BrComponent>
       <section className="container flex-fill pt-3">
         <BrComponent path="main" />
       </section>
