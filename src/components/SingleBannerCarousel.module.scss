@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-export * from './Content';
-export * from './Menu';
-export * from './Navbar';
-export * from './NewsList';
-export * from './Search';
-export * from './SingleBannerCarousel';
+.carousel {
+  &__banner {
+    height: 400px;
+  }
+}
+
+.banner {
+  &__image {
+    object-fit: cover;
+  }
+
+  &__contents {
+    & * {
+      display: inline;
+    }
+  }
+}
