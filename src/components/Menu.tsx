@@ -22,43 +22,35 @@ import { BrComponentContext, BrManageMenuButton, BrPageContext } from '@bloomrea
 
 /* eslint-disable react/jsx-props-no-spreading */
 
-interface MenuLinkProps {
+interface MenuLinkProps extends React.ComponentPropsWithoutRef<'a'> {
   item: BrMenuItem;
 }
 
-function MenuLink({ item, ...props }: MenuLinkProps): React.ReactElement {
+const MenuLink = React.forwardRef(({ item, ...props }: MenuLinkProps, ref: React.Ref<HTMLAnchorElement>) => {
   const url = item.getUrl();
 
-  if (!url) {
+  if (!url || item.getLink()?.type === TYPE_LINK_EXTERNAL) {
     return (
-      <span role="button" {...props}>
-        {item.getName()}
-      </span>
-    );
-  }
-
-  if (item.getLink()?.type === TYPE_LINK_EXTERNAL) {
-    return (
-      <a href={url} {...props}>
+      <a ref={ref} href={url} role="button" {...props}>
         {item.getName()}
       </a>
     );
   }
 
   return (
-    <Link to={url} {...props}>
+    <Link ref={ref} to={url} role="button" {...props}>
       {item.getName()}
     </Link>
   );
-}
+});
 
 interface MenuItemProps extends React.ComponentProps<typeof Nav.Link> {
   item: BrMenuItem;
 }
 
-function MenuItem({ item, ...props }: MenuItemProps): React.ReactElement {
-  return <Nav.Link as={MenuLink} active={item.isSelected()} item={item} {...props} />;
-}
+const MenuItem = React.forwardRef(({ item, ...props }: MenuItemProps, ref) => (
+  <Nav.Link ref={ref} as={MenuLink} active={item.isSelected()} item={item} {...props} />
+));
 
 export function Menu(): React.ReactElement | null {
   const component = React.useContext(BrComponentContext);
@@ -80,8 +72,8 @@ export function Menu(): React.ReactElement | null {
             <Dropdown.Toggle as={MenuItem} item={item} />
 
             <Dropdown.Menu className="mt-lg-3">
-              {item.getChildren().map((subitem) => (
-                <Dropdown.Item as={MenuLink} item={subitem} />
+              {item.getChildren().map((subitem, subindex) => (
+                <Dropdown.Item key={subindex} as={MenuLink} item={subitem} />
               ))}
             </Dropdown.Menu>
           </Dropdown>
