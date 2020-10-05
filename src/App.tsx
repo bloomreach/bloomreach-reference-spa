@@ -49,6 +49,11 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
       <section className="container flex-fill pt-3">
         <BrComponent path="main" />
       </section>
+      <BrComponent path="bottom">
+        <section>
+          <BrComponent />
+        </section>
+      </BrComponent>
       <footer className="bg-dark text-light py-3">
         <div className="container clearfix">
           <div className="float-left pr-3">&copy; Bloomreach</div>
