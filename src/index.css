@@ -19,6 +19,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+mark, .mark {
+  background-color: var(--light);
+  color: var(--dark);
+}
+
 .has-edit-button {
   position: relative;
 }
