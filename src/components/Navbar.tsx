@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { Container, Navbar } from 'react-bootstrap';
+import { Container, Image, Navbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { BrPageContext } from '@bloomreach/react-sdk';
 
@@ -29,7 +29,7 @@ export function NavbarComponent({ children }: React.PropsWithChildren<unknown>):
         <BrPageContext.Consumer>
           {(page) => (
             <Navbar.Brand as={Link} to={page!.getUrl('/')} title="Pacific Nuts & Bolts">
-              <img
+              <Image
                 alt="Pacific Nuts & Bolts"
                 src={`${process.env.PUBLIC_URL}/logo.png`}
                 srcSet={`${process.env.PUBLIC_URL}/logo.png 1x, ${process.env.PUBLIC_URL}/logo@2x.png 2x`}
@@ -37,7 +37,7 @@ export function NavbarComponent({ children }: React.PropsWithChildren<unknown>):
                 className="d-none d-sm-block"
               />
 
-              <img
+              <Image
                 alt="Pacific Nuts & Bolts"
                 src={`${process.env.PUBLIC_URL}/logo-sm.png`}
                 srcSet={`${process.env.PUBLIC_URL}/logo-sm.png 1x, ${process.env.PUBLIC_URL}/logo-sm@2x.png 2x`}
