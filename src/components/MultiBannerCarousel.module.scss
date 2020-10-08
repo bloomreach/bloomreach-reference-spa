@@ -14,11 +14,41 @@
  * limitations under the License.
  */
 
-export * from './Content';
-export * from './CtaBanner';
-export * from './Menu';
-export * from './MultiBannerCarousel';
-export * from './Navbar';
-export * from './NewsList';
-export * from './Search';
-export * from './SingleBannerCarousel';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.carousel {
+  display: flex;
+
+  :global {
+    .carousel-inner {
+      flex: 1 1 auto;
+      order: 1;
+    }
+
+    .carousel-control-next,
+    .carousel-control-prev {
+      position: static;
+      width: 20px;
+    }
+
+    .carousel-control-prev {
+      order: 0;
+      margin-right: $grid-gutter-width;
+    }
+
+    .carousel-control-next {
+      order: 2;
+      margin-left: $grid-gutter-width;
+    }
+  }
+}
+
+.banner {
+  height: 160px;
+
+  &__image {
+    object-fit: contain;
+  }
+}
