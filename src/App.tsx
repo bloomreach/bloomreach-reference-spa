@@ -18,7 +18,16 @@ import React from 'react';
 import axios from 'axios';
 import { RouteComponentProps } from 'react-router-dom';
 import { BrComponent, BrPage } from '@bloomreach/react-sdk';
-import { Content, CtaBanner, Menu, MultiBannerCarousel, NewsList, Navbar, SingleBannerCarousel } from './components';
+import {
+  Content,
+  CtaBanner,
+  Menu,
+  MultiBannerCarousel,
+  NewsList,
+  Navbar,
+  Navigation,
+  SingleBannerCarousel,
+} from './components';
 
 export default function App({ location }: RouteComponentProps): React.ReactElement {
   const configuration = {
@@ -30,7 +39,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
       path: `${location.pathname}${location.search}`,
     },
   };
-  const mapping = { Content, CtaBanner, MultiBannerCarousel, 'News List': NewsList, SingleBannerCarousel };
+  const mapping = { Content, CtaBanner, MultiBannerCarousel, Navigation, 'News List': NewsList, SingleBannerCarousel };
 
   return (
     <BrPage configuration={configuration} mapping={mapping}>
