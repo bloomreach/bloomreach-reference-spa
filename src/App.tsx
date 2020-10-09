@@ -17,6 +17,7 @@
 import React from 'react';
 import axios from 'axios';
 import { RouteComponentProps } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 import { BrComponent, BrPage } from '@bloomreach/react-sdk';
 import {
   Content,
@@ -63,14 +64,16 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
           <BrComponent />
         </section>
       </BrComponent>
-      <footer className="bg-dark text-light py-3">
-        <div className="container clearfix">
-          <div className="float-left pr-3">&copy; Bloomreach</div>
-          <div className="overflow-hidden">
-            <BrComponent path="footer" />
-          </div>
-        </div>
-      </footer>
+      <BrComponent path="footer">
+        <footer className="bg-secondary text-light py-3">
+          <Container className="container">
+            <div className="float-right pl-3 py-2">&copy; Bloomreach 2020</div>
+            <div className="overflow-hidden">
+              <BrComponent />
+            </div>
+          </Container>
+        </footer>
+      </BrComponent>
     </BrPage>
   );
 }
