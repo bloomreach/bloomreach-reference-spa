@@ -56,7 +56,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
           <BrComponent />
         </section>
       </BrComponent>
-      <section className="container flex-fill py-4">
+      <Container as="section" className="flex-fill py-4">
         <Row>
           <BrComponent path="main">
             <Col xs="auto" className="flex-fill">
@@ -69,7 +69,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
             </Col>
           </BrComponent>
         </Row>
-      </section>
+      </Container>
       <BrComponent path="bottom">
         <section>
           <BrComponent />
@@ -77,7 +77,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
       </BrComponent>
       <BrComponent path="footer">
         <footer className="bg-secondary text-light py-3">
-          <Container className="container">
+          <Container>
             <div className="float-right pl-3 py-2">&copy; Bloomreach 2020</div>
             <div className="overflow-hidden">
               <BrComponent />
