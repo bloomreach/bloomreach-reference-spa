@@ -17,7 +17,7 @@
 import React from 'react';
 import axios from 'axios';
 import { RouteComponentProps } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { BrComponent, BrPage } from '@bloomreach/react-sdk';
 import {
   Content,
@@ -56,8 +56,19 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
           <BrComponent />
         </section>
       </BrComponent>
-      <section className="container flex-fill pt-3">
-        <BrComponent path="main" />
+      <section className="container flex-fill py-4">
+        <Row>
+          <BrComponent path="main">
+            <Col xs="auto" className="flex-fill">
+              <BrComponent />
+            </Col>
+          </BrComponent>
+          <BrComponent path="sidebar">
+            <Col xs="3">
+              <BrComponent />
+            </Col>
+          </BrComponent>
+        </Row>
       </section>
       <BrComponent path="bottom">
         <section>
