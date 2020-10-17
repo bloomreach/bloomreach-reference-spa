@@ -14,20 +14,4 @@
  * limitations under the License.
  */
 
-.carousel {
-  &__banner {
-    height: 400px;
-  }
-}
-
-.banner {
-  &__image {
-    object-fit: cover;
-  }
-
-  &__contents {
-    & * {
-      display: inline;
-    }
-  }
-}
+export { SingleBannerCarousel } from './SingleBannerCarousel';
