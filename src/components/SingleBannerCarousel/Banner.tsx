@@ -32,7 +32,7 @@ export const Banner = React.forwardRef(
     const page = React.useContext(BrPageContext);
 
     const { alignment = 'center' } = component?.getParameters() ?? {};
-    const { content, cta, image: imageRef, link: linkRef, title } = document.getData<DocumentData>();
+    const { content, cta, image: imageRef, link: linkRef, title } = document.getData<BannerDocument>();
     const image = imageRef && page?.getContent<ImageSet>(imageRef);
     const link = linkRef && page?.getContent<Document>(linkRef)?.getUrl();
 

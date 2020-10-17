@@ -36,7 +36,7 @@ interface NavigationLinkProps extends React.ComponentPropsWithoutRef<'a'> {
 
 const NavigationLink = React.forwardRef(
   ({ document, ...props }: NavigationLinkProps, ref: React.Ref<HTMLAnchorElement>) => {
-    const { title } = document.getData<DocumentData>();
+    const { title } = document.getData<ContentDocument>();
     const url = document.getUrl();
 
     if (!url) {

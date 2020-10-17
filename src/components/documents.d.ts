@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-interface DocumentContent {
+interface Content {
   value: string;
 }
 
-interface DocumentData {
-  author: string;
-  content: DocumentContent;
-  date: number;
-  image: import('@bloomreach/spa-sdk').Reference;
-  introduction: string;
-  title: string;
+interface BannerDocument {
+  content: Content;
+  cta?: string;
+  image?: import('@bloomreach/spa-sdk').Reference;
+  link?: import('@bloomreach/spa-sdk').Reference;
+  title?: string;
+}
 
-  [property: string]: any;
+interface ContentDocument {
+  content: Content;
+  date?: number;
+  image?: import('@bloomreach/spa-sdk').Reference;
+  introduction?: string;
+  title?: string;
 }

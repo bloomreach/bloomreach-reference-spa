@@ -30,7 +30,7 @@ export const Banner = React.forwardRef(
   ({ document, className, ...props }: BannerProps, ref: React.Ref<HTMLDivElement>) => {
     const page = React.useContext(BrPageContext);
 
-    const { image: imageRef, link: linkRef, title } = document.getData<DocumentData>();
+    const { image: imageRef, link: linkRef, title } = document.getData<BannerDocument>();
     const link = linkRef && page?.getContent<Document>(linkRef)?.getUrl();
     const src = imageRef && page?.getContent<ImageSet>(imageRef)?.getOriginal()?.getUrl();
     const image = src && <Image className={`${styles.banner__image} d-block w-100 h-100`} src={src} alt={title} />;
