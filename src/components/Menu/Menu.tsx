@@ -15,40 +15,16 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Dropdown, Nav } from 'react-bootstrap';
-import { MenuItem as BrMenuItem, Menu as BrMenu, TYPE_LINK_EXTERNAL, isMenu } from '@bloomreach/spa-sdk';
+import { Menu as BrMenu, Reference, isMenu } from '@bloomreach/spa-sdk';
 import { BrComponentContext, BrManageMenuButton, BrPageContext } from '@bloomreach/react-sdk';
 
-interface MenuLinkProps extends React.ComponentPropsWithoutRef<'a'> {
-  item: BrMenuItem;
+import { MenuItem } from './MenuItem';
+import { MenuLink } from './MenuLink';
+
+interface MenuModels {
+  menu: Reference;
 }
-
-const MenuLink = React.forwardRef(({ item, ...props }: MenuLinkProps, ref: React.Ref<HTMLAnchorElement>) => {
-  const url = item.getUrl();
-
-  if (!url || item.getLink()?.type === TYPE_LINK_EXTERNAL) {
-    return (
-      <a ref={ref} href={url} role="button" {...props}>
-        {item.getName()}
-      </a>
-    );
-  }
-
-  return (
-    <Link ref={ref} to={url} role="button" {...props}>
-      {item.getName()}
-    </Link>
-  );
-});
-
-interface MenuItemProps extends React.ComponentProps<typeof Nav.Link> {
-  item: BrMenuItem;
-}
-
-const MenuItem = React.forwardRef(({ item, ...props }: MenuItemProps, ref) => (
-  <Nav.Link ref={ref} as={MenuLink} active={item.isSelected()} item={item} {...props} />
-));
 
 export function Menu(): React.ReactElement | null {
   const component = React.useContext(BrComponentContext);
@@ -63,19 +39,19 @@ export function Menu(): React.ReactElement | null {
   return (
     <Nav as="ul" navbar className={`w-100 ${page!.isPreview() ? 'has-edit-button' : ''}`}>
       <BrManageMenuButton menu={menu} />
-      {menu.getItems().map((item, index) =>
+      {menu.getItems().map((item) =>
         item.getChildren().length ? (
-          <Dropdown as="li" key={index}>
+          <Dropdown as="li" key={item.getName()}>
             <Dropdown.Toggle as={MenuItem} item={item} />
 
             <Dropdown.Menu className="mt-lg-3">
-              {item.getChildren().map((subitem, subindex) => (
-                <Dropdown.Item key={subindex} as={MenuLink} item={subitem} />
+              {item.getChildren().map((subitem) => (
+                <Dropdown.Item key={subitem.getName()} as={MenuLink} item={subitem} />
               ))}
             </Dropdown.Menu>
           </Dropdown>
         ) : (
-          <Nav.Item as="li" key={index}>
+          <Nav.Item as="li" key={item.getName()}>
             <MenuItem item={item} />
           </Nav.Item>
         ),

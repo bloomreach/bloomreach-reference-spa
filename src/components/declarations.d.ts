@@ -33,10 +33,6 @@ interface DocumentModels {
   document: import('@bloomreach/spa-sdk').Reference;
 }
 
-interface MenuModels {
-  menu: import('@bloomreach/spa-sdk').Reference;
-}
-
 interface Pageable {
   currentPage: number;
   currentRange: number[];
