@@ -19,6 +19,5 @@ export * from './CtaBanner';
 export * from './Menu';
 export * from './MultiBannerCarousel';
 export * from './Navigation';
-export * from './NewsList';
 export * from './Search';
 export * from './SingleBannerCarousel';

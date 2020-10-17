@@ -25,7 +25,6 @@ import {
   CtaBanner,
   Menu,
   MultiBannerCarousel,
-  NewsList,
   Navigation,
   Search,
   SingleBannerCarousel,
@@ -42,7 +41,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
       path: `${location.pathname}${location.search}`,
     },
   };
-  const mapping = { Content, CtaBanner, MultiBannerCarousel, Navigation, PageCatalog, SingleBannerCarousel };
+  const mapping = { Content, CtaBanner, MultiBannerCarousel, Navigation, SingleBannerCarousel };
 
   return (
     <BrPage configuration={configuration} mapping={mapping}>
