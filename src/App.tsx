@@ -16,19 +16,21 @@
 
 import React from 'react';
 import axios from 'axios';
-import { RouteComponentProps } from 'react-router-dom';
-import { Col, Container, Row } from 'react-bootstrap';
-import { BrComponent, BrPage } from '@bloomreach/react-sdk';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Col, Container, Image, Navbar, Row } from 'react-bootstrap';
+import { BrComponent, BrPageContext, BrPage } from '@bloomreach/react-sdk';
+
 import {
   Content,
   CtaBanner,
   Menu,
   MultiBannerCarousel,
   NewsList,
-  Navbar,
   Navigation,
+  Search,
   SingleBannerCarousel,
 } from './components';
+import styles from './App.module.scss';
 
 export default function App({ location }: RouteComponentProps): React.ReactElement {
   const configuration = {
@@ -40,15 +42,44 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
       path: `${location.pathname}${location.search}`,
     },
   };
-  const mapping = { Content, CtaBanner, MultiBannerCarousel, Navigation, 'News List': NewsList, SingleBannerCarousel };
+  const mapping = { Content, CtaBanner, MultiBannerCarousel, Navigation, PageCatalog, SingleBannerCarousel };
 
   return (
     <BrPage configuration={configuration} mapping={mapping}>
       <header>
-        <Navbar>
-          <BrComponent path="menu">
-            <Menu />
-          </BrComponent>
+        <Navbar bg="light" expand="lg" sticky="top" className="py-2 py-lg-3">
+          <Container className="justify-content-start px-sm-3">
+            <BrPageContext.Consumer>
+              {(page) => (
+                <Navbar.Brand as={Link} to={page!.getUrl('/')} title="Pacific Nuts & Bolts">
+                  <Image
+                    alt="Pacific Nuts & Bolts"
+                    src={`${process.env.PUBLIC_URL}/logo.png`}
+                    srcSet={`${process.env.PUBLIC_URL}/logo.png 1x, ${process.env.PUBLIC_URL}/logo@2x.png 2x`}
+                    height="30"
+                    className="d-none d-sm-block"
+                  />
+
+                  <Image
+                    alt="Pacific Nuts & Bolts"
+                    src={`${process.env.PUBLIC_URL}/logo-sm.png`}
+                    srcSet={`${process.env.PUBLIC_URL}/logo-sm.png 1x, ${process.env.PUBLIC_URL}/logo-sm@2x.png 2x`}
+                    height="30"
+                    className="d-block d-sm-none"
+                  />
+                </Navbar.Brand>
+              )}
+            </BrPageContext.Consumer>
+
+            <Search className={`${styles.navbar__search} order-lg-2 mr-3 mr-lg-0`} />
+
+            <Navbar.Toggle className="ml-auto" />
+            <Navbar.Collapse className="order-lg-1 mr-lg-3">
+              <BrComponent path="menu">
+                <Menu />
+              </BrComponent>
+            </Navbar.Collapse>
+          </Container>
         </Navbar>
       </header>
       <BrComponent path="top">

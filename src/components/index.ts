@@ -18,7 +18,6 @@ export * from './Content';
 export * from './CtaBanner';
 export * from './Menu';
 export * from './MultiBannerCarousel';
-export * from './Navbar';
 export * from './Navigation';
 export * from './NewsList';
 export * from './Search';
