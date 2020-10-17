@@ -25,5 +25,7 @@ interface MenuItemProps extends React.ComponentProps<typeof Nav.Link> {
 }
 
 export const MenuItem = React.forwardRef(({ item, ...props }: MenuItemProps, ref) => (
-  <Nav.Link ref={ref} as={MenuLink} active={item.isSelected()} item={item} {...props} />
+  <Nav.Link ref={ref} as={MenuLink} to={item} active={item.isSelected()} {...props}>
+    {item.getName()}
+  </Nav.Link>
 ));

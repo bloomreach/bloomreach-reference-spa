@@ -15,10 +15,11 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import { Document, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
+
+import { Link } from './Link';
 
 const MAX_DOCUMENTS = 5;
 
@@ -29,31 +30,6 @@ interface NavigationModels {
   document4?: Reference;
   document5?: Reference;
 }
-
-interface NavigationLinkProps extends React.ComponentPropsWithoutRef<'a'> {
-  document: Document;
-}
-
-const NavigationLink = React.forwardRef(
-  ({ document, ...props }: NavigationLinkProps, ref: React.Ref<HTMLAnchorElement>) => {
-    const { title } = document.getData<ContentDocument>();
-    const url = document.getUrl();
-
-    if (!url) {
-      return (
-        <a ref={ref} role="button" {...props}>
-          {title}
-        </a>
-      );
-    }
-
-    return (
-      <Link ref={ref} to={url} role="button" {...props}>
-        {title}
-      </Link>
-    );
-  },
-);
 
 export function Navigation({ component, page }: BrProps): React.ReactElement | null {
   const models = component.getModels<NavigationModels>();
@@ -70,13 +46,14 @@ export function Navigation({ component, page }: BrProps): React.ReactElement | n
   return (
     <Nav as="ul">
       {documents.map((document, index) => (
-        <Nav.Item as="li">
+        <Nav.Item key={document.getId()} as="li">
           <Nav.Link
-            key={index}
-            as={NavigationLink}
-            document={document}
+            as={Link}
+            href={document.getUrl()}
             className={`text-reset ${index === 0 ? 'pl-0' : ''} ${index === documents.length - 1 ? 'pr-0' : ''}`}
-          />
+          >
+            {document.getData<ContentDocument>().title}
+          </Nav.Link>
         </Nav.Item>
       ))}
     </Nav>

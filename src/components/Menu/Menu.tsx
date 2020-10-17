@@ -46,7 +46,9 @@ export function Menu(): React.ReactElement | null {
 
             <Dropdown.Menu className="mt-lg-3">
               {item.getChildren().map((subitem) => (
-                <Dropdown.Item key={subitem.getName()} as={MenuLink} item={subitem} />
+                <Dropdown.Item key={subitem.getName()} as={MenuLink} to={subitem}>
+                  {subitem.getName()}
+                </Dropdown.Item>
               ))}
             </Dropdown.Menu>
           </Dropdown>

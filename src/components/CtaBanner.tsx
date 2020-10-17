@@ -15,10 +15,11 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button, Container, Jumbotron } from 'react-bootstrap';
 import { Document, Reference } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
+
+import { Link } from './Link';
 
 interface CtaBannerModels {
   document?: Reference;
@@ -33,7 +34,7 @@ export function CtaBanner({ component, page }: BrProps): React.ReactElement | nu
   }
 
   const { content, cta, link: linkRef, title } = document.getData<BannerDocument>();
-  const link = linkRef && page.getContent<Document>(linkRef)?.getUrl();
+  const link = linkRef && page.getContent<Document>(linkRef);
 
   return (
     <Jumbotron fluid className="bg-primary text-light text-center my-0">
@@ -42,8 +43,8 @@ export function CtaBanner({ component, page }: BrProps): React.ReactElement | nu
 
         {title && <h3 className="mb-2">{title}</h3>}
         {content && <div dangerouslySetInnerHTML={{ __html: page.rewriteLinks(content.value) }} />}
-        {link && (
-          <Button as={Link} variant="light" className="text-primary mt-3" to={link}>
+        {cta && (
+          <Button as={Link} href={link?.getUrl()} variant="light" className="text-primary mt-3">
             {cta}
           </Button>
         )}

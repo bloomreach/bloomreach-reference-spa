@@ -15,11 +15,11 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button, Carousel, Image } from 'react-bootstrap';
 import { Document, ImageSet } from '@bloomreach/spa-sdk';
 import { BrComponentContext, BrManageContentButton, BrPageContext } from '@bloomreach/react-sdk';
 
+import { Link } from '../Link';
 import styles from './Banner.module.scss';
 
 interface BannerProps extends React.ComponentProps<'div'> {
@@ -34,7 +34,7 @@ export const Banner = React.forwardRef(
     const { alignment = 'center' } = component?.getParameters() ?? {};
     const { content, cta, image: imageRef, link: linkRef, title } = document.getData<BannerDocument>();
     const image = imageRef && page?.getContent<ImageSet>(imageRef);
-    const link = linkRef && page?.getContent<Document>(linkRef)?.getUrl();
+    const link = linkRef && page?.getContent<Document>(linkRef);
 
     return (
       <div ref={ref} className={`${className} ${page?.isPreview() ? 'has-edit-button' : ''}`} {...props}>
@@ -60,9 +60,9 @@ export const Banner = React.forwardRef(
               dangerouslySetInnerHTML={{ __html: page?.rewriteLinks(content.value) ?? '' }}
             />
           )}
-          {link && (
+          {cta && (
             <div className="mt-2">
-              <Button as={Link} variant="primary" to={link}>
+              <Button as={Link} variant="primary" href={link?.getUrl()}>
                 {cta}
               </Button>
             </div>

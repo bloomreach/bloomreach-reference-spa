@@ -16,11 +16,11 @@
 
 import React from 'react';
 import axios from 'axios';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { Col, Container, Image, Navbar, Row } from 'react-bootstrap';
 import { BrComponent, BrPageContext, BrPage } from '@bloomreach/react-sdk';
 
-import { CtaBanner, Menu, MultiBannerCarousel, Navigation, Search, SingleBannerCarousel } from './components';
+import { CtaBanner, Link, Menu, MultiBannerCarousel, Navigation, Search, SingleBannerCarousel } from './components';
 import styles from './App.module.scss';
 
 export default function App({ location }: RouteComponentProps): React.ReactElement {
@@ -42,7 +42,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
           <Container className="justify-content-start px-sm-3">
             <BrPageContext.Consumer>
               {(page) => (
-                <Navbar.Brand as={Link} to={page!.getUrl('/')} title="Pacific Nuts & Bolts">
+                <Navbar.Brand as={Link} href={page?.getUrl('/')} title="Pacific Nuts & Bolts">
                   <Image
                     alt="Pacific Nuts & Bolts"
                     src={`${process.env.PUBLIC_URL}/logo.png`}

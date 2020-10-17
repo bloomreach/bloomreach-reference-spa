@@ -15,35 +15,35 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
 import { Document, ImageSet } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrPageContext } from '@bloomreach/react-sdk';
 
+import { Link } from '../Link';
 import styles from './Banner.module.scss';
 
-interface BannerProps extends React.ComponentProps<'div'> {
+interface BannerProps extends React.ComponentPropsWithoutRef<'a'> {
   document: Document;
 }
 
 export const Banner = React.forwardRef(
-  ({ document, className, ...props }: BannerProps, ref: React.Ref<HTMLDivElement>) => {
+  ({ document, className, ...props }: BannerProps, ref: React.Ref<HTMLAnchorElement>) => {
     const page = React.useContext(BrPageContext);
 
     const { image: imageRef, link: linkRef, title } = document.getData<BannerDocument>();
-    const link = linkRef && page?.getContent<Document>(linkRef)?.getUrl();
-    const src = imageRef && page?.getContent<ImageSet>(imageRef)?.getOriginal()?.getUrl();
-    const image = src && <Image className={`${styles.banner__image} d-block w-100 h-100`} src={src} alt={title} />;
+    const link = linkRef && page?.getContent<Document>(linkRef);
+    const image = imageRef && page?.getContent<ImageSet>(imageRef)?.getOriginal();
 
     return (
-      <div
+      <Link
         ref={ref}
+        href={link?.getUrl()}
         className={`${styles.banner} ${page?.isPreview() ? 'has-edit-button' : ''} ${className ?? ''}`}
         {...props}
       >
         <BrManageContentButton content={document} />
-        {link ? <Link to={link}>{image}</Link> : image}
-      </div>
+        {image && <Image className={`${styles.banner__image} d-block w-100 h-100`} src={image.getUrl()} alt={title} />}
+      </Link>
     );
   },
 );
