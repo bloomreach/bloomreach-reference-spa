@@ -20,8 +20,6 @@ import { Dropdown, Nav } from 'react-bootstrap';
 import { MenuItem as BrMenuItem, Menu as BrMenu, TYPE_LINK_EXTERNAL, isMenu } from '@bloomreach/spa-sdk';
 import { BrComponentContext, BrManageMenuButton, BrPageContext } from '@bloomreach/react-sdk';
 
-/* eslint-disable react/jsx-props-no-spreading */
-
 interface MenuLinkProps extends React.ComponentPropsWithoutRef<'a'> {
   item: BrMenuItem;
 }
@@ -62,7 +60,6 @@ export function Menu(): React.ReactElement | null {
     return null;
   }
 
-  /* eslint-disable react/no-array-index-key */
   return (
     <Nav as="ul" navbar className={`w-100 ${page!.isPreview() ? 'has-edit-button' : ''}`}>
       <BrManageMenuButton menu={menu} />

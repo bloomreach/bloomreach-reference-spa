@@ -35,7 +35,6 @@ export function CtaBanner({ component, page }: BrProps): React.ReactElement | nu
   const { content, cta, link: linkRef, title } = document.getData<DocumentData>();
   const link = linkRef && page.getContent<Document>(linkRef)?.getUrl();
 
-  /* eslint-disable react/no-danger */
   return (
     <Jumbotron fluid className="bg-primary text-light text-center my-0">
       <Container className={page.isPreview() ? 'has-edit-button' : ''}>

@@ -20,8 +20,6 @@ import { Nav } from 'react-bootstrap';
 import { Document, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
 
-/* eslint-disable react/jsx-props-no-spreading */
-
 const MAX_DOCUMENTS = 5;
 
 interface NavigationModels {
@@ -69,7 +67,6 @@ export function Navigation({ component, page }: BrProps): React.ReactElement | n
     return null;
   }
 
-  /* eslint-disable react/no-array-index-key */
   return (
     <Nav as="ul">
       {documents.map((document, index) => (

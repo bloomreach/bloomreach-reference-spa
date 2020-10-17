@@ -78,7 +78,6 @@ export function MultiBannerCarousel({ component, page }: BrProps): React.ReactEl
     return null;
   }
 
-  /* eslint-disable react/no-array-index-key */
   return (
     <Container className="py-4">
       {title && <h3 className="mb-4 text-center">{title}</h3>}

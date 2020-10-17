@@ -45,7 +45,6 @@ const Banner = React.forwardRef(({ document, className, ...props }: BannerProps,
   const image = imageRef && page.getContent<ImageSet>(imageRef);
   const link = linkRef && page.getContent<Document>(linkRef)?.getUrl();
 
-  /* eslint-disable react/no-danger, react/jsx-props-no-spreading */
   return (
     <Carousel.Item ref={ref} className={`${className} ${page.isPreview() ? 'has-edit-button' : ''}`} {...props}>
       <BrManageContentButton content={document} />
@@ -98,7 +97,6 @@ export function SingleBannerCarousel({ component, page }: BrProps): React.ReactE
   return (
     <Carousel controls={documents.length > 1} indicators={documents.length > 1} interval={interval}>
       {documents.map((document, index) => (
-        // eslint-disable-next-line react/no-array-index-key
         <Banner key={index} className={styles.carousel__banner} document={document} />
       ))}
     </Carousel>

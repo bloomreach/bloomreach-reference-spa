@@ -23,7 +23,6 @@ import styles from './Search.module.scss';
 
 export function Search({ className, ...props }: React.ComponentProps<typeof Form>): React.ReactElement {
   return (
-    // eslint-disable-next-line react/jsx-props-no-spreading
     <Form inline className={`${styles.search} ${className ?? ''}`} {...props}>
       <Form.Control type="search" placeholder="Find products and articles" className={styles.search__input} />
       <Button type="submit" variant="link" className={`${styles.search__button}`} title="Search">

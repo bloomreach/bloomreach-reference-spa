@@ -31,7 +31,11 @@
     "start": "react-scripts start"
   },
   "eslintConfig": {
-    "extends": "@bloomreach/eslint-config"
+    "extends": "@bloomreach/eslint-config",
+    "rules": {
+      "react/jsx-props-no-spreading": "off",
+      "react/no-danger": "off"
+    }
   },
   "browserslist": {
     "production": [
