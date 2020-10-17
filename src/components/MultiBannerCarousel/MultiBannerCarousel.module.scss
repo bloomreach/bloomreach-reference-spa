@@ -16,7 +16,6 @@
 
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins';
 
 .carousel {
   display: flex;
@@ -42,13 +41,5 @@
       order: 2;
       margin-left: $grid-gutter-width;
     }
-  }
-}
-
-.banner {
-  height: 160px;
-
-  &__image {
-    object-fit: contain;
   }
 }

@@ -15,13 +15,13 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Carousel, Col, Container, Image, Row } from 'react-bootstrap';
+import { Carousel, Col, Container, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { Document, ImageSet, Reference } from '@bloomreach/spa-sdk';
-import { BrManageContentButton, BrPageContext, BrProps } from '@bloomreach/react-sdk';
+import { Document, Reference } from '@bloomreach/spa-sdk';
+import { BrProps } from '@bloomreach/react-sdk';
 
+import { Banner } from './Banner';
 import styles from './MultiBannerCarousel.module.scss';
 
 const MAX_DOCUMENTS = 10;
@@ -38,26 +38,6 @@ interface MultiBannerCarouselModels {
   document8?: Reference;
   document9?: Reference;
   document10?: Reference;
-}
-
-interface BannerProps {
-  document: Document;
-}
-
-function Banner({ document }: BannerProps): React.ReactElement {
-  const page = React.useContext(BrPageContext)!;
-
-  const { image: imageRef, link: linkRef, title } = document.getData<DocumentData>();
-  const link = linkRef && page.getContent<Document>(linkRef)?.getUrl();
-  const src = imageRef && page.getContent<ImageSet>(imageRef)?.getOriginal()?.getUrl();
-  const image = src && <Image className={`${styles.banner__image} d-block w-100 h-100`} src={src} alt={title} />;
-
-  return (
-    <Col xs={3} className={`${styles.banner} ${page.isPreview() ? 'has-edit-button' : ''}`}>
-      <BrManageContentButton content={document} />
-      {link ? <Link to={link}>{image}</Link> : image}
-    </Col>
-  );
 }
 
 export function MultiBannerCarousel({ component, page }: BrProps): React.ReactElement | null {
@@ -90,10 +70,11 @@ export function MultiBannerCarousel({ component, page }: BrProps): React.ReactEl
         className={styles.carousel}
       >
         {slides.map((slide, index) => (
+          // eslint-disable-next-line react/no-array-index-key
           <Carousel.Item key={index}>
             <Row>
-              {slide.map((document, subindex) => (
-                <Banner key={subindex} document={document} />
+              {slide.map((document) => (
+                <Col key={document.getId()} as={Banner} xs={12 / DOCUMENTS_PER_SLIDE} document={document} />
               ))}
             </Row>
           </Carousel.Item>
