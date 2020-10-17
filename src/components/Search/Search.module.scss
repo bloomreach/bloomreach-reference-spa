@@ -1,0 +1,51 @@
+/*
+ * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.search {
+  position: relative;
+
+  &__input {
+    padding-right: 40px;
+
+    &::-ms-clear,
+    &::-ms-reveal {
+      display: none;
+      width : 0;
+      height: 0;
+    }
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+      display: none;
+    }
+  }
+
+  &__button {
+    color: var(--secondary);
+
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+
+    &:focus {
+      color: var(--primary);
+      box-shadow: none;
+    }
+  }
+}

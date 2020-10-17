@@ -14,39 +14,4 @@
  * limitations under the License.
  */
 
-.search {
-  position: relative;
-
-  &__input {
-    width: 100% !important;
-    padding-right: 40px;
-
-    &::-ms-clear,
-    &::-ms-reveal {
-      display: none;
-      width : 0;
-      height: 0;
-    }
-
-    &::-webkit-search-decoration,
-    &::-webkit-search-cancel-button,
-    &::-webkit-search-results-button,
-    &::-webkit-search-results-decoration {
-      display: none;
-    }
-  }
-
-  &__button {
-    color: var(--secondary);
-
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-
-    &:focus {
-      color: var(--primary);
-      box-shadow: none;
-    }
-  }
-}
+export { Search } from './Search';

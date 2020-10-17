@@ -24,7 +24,11 @@ import styles from './Search.module.scss';
 export function Search({ className, ...props }: React.ComponentProps<typeof Form>): React.ReactElement {
   return (
     <Form inline className={`${styles.search} ${className ?? ''}`} {...props}>
-      <Form.Control type="search" placeholder="Find products and articles" className={styles.search__input} />
+      <Form.Control
+        type="search"
+        placeholder="Find products and articles"
+        className={`${styles.search__input} w-100`}
+      />
       <Button type="submit" variant="link" className={`${styles.search__button}`} title="Search">
         <FontAwesomeIcon icon={faSearch} />
       </Button>
