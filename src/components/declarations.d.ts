@@ -28,7 +28,3 @@ interface DocumentData {
 
   [property: string]: any;
 }
-
-interface DocumentModels {
-  document: import('@bloomreach/spa-sdk').Reference;
-}

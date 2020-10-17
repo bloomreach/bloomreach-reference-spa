@@ -20,15 +20,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Col, Container, Image, Navbar, Row } from 'react-bootstrap';
 import { BrComponent, BrPageContext, BrPage } from '@bloomreach/react-sdk';
 
-import {
-  Content,
-  CtaBanner,
-  Menu,
-  MultiBannerCarousel,
-  Navigation,
-  Search,
-  SingleBannerCarousel,
-} from './components';
+import { CtaBanner, Menu, MultiBannerCarousel, Navigation, Search, SingleBannerCarousel } from './components';
 import styles from './App.module.scss';
 
 export default function App({ location }: RouteComponentProps): React.ReactElement {
@@ -41,7 +33,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
       path: `${location.pathname}${location.search}`,
     },
   };
-  const mapping = { Content, CtaBanner, MultiBannerCarousel, Navigation, SingleBannerCarousel };
+  const mapping = { CtaBanner, MultiBannerCarousel, Navigation, SingleBannerCarousel };
 
   return (
     <BrPage configuration={configuration} mapping={mapping}>

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-export * from './Content';
 export * from './CtaBanner';
 export * from './Menu';
 export * from './MultiBannerCarousel';
