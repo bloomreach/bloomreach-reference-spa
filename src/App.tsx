@@ -78,15 +78,15 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
           <BrComponent />
         </section>
       </BrComponent>
-      <Container as="section" className="flex-fill py-4">
-        <Row>
+      <Container as="section" className="flex-fill pt-4">
+        <Row className="flex-lg-nowrap">
           <BrComponent path="main">
             <Col xs="auto" className="flex-fill">
               <BrComponent />
             </Col>
           </BrComponent>
           <BrComponent path="sidebar">
-            <Col xs="3">
+            <Col lg="4" xl="3">
               <BrComponent />
             </Col>
           </BrComponent>
@@ -100,10 +100,14 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
       <BrComponent path="footer">
         <footer className="bg-secondary text-light py-3">
           <Container>
-            <div className="float-right pl-3 py-2">&copy; Bloomreach 2020</div>
-            <div className="overflow-hidden">
-              <BrComponent />
-            </div>
+            <Row>
+              <Col lg="9" xl="10">
+                <BrComponent />
+              </Col>
+              <Col lg="3" xl="2" className="text-center text-lg-right py-lg-2">
+                &copy; Bloomreach 2020
+              </Col>
+            </Row>
           </Container>
         </footer>
       </BrComponent>

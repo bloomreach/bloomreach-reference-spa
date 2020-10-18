@@ -44,14 +44,10 @@ export function Navigation({ component, page }: BrProps): React.ReactElement | n
   }
 
   return (
-    <Nav as="ul">
-      {documents.map((document, index) => (
+    <Nav as="ul" className="justify-content-center justify-content-lg-start mx-n3">
+      {documents.map((document) => (
         <Nav.Item key={document.getId()} as="li">
-          <Nav.Link
-            as={Link}
-            href={document.getUrl()}
-            className={`text-reset ${index === 0 ? 'pl-0' : ''} ${index === documents.length - 1 ? 'pr-0' : ''}`}
-          >
+          <Nav.Link as={Link} href={document.getUrl()} className="text-reset">
             {document.getData<ContentDocument>().title}
           </Nav.Link>
         </Nav.Item>
