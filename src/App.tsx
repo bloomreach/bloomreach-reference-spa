@@ -85,7 +85,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
               <BrComponent />
             </Col>
           </BrComponent>
-          <BrComponent path="sidebar">
+          <BrComponent path="right">
             <Col lg="4" xl="3">
               <BrComponent />
             </Col>
