@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-export * from './CtaBanner';
-export * from './Link';
-export * from './Menu';
-export * from './MultiBannerCarousel';
-export * from './Navigation';
-export * from './PageCatalog';
-export * from './Search';
-export * from './SingleBannerCarousel';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.page-catalog {
+  &__page {
+    @each $breakpoint in sm, md, lg, xl {
+      @include media-breakpoint-only($breakpoint) {
+        width: map-get($container-max-widths, $breakpoint) / 2;
+      }
+    }
+  }
+}
