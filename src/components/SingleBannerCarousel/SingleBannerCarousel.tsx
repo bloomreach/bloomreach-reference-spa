@@ -32,8 +32,12 @@ interface SingleBannerCarouselModels {
   document5?: Reference;
 }
 
+interface SingleBannerCarouselParameters {
+  interval?: number;
+}
+
 export function SingleBannerCarousel({ component, page }: BrProps): React.ReactElement | null {
-  const { interval = 0 } = component.getParameters();
+  const { interval = 0 } = component.getParameters<SingleBannerCarouselParameters>();
   const models = component.getModels<SingleBannerCarouselModels>();
   const documents = [...Array(MAX_DOCUMENTS).keys()]
     .map((n) => `document${n + 1}` as keyof SingleBannerCarouselModels)

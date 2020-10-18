@@ -40,8 +40,13 @@ interface MultiBannerCarouselModels {
   document10?: Reference;
 }
 
+interface MultiBannerCarouselParameters {
+  interval?: number;
+  title?: string;
+}
+
 export function MultiBannerCarousel({ component, page }: BrProps): React.ReactElement | null {
-  const { interval = 0, title } = component.getParameters();
+  const { interval = 0, title } = component.getParameters<MultiBannerCarouselParameters>();
   const models = component.getModels<MultiBannerCarouselModels>();
   const documents = [...Array(MAX_DOCUMENTS).keys()]
     .map((n) => `document${n + 1}` as keyof MultiBannerCarouselModels)

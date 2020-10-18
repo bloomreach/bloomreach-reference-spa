@@ -26,12 +26,15 @@ interface BannerProps extends React.ComponentProps<'div'> {
   document: Document;
 }
 
+interface BannerParameters {
+  alignment?: 'left' | 'center' | 'right';
+}
+
 export const Banner = React.forwardRef(
   ({ document, className, ...props }: BannerProps, ref: React.Ref<HTMLDivElement>) => {
     const component = React.useContext(BrComponentContext);
     const page = React.useContext(BrPageContext);
-
-    const { alignment = 'center' } = component?.getParameters() ?? {};
+    const { alignment = 'center' } = component?.getParameters<BannerParameters>() ?? {};
     const { content, cta, image: imageRef, link: linkRef, title } = document.getData<BannerDocument>();
     const image = imageRef && page?.getContent<ImageSet>(imageRef);
     const link = linkRef && page?.getContent<Document>(linkRef);
