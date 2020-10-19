@@ -30,7 +30,7 @@ export function CtaBanner({ component, page }: BrProps): React.ReactElement | nu
   const document = documentRef && page.getContent<Document>(documentRef);
 
   if (!document) {
-    return null;
+    return page.isPreview() ? <div /> : null;
   }
 
   const { content, cta, link: linkRef, title } = document.getData<BannerDocument>();

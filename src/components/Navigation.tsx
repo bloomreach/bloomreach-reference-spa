@@ -40,7 +40,7 @@ export function Navigation({ component, page }: BrProps): React.ReactElement | n
     .filter<Document>(Boolean as any);
 
   if (!documents.length) {
-    return null;
+    return page.isPreview() ? <div /> : null;
   }
 
   return (

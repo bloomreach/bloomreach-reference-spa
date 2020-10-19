@@ -46,7 +46,7 @@ export function SingleBannerCarousel({ component, page }: BrProps): React.ReactE
     .filter<Document>(Boolean as any);
 
   if (!documents.length) {
-    return null;
+    return page.isPreview() ? <div /> : null;
   }
 
   return (

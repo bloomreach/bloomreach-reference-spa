@@ -39,7 +39,7 @@ export function PageCatalog({ component, page }: BrProps): React.ReactElement | 
   const pagination = paginationRef && page.getContent<BrPagination>(paginationRef);
 
   if (!pagination) {
-    return null;
+    return page.isPreview() ? <div /> : null;
   }
 
   const documents = pagination

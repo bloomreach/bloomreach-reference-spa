@@ -60,7 +60,7 @@ export function MultiBannerCarousel({ component, page }: BrProps): React.ReactEl
   }
 
   if (!slides.length) {
-    return null;
+    return page.isPreview() ? <div /> : null;
   }
 
   return (

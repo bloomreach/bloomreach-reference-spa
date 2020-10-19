@@ -24,7 +24,7 @@ import styles from './Content.module.scss';
 export function Content({ page }: BrProps): React.ReactElement | null {
   const document = page.getDocument<Document>();
   if (!document) {
-    return null;
+    return page.isPreview() ? <div /> : null;
   }
 
   const { content, image: imageRef, title } = document.getData<ContentDocument>();
