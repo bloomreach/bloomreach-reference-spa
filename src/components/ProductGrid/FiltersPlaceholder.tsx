@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-export * from './Content';
-export * from './CtaBanner';
-export * from './Link';
-export * from './Menu';
-export * from './MultiBannerCarousel';
-export * from './Navigation';
-export * from './PageCatalog';
-export * from './ProductGrid';
-export * from './Search';
-export * from './SingleBannerCarousel';
+import React from 'react';
+
+interface FiltersPlaceholderProps {
+  size: number;
+}
+
+export function FiltersPlaceholder({ size }: FiltersPlaceholderProps): React.ReactElement | null {
+  return (
+    <div className="border rounded px-4 pt-1 pb-3 mb-4">
+      {[...Array(size).keys()].map((index) => (
+        <React.Fragment key={index}>
+          <div className="shimmer pt-4 my-4 w-100" />
+          <div className="shimmer pt-3 pb-1 mb-2 w-75" />
+          <div className="shimmer pt-3 pb-1 mb-2 w-50" />
+          <div className="shimmer pt-3 pb-1 mb-2 w-75" />
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}

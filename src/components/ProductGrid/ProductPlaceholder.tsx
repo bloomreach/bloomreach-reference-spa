@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import React from 'react';
 
-export * from './Content';
-export * from './CtaBanner';
-export * from './Link';
-export * from './Menu';
-export * from './MultiBannerCarousel';
-export * from './Navigation';
-export * from './PageCatalog';
-export * from './ProductGrid';
-export * from './Search';
-export * from './SingleBannerCarousel';
+import styles from './Product.module.scss';
+
+export function ProductPlaceholder(): React.ReactElement {
+  return (
+    <>
+      <div className={`${styles['product__image-container']} shimmer mb-3`} />
+      <div className="shimmer py-3 mb-2" />
+      <div className="shimmer w-75 py-2 mb-1" />
+      <div className="shimmer w-75 py-2 mb-2" />
+      <div className="shimmer w-25 py-3" />
+    </>
+  );
+}

@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-interface Content {
-  value: string;
-}
+.product {
+  &__image-container {
+    position: relative;
 
-interface BannerDocument {
-  content: Content;
-  cta?: string;
-  image?: import('@bloomreach/spa-sdk').Reference;
-  link?: import('@bloomreach/spa-sdk').Reference;
-  title?: string;
-}
+    padding-top: 75%;
+    height: 0;
+  }
 
-interface ContentDocument {
-  content: Content;
-  date?: number;
-  image?: import('@bloomreach/spa-sdk').Reference;
-  introduction?: string;
-  title?: string;
+  &__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+  }
 }

@@ -32,6 +32,16 @@
   },
   "eslintConfig": {
     "extends": "@bloomreach/eslint-config",
+    "overrides": [
+      {
+        "files": [
+          "*.tsx"
+        ],
+        "rules": {
+          "react/require-default-props": "off"
+        }
+      }
+    ],
     "rules": {
       "react/jsx-props-no-spreading": "off",
       "react/no-danger": "off"

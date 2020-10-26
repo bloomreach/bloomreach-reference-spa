@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-export * from './Content';
-export * from './CtaBanner';
-export * from './Link';
-export * from './Menu';
-export * from './MultiBannerCarousel';
-export * from './Navigation';
-export * from './PageCatalog';
-export * from './ProductGrid';
-export * from './Search';
-export * from './SingleBannerCarousel';
+import React from 'react';
+import { Col, Row } from 'react-bootstrap';
+
+import { ProductPlaceholder } from './ProductPlaceholder';
+
+interface ProductsPlaceholderProps {
+  size: number;
+}
+
+export function ProductsPlaceholder({ size }: ProductsPlaceholderProps): React.ReactElement {
+  return (
+    <Row>
+      {[...Array(size).keys()].map((index) => (
+        <Col key={index} sm="4" className="mb-4">
+          <ProductPlaceholder />
+        </Col>
+      ))}
+    </Row>
+  );
+}

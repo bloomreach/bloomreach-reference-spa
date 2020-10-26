@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-export * from './Content';
-export * from './CtaBanner';
-export * from './Link';
-export * from './Menu';
-export * from './MultiBannerCarousel';
-export * from './Navigation';
-export * from './PageCatalog';
-export * from './ProductGrid';
-export * from './Search';
-export * from './SingleBannerCarousel';
+import React from 'react';
+
+export function StatsPlaceholder(): React.ReactElement {
+  return <div className="shimmer pt-4 w-50 mb-4" />;
+}

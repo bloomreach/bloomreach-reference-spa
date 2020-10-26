@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-export * from './Content';
-export * from './CtaBanner';
-export * from './Link';
-export * from './Menu';
-export * from './MultiBannerCarousel';
-export * from './Navigation';
-export * from './PageCatalog';
-export * from './ProductGrid';
-export * from './Search';
-export * from './SingleBannerCarousel';
+import React from 'react';
+
+interface StatsProps {
+  offset: number;
+  size: number;
+  total: number;
+}
+
+export function Stats({ offset, size, total }: StatsProps): React.ReactElement {
+  return (
+    <div className="text-muted mb-4">
+      {total && offset < total ? `${offset + 1}-${offset + size} of ${total} products` : `0 products`}
+    </div>
+  );
+}

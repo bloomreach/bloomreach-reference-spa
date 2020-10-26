@@ -28,6 +28,7 @@ import {
   MultiBannerCarousel,
   Navigation,
   PageCatalog,
+  ProductGrid,
   Search,
   SingleBannerCarousel,
 } from './components';
@@ -43,7 +44,15 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
       path: `${location.pathname}${location.search}`,
     },
   };
-  const mapping = { Content, CtaBanner, MultiBannerCarousel, Navigation, PageCatalog, SingleBannerCarousel };
+  const mapping = {
+    Content,
+    CtaBanner,
+    MultiBannerCarousel,
+    Navigation,
+    PageCatalog,
+    ProductGrid,
+    SingleBannerCarousel,
+  };
 
   return (
     <BrPage configuration={configuration} mapping={mapping}>
