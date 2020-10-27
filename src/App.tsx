@@ -24,6 +24,7 @@ import {
   Content,
   CtaBanner,
   Link,
+  Images,
   Menu,
   MultiBannerCarousel,
   Navigation,
@@ -48,6 +49,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
   const mapping = {
     Content,
     CtaBanner,
+    Images,
     MultiBannerCarousel,
     Navigation,
     PageCatalog,

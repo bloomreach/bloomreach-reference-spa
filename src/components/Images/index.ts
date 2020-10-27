@@ -14,15 +14,4 @@
  * limitations under the License.
  */
 
-export * from './Content';
-export * from './CtaBanner';
-export * from './Link';
-export * from './Images';
-export * from './Menu';
-export * from './MultiBannerCarousel';
-export * from './Navigation';
-export * from './PageCatalog';
-export * from './Product';
-export * from './ProductGrid';
-export * from './Search';
-export * from './SingleBannerCarousel';
+export { Images } from './Images';
