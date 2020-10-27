@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -22,6 +25,30 @@ body {
 mark, .mark {
   background-color: var(--light);
   color: var(--dark);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1200px 0;
+  }
+  100% {
+    background-position: 1200px 0;
+  }
+}
+
+.shimmer {
+  animation-duration: 2.2s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+  background: linear-gradient(
+    to right,
+    $gray-100 4%,
+    $gray-200 25%,
+    $gray-100 36%
+  );
+  background-size: 1200px 100%;
 }
 
 .has-edit-button {

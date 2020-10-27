@@ -19,32 +19,6 @@
 @import '~bootstrap/scss/mixins';
 
 .grid {
-  @keyframes :global(shimmer) {
-    0% {
-      background-position: -1200px 0;
-    }
-    100% {
-      background-position: 1200px 0;
-    }
-  }
-
-  :global {
-    & .shimmer {
-      animation-duration: 2.2s;
-      animation-fill-mode: forwards;
-      animation-iteration-count: infinite;
-      animation-name: shimmer;
-      animation-timing-function: linear;
-      background: linear-gradient(
-        to right,
-        $gray-100 4%,
-        $gray-200 25%,
-        $gray-100 36%
-      );
-      background-size: 1200px 100%;
-    }
-  }
-
   @include media-breakpoint-up(lg) {
     display: grid;
     grid-auto-columns: 3fr;
