@@ -19,7 +19,7 @@ import { Button, Col, Collapse, Row } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { BrComponentContext, BrPageContext } from '@bloomreach/react-sdk';
 
-import { useSearch } from './useSearch';
+import { useSearch } from '../../hooks';
 import { Filters } from './Filters';
 import { FiltersPlaceholder } from './FiltersPlaceholder';
 import { Pagination } from './Pagination';
