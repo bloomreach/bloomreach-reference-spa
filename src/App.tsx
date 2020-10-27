@@ -28,6 +28,7 @@ import {
   MultiBannerCarousel,
   Navigation,
   PageCatalog,
+  Product,
   ProductGrid,
   Search,
   SingleBannerCarousel,
@@ -50,6 +51,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
     MultiBannerCarousel,
     Navigation,
     PageCatalog,
+    Product,
     ProductGrid,
     SingleBannerCarousel,
   };

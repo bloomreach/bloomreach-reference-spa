@@ -14,14 +14,31 @@
  * limitations under the License.
  */
 
-export * from './Content';
-export * from './CtaBanner';
-export * from './Link';
-export * from './Menu';
-export * from './MultiBannerCarousel';
-export * from './Navigation';
-export * from './PageCatalog';
-export * from './Product';
-export * from './ProductGrid';
-export * from './Search';
-export * from './SingleBannerCarousel';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.product {
+  &__image-container {
+    @include media-breakpoint-up(md) {
+      position: relative;
+
+      padding-bottom: 100%;
+      height: 0;
+    }
+
+    @include media-breakpoint-down(sm) {
+      height: 240px;
+    }
+  }
+
+  &__image {
+    @include media-breakpoint-up(md) {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    object-fit: contain;
+  }
+}

@@ -44,10 +44,16 @@ interface ContentDocument {
 
 interface ProductDocument {
   brand: string;
+  description: string;
   pid: string;
   title: string;
   price: number;
   sale_price?: number;
   thumb_image?: string;
   url: string;
+}
+
+interface ResourceBundle {
+  keys: string[];
+  messages: string[];
 }
