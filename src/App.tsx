@@ -33,6 +33,7 @@ import {
   ProductGrid,
   Search,
   SingleBannerCarousel,
+  Video,
 } from './components';
 import styles from './App.module.scss';
 
@@ -56,6 +57,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
     Product,
     ProductGrid,
     SingleBannerCarousel,
+    Video,
   };
 
   return (
