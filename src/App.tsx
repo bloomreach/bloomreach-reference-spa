@@ -91,7 +91,11 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
               )}
             </BrPageContext.Consumer>
 
-            <Search className={`${styles.navbar__search} order-lg-2 mr-3 mr-lg-0`} />
+            <BrComponent path="header">
+              <div className={`${styles.navbar__container} order-lg-2 mr-3 mr-lg-0`}>
+                <BrComponent />
+              </div>
+            </BrComponent>
 
             <Navbar.Toggle className="ml-auto" />
             <Navbar.Collapse className="order-lg-1 mr-lg-3">

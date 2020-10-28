@@ -19,7 +19,7 @@
 @import '~bootstrap/scss/mixins';
 
 .navbar {
-  &__search {
+  &__container {
     max-width: 300px;
 
     @include media-breakpoint-up(lg) {
