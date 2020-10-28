@@ -33,7 +33,7 @@ import {
   PageCatalog,
   Product,
   ProductGrid,
-  Search,
+  SearchBar,
   SingleBannerCarousel,
   Video,
 } from './components';
@@ -61,6 +61,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
     Product,
     ProductGrid,
     SingleBannerCarousel,
+    SearchBar,
     Video,
   };
 

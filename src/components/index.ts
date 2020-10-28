@@ -26,6 +26,6 @@ export * from './Navigation';
 export * from './PageCatalog';
 export * from './Product';
 export * from './ProductGrid';
-export * from './Search';
+export * from './SearchBar';
 export * from './SingleBannerCarousel';
 export * from './Video';

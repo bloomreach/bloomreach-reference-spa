@@ -14,18 +14,46 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Document, Reference } from '@bloomreach/spa-sdk';
+import { BrProps } from '@bloomreach/react-sdk';
 
-import styles from './Search.module.scss';
+import styles from './SearchBar.module.scss';
 
-export function Search({ className, ...props }: React.ComponentProps<typeof Form>): React.ReactElement {
+interface SearchBarModels {
+  document?: Reference;
+}
+
+export function SearchBar({ component, page }: BrProps): React.ReactElement {
+  const ref = useRef<HTMLFormElement>(null);
+  const history = useHistory();
+
+  const handleSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+
+    const { document: documentRef } = component.getModels<SearchBarModels>();
+    const document = documentRef && page.getContent<Document>(documentRef);
+    const url = document?.getUrl() ?? '';
+
+    if (!url) {
+      return;
+    }
+
+    const data = new FormData(ref?.current ?? undefined);
+    const params = new URLSearchParams([...data.entries()] as [string, string][]);
+
+    history.push(`${url}${url.includes('?') ? '&' : '?'}${params.toString()}`);
+  };
+
   return (
-    <Form inline className={`${styles.search} ${className ?? ''}`} {...props}>
+    <Form ref={ref} onSubmit={handleSubmit} inline className={styles.search}>
       <Form.Control
         type="search"
+        name="q"
         placeholder="Find products and articles"
         className={`${styles.search__input} w-100`}
       />
