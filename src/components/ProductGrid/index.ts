@@ -15,3 +15,4 @@
  */
 
 export { CategoryProductGrid as ProductGrid } from './CategoryProductGrid';
+export * from './ProductSearch';

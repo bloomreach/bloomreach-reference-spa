@@ -41,11 +41,11 @@ interface ProductGridProps {
   >;
   sorting?: boolean;
   stats?: boolean;
-  title?: string;
+  title?: string | React.ReactElement;
 }
 
 export function ProductGrid({
-  filters: allowedFilters = [],
+  filters: allowedFilters,
   limit,
   pagination: isPagination,
   params: defaults,
@@ -67,8 +67,8 @@ export function ProductGrid({
       sorting: search.get(`${id}:sort`) ?? undefined,
       filters: Object.fromEntries(
         allowedFilters
-          .map((filter) => [filter, search.getAll(`${id}:filter:${filter}`)])
-          .filter(([, values]) => values.length),
+          ?.map((filter) => [filter, search.getAll(`${id}:filter:${filter}`)])
+          .filter(([, values]) => values.length) ?? [],
       ) as React.ComponentProps<typeof Filters>['values'],
     };
   }, [history.location.search, id, allowedFilters]);
@@ -100,12 +100,12 @@ export function ProductGrid({
     () =>
       Object.fromEntries(
         allowedFilters
-          .map((facet) => [facet, results?.facet_counts.facet_fields[facet]])
-          .filter(([, values]) => values?.length),
+          ?.map((facet) => [facet, results?.facet_counts.facet_fields[facet]])
+          .filter(([, values]) => values?.length) ?? [],
       ),
     [allowedFilters, results],
   );
-  const isFiltering = allowedFilters.length > 0 && (!results || Object.keys(availableFilters).length > 0);
+  const isFiltering = !!allowedFilters?.length && (!results || Object.keys(availableFilters).length > 0);
 
   useEffect(() => setPage(page), [page]);
   useEffect(() => setSorting(sorting), [sorting]);
@@ -126,7 +126,7 @@ export function ProductGrid({
       search.delete(`${id}:page`);
     }
 
-    allowedFilters.forEach((filter) => search.delete(`${id}:filter:${filter}`));
+    allowedFilters?.forEach((filter) => search.delete(`${id}:filter:${filter}`));
 
     Object.entries(filtersState).forEach(([filter, values]) =>
       values.forEach((value) => search.append(`${id}:filter:${filter}`, value)),
@@ -189,7 +189,7 @@ export function ProductGrid({
                 }}
               />
             ) : (
-              <FiltersPlaceholder size={allowedFilters.length} />
+              <FiltersPlaceholder size={allowedFilters?.length ?? 0} />
             )}
           </div>
         </Collapse>
