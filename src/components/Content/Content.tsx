@@ -31,7 +31,7 @@ export function Content({ page }: BrProps): React.ReactElement | null {
   const image = imageRef && page?.getContent<ImageSet>(imageRef)?.getOriginal();
 
   return (
-    <article className={page.isPreview() ? 'has-edit-button' : ''}>
+    <article className={`${page.isPreview() ? 'has-edit-button' : ''} mw-container mx-auto`}>
       <BrManageContentButton content={document} />
       {title && <h1 className="mb-4">{title}</h1>}
       {image && (

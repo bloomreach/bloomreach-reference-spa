@@ -95,9 +95,9 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
         </Navbar>
       </header>
       <BrComponent path="top">
-        <section>
+        <Container as="section" fluid>
           <BrComponent />
-        </section>
+        </Container>
       </BrComponent>
       <Container as="section" className="flex-fill pt-4">
         <Row className="flex-lg-nowrap">
@@ -114,9 +114,9 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
         </Row>
       </Container>
       <BrComponent path="bottom">
-        <section>
+        <Container as="section" fluid>
           <BrComponent />
-        </section>
+        </Container>
       </BrComponent>
       <BrComponent path="footer">
         <footer className="bg-secondary text-light py-3">

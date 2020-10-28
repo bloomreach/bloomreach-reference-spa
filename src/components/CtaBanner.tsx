@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { Button, Container, Jumbotron } from 'react-bootstrap';
+import { Button, Container, Jumbotron, Row } from 'react-bootstrap';
 import { Document, Reference } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
 
@@ -37,7 +37,7 @@ export function CtaBanner({ component, page }: BrProps): React.ReactElement | nu
   const link = linkRef && page.getContent<Document>(linkRef);
 
   return (
-    <Jumbotron fluid className="bg-primary text-light text-center my-0">
+    <Jumbotron as={Row} fluid className="bg-primary text-light text-center my-0">
       <Container className={page.isPreview() ? 'has-edit-button' : ''}>
         <BrManageContentButton content={document} />
 

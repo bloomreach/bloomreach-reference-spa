@@ -16,6 +16,7 @@
 
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
 
 body {
   -webkit-font-smoothing: antialiased;
@@ -49,6 +50,14 @@ mark, .mark {
     $gray-100 36%
   );
   background-size: 1200px 100%;
+}
+
+.mw-container {
+  @each $breakpoint in sm, md, lg, xl {
+    @include media-breakpoint-up($breakpoint) {
+      max-width: map-get($container-max-widths, $breakpoint) - $grid-gutter-width;
+    }
+  }
 }
 
 .has-edit-button {

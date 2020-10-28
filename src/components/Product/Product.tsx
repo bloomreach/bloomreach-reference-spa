@@ -57,7 +57,11 @@ export function Product({ component, page }: BrProps): React.ReactElement {
   }
 
   if (!results) {
-    return <Placeholder />;
+    return (
+      <div className="mw-container mx-auto">
+        <Placeholder />
+      </div>
+    );
   }
 
   const [{ brand, description, pid, sale_price: sale, price, title, thumb_image: thumbnail }] = results.response.docs;
@@ -71,52 +75,54 @@ export function Product({ component, page }: BrProps): React.ReactElement {
     .filter(({ value }) => !!value);
 
   return (
-    <Row>
-      <Col md={{ span: 8, order: 1 }}>
-        <h2 className="mb-4">{title}</h2>
-        <div className="text-muted">
-          Product No. <span className="text-primary ml-1">{pid}</span>
-        </div>
-        <div className="text-muted mb-4">
-          Manufacturer <span className="text-primary ml-1">{brand}</span>
-        </div>
-        <h4 className="mb-4">${(sale ?? price).toFixed(2)}</h4>
-      </Col>
-      <Col md={{ span: 4, order: 0 }}>
-        <div className={`${styles['product__image-container']} ${!thumbnail ? 'bg-light' : ''} mb-4`}>
-          {thumbnail && <Image className={`${styles.product__image} w-100 h-100`} src={thumbnail} alt={title} />}
-        </div>
-      </Col>
-      <Col md={{ order: 2 }} lg="9">
-        {description && (
-          <>
-            <h3 className="mb-4">Features & Benefits</h3>
-            <p className="mb-4">{description}</p>
-          </>
-        )}
+    <div className="mw-container mx-auto">
+      <Row>
+        <Col md={{ span: 8, order: 1 }}>
+          <h2 className="mb-4">{title}</h2>
+          <div className="text-muted">
+            Product No. <span className="text-primary ml-1">{pid}</span>
+          </div>
+          <div className="text-muted mb-4">
+            Manufacturer <span className="text-primary ml-1">{brand}</span>
+          </div>
+          <h4 className="mb-4">${(sale ?? price).toFixed(2)}</h4>
+        </Col>
+        <Col md={{ span: 4, order: 0 }}>
+          <div className={`${styles['product__image-container']} ${!thumbnail ? 'bg-light' : ''} mb-4`}>
+            {thumbnail && <Image className={`${styles.product__image} w-100 h-100`} src={thumbnail} alt={title} />}
+          </div>
+        </Col>
+        <Col md={{ order: 2 }} lg="9">
+          {description && (
+            <>
+              <h3 className="mb-4">Features & Benefits</h3>
+              <p className="mb-4">{description}</p>
+            </>
+          )}
 
-        {specifications.length > 0 && (
-          <>
-            <h3 className="mb-4">Specifications</h3>
-            <Table responsive className="mb-4">
-              <thead className="thead-light">
-                <tr>
-                  <th>Meta</th>
-                  <th>Data</th>
-                </tr>
-              </thead>
-              <tbody>
-                {specifications.map(({ key, label, value }) => (
-                  <tr key={key}>
-                    <td>{label}</td>
-                    <td>{value}</td>
+          {specifications.length > 0 && (
+            <>
+              <h3 className="mb-4">Specifications</h3>
+              <Table responsive className="mb-4">
+                <thead className="thead-light">
+                  <tr>
+                    <th>Meta</th>
+                    <th>Data</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
-          </>
-        )}
-      </Col>
-    </Row>
+                </thead>
+                <tbody>
+                  {specifications.map(({ key, label, value }) => (
+                    <tr key={key}>
+                      <td>{label}</td>
+                      <td>{value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </>
+          )}
+        </Col>
+      </Row>
+    </div>
   );
 }

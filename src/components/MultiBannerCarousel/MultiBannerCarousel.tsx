@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { Carousel, Col, Container, Row } from 'react-bootstrap';
+import { Carousel, Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Document, Reference } from '@bloomreach/spa-sdk';
@@ -64,7 +64,7 @@ export function MultiBannerCarousel({ component, page }: BrProps): React.ReactEl
   }
 
   return (
-    <Container className="py-4">
+    <div className="mw-container mx-auto my-4">
       {title && <h3 className="mb-4 text-center">{title}</h3>}
       <Carousel
         controls={slides.length > 1}
@@ -85,6 +85,6 @@ export function MultiBannerCarousel({ component, page }: BrProps): React.ReactEl
           </Carousel.Item>
         ))}
       </Carousel>
-    </Container>
+    </div>
   );
 }

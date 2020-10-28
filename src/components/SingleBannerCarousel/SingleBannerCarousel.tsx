@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { Carousel } from 'react-bootstrap';
+import { Carousel, Row } from 'react-bootstrap';
 import { Document, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
 
@@ -50,7 +50,7 @@ export function SingleBannerCarousel({ component, page }: BrProps): React.ReactE
   }
 
   return (
-    <Carousel controls={documents.length > 1} indicators={documents.length > 1} interval={interval}>
+    <Carousel as={Row} controls={documents.length > 1} indicators={documents.length > 1} interval={interval}>
       {documents.map((document) => (
         <Carousel.Item key={document.getId()} as={Banner} className={styles.carousel__banner} document={document} />
       ))}

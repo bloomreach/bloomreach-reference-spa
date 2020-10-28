@@ -48,7 +48,7 @@ export function PageCatalog({ component, page }: BrProps): React.ReactElement | 
     .filter<Document>(Boolean as any);
 
   return (
-    <div>
+    <div className="mw-container mx-auto">
       {title && <h4 className="mb-4">{title}</h4>}
       {total && (
         <div className="mb-4 text-muted">
