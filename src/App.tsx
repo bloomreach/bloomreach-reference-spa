@@ -21,6 +21,7 @@ import { Col, Container, Image, Navbar, Row } from 'react-bootstrap';
 import { BrComponent, BrPageContext, BrPage } from '@bloomreach/react-sdk';
 
 import {
+  BannerCollection,
   Content,
   CtaBanner,
   Link,
@@ -49,6 +50,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
     },
   };
   const mapping = {
+    BannerCollection,
     Content,
     CtaBanner,
     Images,
