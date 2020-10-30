@@ -7,13 +7,13 @@
     "@bloomreach/react-sdk": "^14.3.0",
     "@bloomreach/spa-sdk": "^14.3.0",
     "@fortawesome/fontawesome-svg-core": "^1.2",
-    "@fortawesome/free-solid-svg-icons": "^5.14",
+    "@fortawesome/free-solid-svg-icons": "^5.15",
     "@fortawesome/react-fontawesome": "^0.1",
-    "axios": "^0.19",
+    "axios": "^0.21",
     "bootstrap": "^4.5",
-    "react": "^16.13",
-    "react-bootstrap": "^1.3",
-    "react-dom": "^16.13",
+    "react": "^16.14",
+    "react-bootstrap": "^1.4",
+    "react-dom": "^16.14",
     "react-google-maps": "^9.4",
     "react-player": "^2.6",
     "react-router-dom": "^5.2"
@@ -23,9 +23,9 @@
     "@types/react": "^16.9",
     "@types/react-dom": "^16.9",
     "@types/react-router-dom": "^5.1",
-    "eslint": "^7.9",
-    "react-scripts": "3.4.1",
-    "typescript": "^3.8"
+    "eslint": "^7.12",
+    "react-scripts": "4.0.0",
+    "typescript": "^4.0"
   },
   "scripts": {
     "build": "react-scripts build",
