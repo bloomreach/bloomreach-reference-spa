@@ -15,6 +15,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
