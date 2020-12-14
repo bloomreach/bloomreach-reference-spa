@@ -26,7 +26,7 @@
     "eslint": "^7.12",
     "node-sass": "^4.14",
     "react-scripts": "4.0.0",
-    "typescript": "^4.0"
+    "typescript": "~4.0"
   },
   "scripts": {
     "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
