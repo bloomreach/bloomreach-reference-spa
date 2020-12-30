@@ -42,13 +42,10 @@ import styles from './App.module.scss';
 
 export default function App({ location }: RouteComponentProps): React.ReactElement {
   const configuration = {
-    baseUrl: process.env.REACT_APP_BASE_URL,
     endpoint: process.env.REACT_APP_BRXM_ENDPOINT,
     endpointQueryParameter: 'endpoint',
     httpClient: axios,
-    request: {
-      path: `${location.pathname}${location.search}`,
-    },
+    path: `${location.pathname}${location.search}`,
   };
   const mapping = {
     BannerCollection,
