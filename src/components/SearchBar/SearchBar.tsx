@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2020-2021 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Document, Reference } from '@bloomreach/spa-sdk';
+import { ContainerItem, Document, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
 
 import styles from './SearchBar.module.scss';
@@ -28,9 +28,13 @@ interface SearchBarModels {
   document?: Reference;
 }
 
-export function SearchBar({ component, page }: BrProps): React.ReactElement {
+export function SearchBar({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const ref = useRef<HTMLFormElement>(null);
   const history = useHistory();
+
+  if (component.isHidden()) {
+    return page.isPreview() ? <div /> : null;
+  }
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();

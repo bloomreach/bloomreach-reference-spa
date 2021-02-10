@@ -17,7 +17,7 @@
 import React, { useMemo } from 'react';
 import { Redirect, useRouteMatch } from 'react-router-dom';
 import { Col, Image, Row, Table } from 'react-bootstrap';
-import { Document, Reference } from '@bloomreach/spa-sdk';
+import { ContainerItem, Document, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
 
 import { useSearch } from '../../hooks';
@@ -28,7 +28,7 @@ interface ProductModels {
   specifications?: Reference;
 }
 
-export function Product({ component, page }: BrProps): React.ReactElement | null {
+export function Product({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const { smAccountId = '', smDomainKey, smEndpoint = '' } = page.getChannelParameters<ChannelParameters>();
   const { specifications: specificationsRef } = component.getModels<ProductModels>();
   const specificationsBundle = specificationsRef && page.getContent<Document>(specificationsRef);
@@ -51,6 +51,10 @@ export function Product({ component, page }: BrProps): React.ReactElement | null
     [id, smAccountId, smDomainKey],
   );
   const [results] = useSearch<ProductDocument>(smEndpoint, params);
+
+  if (component.isHidden()) {
+    return page.isPreview() ? <div /> : null;
+  }
 
   if (!id || !results) {
     return (

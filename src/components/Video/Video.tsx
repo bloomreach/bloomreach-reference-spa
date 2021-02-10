@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2020-2021 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
 import { BrProps } from '@bloomreach/react-sdk';
+import { ContainerItem } from '@bloomreach/spa-sdk';
 
 import styles from './Video.module.scss';
 
@@ -24,10 +25,10 @@ interface VideoParameters {
   url: string;
 }
 
-export function Video({ component, page }: BrProps): React.ReactElement | null {
+export function Video({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const { url } = component.getParameters<VideoParameters>();
 
-  if (!url) {
+  if (!url || component.isHidden()) {
     return page.isPreview() ? <div /> : null;
   }
 

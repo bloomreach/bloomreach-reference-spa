@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2020-2021 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,15 @@
 
 import React from 'react';
 import { Image } from 'react-bootstrap';
-import { Document, ImageSet } from '@bloomreach/spa-sdk';
+import { ContainerItem, Document, ImageSet } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
 
 import styles from './Content.module.scss';
 
-export function Content({ page }: BrProps): React.ReactElement | null {
+export function Content({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const document = page.getDocument<Document>();
-  if (!document) {
+
+  if (!document || component.isHidden()) {
     return page.isPreview() ? <div /> : null;
   }
 

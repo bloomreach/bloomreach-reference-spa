@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2020-2021 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import React, { useMemo } from 'react';
 import { BrProps } from '@bloomreach/react-sdk';
+import { ContainerItem } from '@bloomreach/spa-sdk';
 
 import { ProductGrid } from './ProductGrid';
 
@@ -31,7 +32,7 @@ interface ProductGridParameters {
   widget?: string;
 }
 
-export function CategoryProductGrid({ component }: BrProps): React.ReactElement {
+export function CategoryProductGrid({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const {
     category,
     filters: filtersParameter = '',
@@ -62,6 +63,10 @@ export function CategoryProductGrid({ component }: BrProps): React.ReactElement 
         .filter(Boolean),
     [filtersParameter],
   );
+
+  if (component.isHidden()) {
+    return page.isPreview() ? <div /> : null;
+  }
 
   return (
     <ProductGrid
