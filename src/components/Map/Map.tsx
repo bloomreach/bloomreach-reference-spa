@@ -25,8 +25,8 @@ const GoogleMaps = withScriptjs(withGoogleMap(GoogleMap));
 
 interface MapParameters {
   token?: string;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
   marker?: boolean;
   zoom: number;
 }
