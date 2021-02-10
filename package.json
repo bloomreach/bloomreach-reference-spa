@@ -1,7 +1,7 @@
 {
   "name": "@bloomreach/example-saas",
   "description": "Example React SPA for brX SaaS",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "dependencies": {
     "@bloomreach/react-sdk": "^0.1.0-saas",
