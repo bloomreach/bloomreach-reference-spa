@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2020-2021 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ interface ProductModels {
   specifications?: Reference;
 }
 
-export function Product({ component, page }: BrProps): React.ReactElement {
+export function Product({ component, page }: BrProps): React.ReactElement | null {
   const { smAccountId = '', smDomainKey, smEndpoint = '' } = page.getChannelParameters<ChannelParameters>();
   const { specifications: specificationsRef } = component.getModels<ProductModels>();
   const specificationsBundle = specificationsRef && page.getContent<Document>(specificationsRef);
@@ -52,16 +52,16 @@ export function Product({ component, page }: BrProps): React.ReactElement {
   );
   const [results] = useSearch<ProductDocument>(smEndpoint, params);
 
-  if (results?.response.numFound === 0) {
-    return <Redirect to={page.getUrl('/404')} />;
-  }
-
-  if (!results) {
+  if (!id || !results) {
     return (
       <div className="mw-container mx-auto">
         <Placeholder />
       </div>
     );
+  }
+
+  if (results.response.numFound === 0) {
+    return <Redirect to={page.getUrl('/404')} />;
   }
 
   const [{ brand, description, pid, sale_price: sale, price, title, thumb_image: thumbnail }] = results.response.docs;
