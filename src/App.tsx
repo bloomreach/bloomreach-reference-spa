@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2020-2021 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,7 +138,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
                 <BrComponent />
               </Col>
               <Col lg="3" xl="2" className="text-center text-lg-right py-lg-2">
-                &copy; Bloomreach 2020
+                &copy; Bloomreach 2021
               </Col>
             </Row>
           </Container>
