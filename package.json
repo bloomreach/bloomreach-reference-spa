@@ -4,8 +4,8 @@
   "version": "0.1.2",
   "private": true,
   "dependencies": {
-    "@bloomreach/react-sdk": "^0.1.0-saas",
-    "@bloomreach/spa-sdk": "^0.1.0-saas",
+    "@bloomreach/react-sdk": "^0.2.0-saas",
+    "@bloomreach/spa-sdk": "^0.2.0-saas",
     "@fortawesome/fontawesome-svg-core": "^1.2",
     "@fortawesome/free-solid-svg-icons": "^5.15",
     "@fortawesome/react-fontawesome": "^0.1",
