@@ -22,6 +22,7 @@ import { BrComponent, BrPageContext, BrPage } from '@bloomreach/react-sdk';
 
 import {
   BannerCollection,
+  BrPixel,
   Content,
   CtaBanner,
   Link,
@@ -86,6 +87,15 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
                     srcSet={`${process.env.PUBLIC_URL}/logo-sm.png 1x, ${process.env.PUBLIC_URL}/logo-sm@2x.png 2x`}
                     height="30"
                     className="d-block d-sm-none"
+                  />
+
+                  <BrPixel
+                    accountId="6413"
+                    domainKey="pacifichome"
+                    page={page!}
+                    pageType="search"
+                    pageLabels="bloomreach,commerce,spa"
+                    type="pageview"
                   />
                 </Navbar.Brand>
               )}
