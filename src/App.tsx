@@ -39,6 +39,7 @@ import {
   Video,
 } from './components';
 import styles from './App.module.scss';
+import { CommerceContextProvider } from './CommerceContext';
 
 export default function App({ location }: RouteComponentProps): React.ReactElement {
   const configuration = {
@@ -66,84 +67,84 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
 
   return (
     <BrPage configuration={configuration} mapping={mapping}>
-      <header>
-        <Navbar bg="light" expand="lg" sticky="top" className="py-2 py-lg-3">
-          <Container className="justify-content-start px-sm-3">
-            <BrPageContext.Consumer>
-              {(page) => (
-                <Navbar.Brand as={Link} href={page?.getUrl('/')} title="Pacific Nuts & Bolts">
-                  <Image
-                    alt="Pacific Nuts & Bolts"
-                    src={`${process.env.PUBLIC_URL}/logo.png`}
-                    srcSet={`${process.env.PUBLIC_URL}/logo.png 1x, ${process.env.PUBLIC_URL}/logo@2x.png 2x`}
-                    height="30"
-                    className="d-none d-sm-block"
-                  />
+      <CommerceContextProvider>
+        <header>
+          <Navbar bg="light" expand="lg" sticky="top" className="py-2 py-lg-3">
+            <Container className="justify-content-start px-sm-3">
+              <BrPageContext.Consumer>
+                {(page) => (
+                  <Navbar.Brand as={Link} href={page?.getUrl('/')} title="Pacific Nuts & Bolts">
+                    <Image
+                      alt="Pacific Nuts & Bolts"
+                      src={`${process.env.PUBLIC_URL}/logo.png`}
+                      srcSet={`${process.env.PUBLIC_URL}/logo.png 1x, ${process.env.PUBLIC_URL}/logo@2x.png 2x`}
+                      height="30"
+                      className="d-none d-sm-block"
+                    />
 
-                  <Image
-                    alt="Pacific Nuts & Bolts"
-                    src={`${process.env.PUBLIC_URL}/logo-sm.png`}
-                    srcSet={`${process.env.PUBLIC_URL}/logo-sm.png 1x, ${process.env.PUBLIC_URL}/logo-sm@2x.png 2x`}
-                    height="30"
-                    className="d-block d-sm-none"
-                  />
-                </Navbar.Brand>
-              )}
-            </BrPageContext.Consumer>
+                    <Image
+                      alt="Pacific Nuts & Bolts"
+                      src={`${process.env.PUBLIC_URL}/logo-sm.png`}
+                      srcSet={`${process.env.PUBLIC_URL}/logo-sm.png 1x, ${process.env.PUBLIC_URL}/logo-sm@2x.png 2x`}
+                      height="30"
+                      className="d-block d-sm-none"
+                    />
+                  </Navbar.Brand>
+                )}
+              </BrPageContext.Consumer>
 
-            <BrComponent path="header">
-              <div className={`${styles.navbar__container} order-lg-2 mr-3 mr-lg-0`}>
-                <BrComponent />
-              </div>
-            </BrComponent>
-
-            <Navbar.Toggle className="ml-auto" />
-            <Navbar.Collapse className="order-lg-1 mr-lg-3">
-              <BrComponent path="menu">
-                <Menu />
+              <BrComponent path="header">
+                <div className={`${styles.navbar__container} order-lg-2 mr-3 mr-lg-0`}>
+                  <BrComponent />
+                </div>
               </BrComponent>
-            </Navbar.Collapse>
+
+              <Navbar.Toggle className="ml-auto" />
+              <Navbar.Collapse className="order-lg-1 mr-lg-3">
+                <BrComponent path="menu">
+                  <Menu />
+                </BrComponent>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
+        </header>
+        <BrComponent path="top">
+          <Container as="section" fluid>
+            <BrComponent />
           </Container>
-        </Navbar>
-      </header>
-      <BrComponent path="top">
-        <Container as="section" fluid>
-          <BrComponent />
-        </Container>
-      </BrComponent>
-      <Container as="section" className="flex-fill pt-4">
-        <Row className="flex-lg-nowrap">
-          <BrComponent path="main">
-            <Col xs="auto" className="flex-fill">
-              <BrComponent />
-            </Col>
-          </BrComponent>
-          <BrComponent path="right">
-            <Col lg="4" xl="3">
-              <BrComponent />
-            </Col>
-          </BrComponent>
-        </Row>
-      </Container>
-      <BrComponent path="bottom">
-        <Container as="section" fluid>
-          <BrComponent />
-        </Container>
-      </BrComponent>
-      <BrComponent path="footer">
-        <footer className="bg-secondary text-light py-3">
-          <Container>
-            <Row>
-              <Col lg="9" xl="10">
+        </BrComponent>
+        <Container as="section" className="flex-fill pt-4">
+          <Row className="flex-lg-nowrap">
+            <BrComponent path="main">
+              <Col xs="auto" className="flex-fill">
                 <BrComponent />
               </Col>
               <Col lg="3" xl="2" className="text-center text-lg-right py-lg-2">
                 &copy; Bloomreach 2021
               </Col>
-            </Row>
+            </BrComponent>
+          </Row>
+        </Container>
+        <BrComponent path="bottom">
+          <Container as="section" fluid>
+            <BrComponent />
           </Container>
-        </footer>
-      </BrComponent>
+        </BrComponent>
+        <BrComponent path="footer">
+          <footer className="bg-secondary text-light py-3">
+            <Container>
+              <Row>
+                <Col lg="9" xl="10">
+                  <BrComponent />
+                </Col>
+                <Col lg="3" xl="2" className="text-center text-lg-right py-lg-2">
+                  &copy; Bloomreach 2020
+                </Col>
+              </Row>
+            </Container>
+          </footer>
+        </BrComponent>
+      </CommerceContextProvider>
     </BrPage>
   );
 }

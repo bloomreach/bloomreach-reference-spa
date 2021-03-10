@@ -4,6 +4,7 @@
   "version": "0.3.0-saas",
   "private": true,
   "dependencies": {
+    "@bloomreach/connector-components-react": "^0.2.0-saas",
     "@bloomreach/react-sdk": "^0.3.0-saas",
     "@bloomreach/spa-sdk": "^0.3.0-saas",
     "@fortawesome/fontawesome-svg-core": "^1.2",

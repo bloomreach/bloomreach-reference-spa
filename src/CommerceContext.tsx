@@ -1,0 +1,72 @@
+/*
+ * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import React from 'react';
+import { CommerceConnectorConsumer, CommerceConnectorProvider } from '@bloomreach/connector-components-react';
+import { loadCommerceConfig } from './utils';
+
+export interface CommerceConfig {
+  graphqlServiceUrl: string;
+  connector: string;
+  smDomainKey?: string;
+  smViewId?: string;
+  smCatalogViews?: string;
+}
+
+interface CommerceContextProps {
+  connector?: string;
+  smConnector?: string;
+  smDomainKey?: string;
+  smViewId?: string;
+  smCatalogViews?: string;
+  currentToken?: string;
+}
+
+export const CommerceContext = React.createContext<CommerceContextProps>({});
+export const CommerceContextConsumer = CommerceContext.Consumer;
+export function CommerceContextProvider({ children }: React.PropsWithChildren<unknown>): React.ReactElement {
+  const { connector, graphqlServiceUrl, smViewId, smDomainKey, smCatalogViews } = loadCommerceConfig();
+  const existingToken = ''; // TODO
+  console.log('[connector]:', connector);
+  console.log('[graphqlServiceUrl]:', graphqlServiceUrl);
+  console.log('[smViewId]:', smViewId);
+  console.log('[smDomainKey]:', smDomainKey);
+  console.log('[smCatalogViews]:', smCatalogViews);
+  return (
+    <CommerceConnectorProvider
+      connector={connector}
+      graphqlServiceUrl={graphqlServiceUrl}
+      existingToken={existingToken}
+    >
+      <CommerceConnectorConsumer>
+        {({ currentToken }) => (
+          <CommerceContext.Provider
+            value={{
+              connector,
+              smConnector: 'brsm',
+              smViewId,
+              smDomainKey,
+              smCatalogViews,
+              currentToken,
+            }}
+          >
+            {children}
+          </CommerceContext.Provider>
+        )}
+      </CommerceConnectorConsumer>
+    </CommerceConnectorProvider>
+  );
+}
