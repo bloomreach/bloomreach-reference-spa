@@ -40,7 +40,7 @@ import {
   Video,
 } from './components';
 import styles from './App.module.scss';
-import { CommerceContextProvider } from './CommerceContext';
+import { CommerceContextProvider, CommerceContextConsumer } from './CommerceContext';
 
 export default function App({ location }: RouteComponentProps): React.ReactElement {
   const configuration = {
@@ -91,14 +91,18 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
                       className="d-block d-sm-none"
                     />
 
-                    <BrPixel
-                      accountId="6413"
-                      domainKey="pacifichome"
-                      page={page!}
-                      pageType="search"
-                      pageLabels="bloomreach,commerce,spa"
-                      type="pageview"
-                    />
+                    <CommerceContextConsumer>
+                      {({ smAccountId, smDomainKey }) => (
+                        <BrPixel
+                          accountId={smAccountId ?? ''}
+                          domainKey={smDomainKey ?? ''}
+                          page={page!}
+                          pageType="search"
+                          pageLabels="pacific,nut,bolt,commerce"
+                          type="pageview"
+                        />
+                      )}
+                    </CommerceContextConsumer>
                   </Navbar.Brand>
                 )}
               </BrPageContext.Consumer>

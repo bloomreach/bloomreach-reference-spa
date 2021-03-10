@@ -21,6 +21,7 @@ import { loadCommerceConfig } from './utils';
 export interface CommerceConfig {
   graphqlServiceUrl: string;
   connector: string;
+  smAccountId?: string;
   smDomainKey?: string;
   smViewId?: string;
   smCatalogViews?: string;
@@ -29,6 +30,7 @@ export interface CommerceConfig {
 interface CommerceContextProps {
   connector?: string;
   smConnector?: string;
+  smAccountId?: string;
   smDomainKey?: string;
   smViewId?: string;
   smCatalogViews?: string;
@@ -38,11 +40,12 @@ interface CommerceContextProps {
 export const CommerceContext = React.createContext<CommerceContextProps>({});
 export const CommerceContextConsumer = CommerceContext.Consumer;
 export function CommerceContextProvider({ children }: React.PropsWithChildren<unknown>): React.ReactElement {
-  const { connector, graphqlServiceUrl, smViewId, smDomainKey, smCatalogViews } = loadCommerceConfig();
+  const { connector, graphqlServiceUrl, smViewId, smAccountId, smDomainKey, smCatalogViews } = loadCommerceConfig();
   const existingToken = ''; // TODO
   console.log('[connector]:', connector);
   console.log('[graphqlServiceUrl]:', graphqlServiceUrl);
   console.log('[smViewId]:', smViewId);
+  console.log('[smAccountId]:', smAccountId);
   console.log('[smDomainKey]:', smDomainKey);
   console.log('[smCatalogViews]:', smCatalogViews);
   return (
@@ -58,6 +61,7 @@ export function CommerceContextProvider({ children }: React.PropsWithChildren<un
               connector,
               smConnector: 'brsm',
               smViewId,
+              smAccountId,
               smDomainKey,
               smCatalogViews,
               currentToken,

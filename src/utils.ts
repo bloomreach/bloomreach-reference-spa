@@ -20,6 +20,7 @@ export function loadCommerceConfig(): CommerceConfig {
   const commerceConfig: CommerceConfig = {
     graphqlServiceUrl: process.env.REACT_APP_GRAPHQL_SERVICE_URL || 'http://localhost:4000',
     connector: process.env.REACT_APP_DEFAULT_CONNECTOR ?? '',
+    smAccountId: process.env.REACT_APP_DEFAULT_SM_ACCOUNT_ID,
     smDomainKey: process.env.REACT_APP_DEFAULT_SM_DOMAIN_KEY,
     smViewId: process.env.REACT_APP_DEFAULT_SM_VIEW_ID,
     smCatalogViews: process.env.REACT_APP_DEFAULT_SM_CATALOG_VIEWS,
