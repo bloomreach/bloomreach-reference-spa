@@ -37,6 +37,7 @@ import {
   ProductSearch,
   SearchBar,
   SingleBannerCarousel,
+  TitleAndText,
   Video,
 } from './components';
 import styles from './App.module.scss';
@@ -63,6 +64,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
     ProductSearch,
     SingleBannerCarousel,
     SearchBar,
+    TitleAndText,
     Video,
   };
 

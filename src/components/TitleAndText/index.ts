@@ -14,20 +14,4 @@
  * limitations under the License.
  */
 
-export * from './BannerCollection';
-export * from './BrPixel';
-export * from './Content';
-export * from './CtaBanner';
-export * from './Link';
-export * from './Images';
-export * from './Map';
-export * from './Menu';
-export * from './MultiBannerCarousel';
-export * from './Navigation';
-export * from './PageCatalog';
-export * from './Product';
-export * from './ProductGrid';
-export * from './SearchBar';
-export * from './SingleBannerCarousel';
-export * from './TitleAndText';
-export * from './Video';
+export { TitleAndText } from './TitleAndText';
