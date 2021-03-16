@@ -25,7 +25,7 @@ export function TitleAndText({ component, page }: BrProps<ContainerItem>): React
     return page.isPreview() ? <div /> : null;
   }
 
-  const { title, titlesize = 'H3', text, textalignment = 'left', style = 'style1' } = component.getParameters();
+  const { title, titlesize = 'H3', text, textalignment = 'center', style = 'style1' } = component.getParameters();
   const sectionStyle = styles[style];
 
   return (
