@@ -14,49 +14,48 @@
  * limitations under the License.
  */
 
+import {
+  FacetFieldFilterInput,
+  FacetResultFragment_fields as FacetField,
+} from '@bloomreach/connector-components-react';
 import React, { useRef } from 'react';
 import { Form } from 'react-bootstrap';
 
-interface Option {
-  count: number;
-  name: string;
-}
-
-type Filters = Record<string, Option[]>;
-type Values = Record<string, string[]>;
+import { notEmpty } from '../../utils';
 
 interface FiltersProps {
-  filters: Filters;
-  values: Values;
-  onChange?: (values: Values) => void;
+  filters: FacetField[];
+  values: FacetFieldFilterInput[];
+  onChange?: (values: FacetFieldFilterInput[]) => void;
 }
 
 export function Filters({ filters, values, onChange }: FiltersProps): React.ReactElement | null {
   const formRef = useRef<HTMLFormElement>(null);
 
+  const facetSelected = (facetId: string, optionId: string): boolean => {
+    return values.find((facet) => facet.id === facetId)?.values.includes(optionId) ?? false;
+  };
+
   const handleChange = (): void => {
     const data = new FormData(formRef?.current ?? undefined);
-    const newValues = [...data.keys()].reduce(
-      (result, filter) => Object.assign(result, { [filter]: data.getAll(filter) }),
-      {} as Values,
-    );
+    const newValues = [...data.keys()].map((facetId) => ({ id: facetId, values: data.getAll(facetId) as string[] }));
 
     onChange?.(newValues);
   };
 
   return (
     <Form ref={formRef} className="border rounded px-4 pt-1 pb-3 mb-4">
-      {Object.entries(filters).map(([filter, options]) => (
-        <React.Fragment key={filter}>
+      {filters.map(({ id: facetId, name: filter, values: options }) => (
+        <React.Fragment key={facetId}>
           <div className="h5 text-capitalize my-3">{filter}</div>
-          {options.map(({ count, name }) => (
-            <Form.Group key={name} className="mb-1">
+          {options.filter(notEmpty).map(({ id: optionId, count, name }) => (
+            <Form.Group key={optionId} className="mb-1">
               <Form.Check
-                name={filter}
-                value={name}
-                id={`${filter}-${name}`}
+                name={facetId}
+                value={optionId}
+                id={`${facetId}-${optionId}`}
                 label={`${name} (${count})`}
-                checked={values[filter]?.includes(name)}
+                checked={facetSelected(facetId, optionId)}
                 onChange={handleChange}
               />
             </Form.Group>

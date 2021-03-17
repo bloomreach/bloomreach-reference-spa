@@ -17,9 +17,16 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { Button, Col, Collapse, Row } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import { BrComponentContext, BrPageContext } from '@bloomreach/react-sdk';
+import { useCookies } from 'react-cookie';
+import { BrComponentContext } from '@bloomreach/react-sdk';
+import {
+  useProductGridSearch,
+  FacetFieldFilterInput,
+  useProductGridCategory,
+  useProductGridWidget,
+  CommonProductInputProps,
+} from '@bloomreach/connector-components-react';
 
-import { useSearch } from '../../hooks';
 import { Filters } from './Filters';
 import { FiltersPlaceholder } from './FiltersPlaceholder';
 import { Pagination } from './Pagination';
@@ -30,18 +37,24 @@ import { Stats } from './Stats';
 import { StatsPlaceholder } from './StatsPlaceholder';
 
 import styles from './ProductGrid.module.scss';
+import { CommerceContext } from '../../CommerceContext';
+import { notEmpty } from '../../utils';
+
+type SearchHookType = typeof useProductGridSearch | typeof useProductGridCategory | typeof useProductGridWidget;
+type ProductGridParamsType = Parameters<SearchHookType>[0];
 
 interface ProductGridProps {
   filters?: string[];
   limit: number;
   pagination?: boolean;
   params: Omit<
-    Parameters<typeof useSearch>[1],
-    'account_id' | 'domain_key' | 'fl' | 'fq' | 'rows' | 'sort' | 'start' | 'url'
+    ProductGridParamsType,
+    keyof CommonProductInputProps | 'facetFieldFilters' | 'pageSize' | 'sortFields' | 'connector' | 'brUid2' | 'offset'
   >;
   sorting?: boolean;
   stats?: boolean;
   title?: string | React.ReactElement;
+  useSearch: SearchHookType;
 }
 
 export function ProductGrid({
@@ -52,10 +65,21 @@ export function ProductGrid({
   sorting: isSorting,
   stats: isStats,
   title,
+  useSearch,
 }: ProductGridProps): React.ReactElement {
   const id = useContext(BrComponentContext)?.getId() ?? '';
-  const { smAccountId = '', smDomainKey, smEndpoint = '' } =
-    useContext(BrPageContext)?.getChannelParameters<ChannelParameters>() ?? {};
+  const {
+    smDomainKey,
+    smConnector,
+    smViewId,
+    smAccountId,
+    smAuthKey,
+    smCustomAttrFields,
+    smCustomVarAttrFields,
+    smCustomVarListPriceField,
+    smCustomVarPurchasePriceField,
+  } = useContext(CommerceContext);
+  const [cookies] = useCookies(['_br_uid_2']);
 
   const history = useHistory();
 
@@ -65,49 +89,66 @@ export function ProductGrid({
     return {
       page: Number(search.get(`${id}:page`) ?? 1),
       sorting: search.get(`${id}:sort`) ?? undefined,
-      filters: Object.fromEntries(
+      filters:
         allowedFilters
-          ?.map((filter) => [filter, search.getAll(`${id}:filter:${filter}`)])
-          .filter(([, values]) => values.length) ?? [],
-      ) as React.ComponentProps<typeof Filters>['values'],
+          ?.map((filter) => ({ id: filter, values: search.getAll(`${id}:filter:${filter}`) }))
+          .filter(({ values }) => values.length) ?? [],
     };
   }, [history.location.search, id, allowedFilters]);
 
-  const params = useMemo(
+  const params: ProductGridParamsType = useMemo(
     () => ({
       ...defaults,
-      account_id: smAccountId,
-      domain_key: smDomainKey,
-      fl: ['brand', 'pid', 'price', 'sale_price', 'title', 'thumb_image', 'url'],
-      fq: Object.entries(filters).map(
-        ([filter, values]) => `${filter}:${values.map((value) => `"${value}"`).join(' OR ')}`,
-      ),
-      rows: limit,
-      sort: sorting,
-      start: limit * (page - 1),
-      url: window.location.href,
+      smViewId,
+      smAccountId,
+      smAuthKey,
+      smDomainKey,
+      customAttrFields: smCustomAttrFields,
+      customVariantAttrFields: smCustomVarAttrFields,
+      customVariantListPriceField: smCustomVarListPriceField,
+      customVariantPurchasePriceField: smCustomVarPurchasePriceField,
+      facetFieldFilters: filters,
+      pageSize: limit,
+      sortFields: sorting,
+      connector: smConnector,
+      offset: limit * (page - 1),
+      brUid2: cookies._br_uid_2,
     }),
-    [defaults, filters, limit, page, smAccountId, smDomainKey, sorting],
+    [
+      cookies._br_uid_2,
+      defaults,
+      filters,
+      limit,
+      page,
+      smAccountId,
+      smAuthKey,
+      smConnector,
+      smCustomAttrFields,
+      smCustomVarAttrFields,
+      smCustomVarListPriceField,
+      smCustomVarPurchasePriceField,
+      smDomainKey,
+      smViewId,
+      sorting,
+    ],
   );
 
-  const [pageState, setPage] = useState(page);
+  const [pageState, setPageState] = useState(page);
   const [sortingState, setSorting] = useState(sorting);
-  const [filtersState, setFilters] = useState(filters);
+  const [filtersState, setFilters] = useState<FacetFieldFilterInput[]>(filters);
   const [filteringVisibility, toggleFiltering] = useState(false);
 
-  const [results, loading] = useSearch<ProductDocument>(smEndpoint, params);
+  const [onLoadMore, results, loading] = useSearch(params as any);
   const availableFilters = useMemo(
     () =>
-      Object.fromEntries(
-        allowedFilters
-          ?.map((facet) => [facet, results?.facet_counts.facet_fields[facet]])
-          .filter(([, values]) => values?.length) ?? [],
-      ),
+      results?.facetResult?.fields
+        .filter((facet) => facet && allowedFilters?.includes(facet.id) && facet.values?.length)
+        .filter(notEmpty),
     [allowedFilters, results],
   );
-  const isFiltering = !!allowedFilters?.length && (!results || Object.keys(availableFilters).length > 0);
+  const isFiltering = !!allowedFilters?.length && (!results?.items || !!availableFilters?.length);
 
-  useEffect(() => setPage(page), [page]);
+  useEffect(() => setPageState(page), [page]);
   useEffect(() => setSorting(sorting), [sorting]);
   useEffect(() => setFilters(filters), [filters]);
   useEffect(() => {
@@ -128,15 +169,22 @@ export function ProductGrid({
 
     allowedFilters?.forEach((filter) => search.delete(`${id}:filter:${filter}`));
 
-    Object.entries(filtersState).forEach(([filter, values]) =>
-      values.forEach((value) => search.append(`${id}:filter:${filter}`, value)),
+    filtersState.forEach(({ id: facetId, values }) =>
+      values.filter(notEmpty).forEach((value) => search.append(`${id}:filter:${facetId}`, value)),
     );
 
     if (current !== search.toString()) {
-      history.push({ search: `?${search.toString()}` });
+      const searchStr = search.toString() ? `?${search.toString()}` : '';
+      history.push({ search: searchStr });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowedFilters, filtersState, id, pageState, sortingState]);
+
+  const setPage = async (pageNum: number): Promise<void> => {
+    const offset = (pageNum - 1) * limit;
+    await onLoadMore(offset);
+    setPageState(pageNum);
+  };
 
   return (
     <div className={`${styles.grid} mw-container mx-auto`}>
@@ -145,12 +193,8 @@ export function ProductGrid({
         <Row className="align-items-center">
           <Col sm="auto" className="flex-fill">
             {isStats &&
-              (results ? (
-                <Stats
-                  offset={results.response.start}
-                  size={results.response.docs.length}
-                  total={results.response.numFound}
-                />
+              (results?.items ? (
+                <Stats offset={results.offset} size={results.count} total={results.total} />
               ) : (
                 <StatsPlaceholder />
               ))}
@@ -179,9 +223,9 @@ export function ProductGrid({
       {isFiltering && (
         <Collapse in={filteringVisibility}>
           <div className={`${styles.grid__facets} d-lg-block`}>
-            {results ? (
+            {results?.items ? (
               <Filters
-                filters={availableFilters}
+                filters={availableFilters!}
                 values={filters}
                 onChange={(newFilters) => {
                   setPage(1);
@@ -195,14 +239,13 @@ export function ProductGrid({
         </Collapse>
       )}
       <div className={styles.grid__products}>
-        {!loading && results ? <Products products={results.response.docs} /> : <ProductsPlaceholder size={limit} />}
+        {!loading && results?.items ? (
+          <Products products={results.items.filter(notEmpty)} />
+        ) : (
+          <ProductsPlaceholder size={limit} />
+        )}
         {isPagination && results && (
-          <Pagination
-            limit={limit}
-            offset={results.response.start}
-            total={results.response.numFound}
-            onChange={setPage}
-          />
+          <Pagination limit={limit} offset={results.offset} total={results.total} onChange={setPage} />
         )}
       </div>
     </div>

@@ -18,6 +18,7 @@ import React, { useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem } from '@bloomreach/spa-sdk';
+import { ProductGridSearchInputProps, useProductGridSearch } from '@bloomreach/connector-components-react';
 
 import { ProductGrid } from './ProductGrid';
 
@@ -38,14 +39,7 @@ export function ProductSearch({ component, page }: BrProps<ContainerItem>): Reac
     return search.get('q') ?? '';
   }, [history.location.search]);
 
-  const params = useMemo(
-    () => ({
-      q: query,
-      request_type: 'search',
-      search_type: 'keyword',
-    }),
-    [query],
-  );
+  const params: ProductGridSearchInputProps = useMemo(() => ({ searchText: query }), [query]);
 
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
@@ -64,6 +58,7 @@ export function ProductSearch({ component, page }: BrProps<ContainerItem>): Reac
           <span className="font-weight-bold text-capitalize">{query}</span>
         </>
       }
+      useSearch={useProductGridSearch}
     />
   );
 }

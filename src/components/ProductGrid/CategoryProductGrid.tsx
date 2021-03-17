@@ -17,6 +17,7 @@
 import React, { useMemo } from 'react';
 import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem } from '@bloomreach/spa-sdk';
+import { ProductGridCategoryInputProps, useProductGridCategory } from '@bloomreach/connector-components-react';
 
 import { ProductGrid } from './ProductGrid';
 
@@ -41,19 +42,8 @@ export function CategoryProductGrid({ component, page }: BrProps<ContainerItem>)
     sorting,
     title,
     total,
-    view,
-    widget,
   } = component.getParameters<ProductGridParameters>();
-  const params = useMemo(
-    () => ({
-      q: category,
-      request_type: 'search',
-      search_type: 'category',
-      view_id: view,
-      widget_id: widget,
-    }),
-    [category, view, widget],
-  );
+  const params: ProductGridCategoryInputProps = useMemo(() => ({ categoryId: category }), [category]);
 
   const filters = useMemo(
     () =>
@@ -77,6 +67,7 @@ export function CategoryProductGrid({ component, page }: BrProps<ContainerItem>)
       sorting={sorting}
       stats={total}
       title={title}
+      useSearch={useProductGridCategory}
     />
   );
 }
