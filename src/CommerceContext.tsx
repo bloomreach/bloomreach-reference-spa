@@ -22,32 +22,48 @@ export interface CommerceConfig {
   graphqlServiceUrl: string;
   connector: string;
   smAccountId?: string;
+  smAuthKey?: string;
   smDomainKey?: string;
   smViewId?: string;
   smCatalogViews?: string;
+  smCustomAttrFields?: string[];
+  smCustomVarAttrFields?: string[];
+  smCustomVarListPriceField?: string;
+  smCustomVarPurchasePriceField?: string;
 }
 
 interface CommerceContextProps {
   connector?: string;
   smConnector?: string;
   smAccountId?: string;
+  smAuthKey?: string;
   smDomainKey?: string;
   smViewId?: string;
   smCatalogViews?: string;
+  smCustomAttrFields?: string[];
+  smCustomVarAttrFields?: string[];
+  smCustomVarListPriceField?: string;
+  smCustomVarPurchasePriceField?: string;
   currentToken?: string;
 }
 
 export const CommerceContext = React.createContext<CommerceContextProps>({});
 export const CommerceContextConsumer = CommerceContext.Consumer;
 export function CommerceContextProvider({ children }: React.PropsWithChildren<unknown>): React.ReactElement {
-  const { connector, graphqlServiceUrl, smViewId, smAccountId, smDomainKey, smCatalogViews } = loadCommerceConfig();
+  const {
+    connector,
+    graphqlServiceUrl,
+    smViewId,
+    smAccountId,
+    smAuthKey,
+    smDomainKey,
+    smCatalogViews,
+    smCustomAttrFields,
+    smCustomVarAttrFields,
+    smCustomVarListPriceField,
+    smCustomVarPurchasePriceField,
+  } = loadCommerceConfig();
   const existingToken = ''; // TODO
-  console.log('[connector]:', connector);
-  console.log('[graphqlServiceUrl]:', graphqlServiceUrl);
-  console.log('[smViewId]:', smViewId);
-  console.log('[smAccountId]:', smAccountId);
-  console.log('[smDomainKey]:', smDomainKey);
-  console.log('[smCatalogViews]:', smCatalogViews);
   return (
     <CommerceConnectorProvider
       connector={connector}
@@ -62,8 +78,13 @@ export function CommerceContextProvider({ children }: React.PropsWithChildren<un
               smConnector: 'brsm',
               smViewId,
               smAccountId,
+              smAuthKey,
               smDomainKey,
               smCatalogViews,
+              smCustomAttrFields,
+              smCustomVarAttrFields,
+              smCustomVarListPriceField,
+              smCustomVarPurchasePriceField,
               currentToken,
             }}
           >

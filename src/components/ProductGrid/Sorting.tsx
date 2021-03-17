@@ -35,8 +35,8 @@ export function Sorting({ id, onChange, value = '' }: SortingProps): React.React
         <Form.Label className="text-muted mr-2 mb-0">Sort by</Form.Label>
         <Form.Control ref={selectRef} as="select" size="sm" value={value} onChange={handleChange} className="w-auto">
           <option value="">Default</option>
-          <option value="sale_price asc">Price</option>
-          <option value="title asc">Name</option>
+          <option value="purchasePrice">Price</option>
+          <option value="displayName">Name</option>
         </Form.Control>
       </Form.Group>
     </Form>

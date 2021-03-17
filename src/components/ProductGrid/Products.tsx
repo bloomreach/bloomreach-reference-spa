@@ -18,11 +18,12 @@ import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { ItemFragment } from '@bloomreach/connector-components-react';
 
 import { Product } from './Product';
 
 interface ProductsProps {
-  products: ProductDocument[];
+  products: ItemFragment[];
 }
 
 export function Products({ products }: ProductsProps): React.ReactElement | null {
@@ -40,7 +41,7 @@ export function Products({ products }: ProductsProps): React.ReactElement | null
   return (
     <Row>
       {products.map((product) => (
-        <Col key={product.pid} as={Product} sm="4" product={product} className="mb-4" />
+        <Col key={product.itemId.id} as={Product} sm="4" product={product} className="mb-4" />
       ))}
     </Row>
   );

@@ -4,7 +4,7 @@
   "version": "0.3.0-saas",
   "private": true,
   "dependencies": {
-    "@bloomreach/connector-components-react": "^0.2.0-saas",
+    "@bloomreach/connector-components-react": "^0.3.0-saas",
     "@bloomreach/react-sdk": "^0.3.0-saas",
     "@bloomreach/spa-sdk": "^0.3.0-saas",
     "@fortawesome/fontawesome-svg-core": "^1.2",
@@ -14,6 +14,7 @@
     "bootstrap": "^4.5",
     "react": "^16.14",
     "react-bootstrap": "^1.4",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.14",
     "react-google-maps": "^9.4",
     "react-player": "^2.6",
@@ -50,7 +51,15 @@
     ],
     "rules": {
       "react/jsx-props-no-spreading": "off",
-      "react/no-danger": "off"
+      "react/no-danger": "off",
+      "no-underscore-dangle": [
+        "error",
+        {
+          "allow": [
+            "_br_uid_2"
+          ]
+        }
+      ]
     }
   },
   "browserslist": {
