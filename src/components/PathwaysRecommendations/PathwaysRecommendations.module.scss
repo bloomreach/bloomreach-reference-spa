@@ -14,4 +14,25 @@
  * limitations under the License.
  */
 
-export { PathwaysRecommendations } from './PathwaysRecommendations';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.grid {
+  @include media-breakpoint-up(lg) {
+    display: grid;
+    grid-auto-columns: 3fr;
+    grid-auto-rows: 1fr;
+    grid-column-gap: $grid-gutter-width;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+
+    &__header {
+      grid-row: 1;
+    }
+
+    &__products {
+      grid-row: 2;
+    }
+  }
+}

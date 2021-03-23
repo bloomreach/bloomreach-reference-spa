@@ -14,15 +14,126 @@
  * limitations under the License.
  */
 
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
+import { useCookies } from 'react-cookie';
+import { Alert } from 'react-bootstrap';
+
 import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem } from '@bloomreach/spa-sdk';
+import { ProductGridWidgetInputProps, useProductGridWidget } from '@bloomreach/connector-components-react';
+
+import { CommerceContext } from '../../CommerceContext';
+import { Products } from './Products';
+import { notEmpty } from '../../utils';
+
+import styles from './PathwaysRecommendations.module.scss';
+import { ProductsPlaceholder } from '../ProductGrid/ProductsPlaceholder';
+
+export interface PathwaysRecommendationsParameters {
+  category?: string;
+  keyword?: string;
+  limit: number;
+  pids?: string;
+  showDescription: boolean;
+  showPid: boolean;
+  showPrice: boolean;
+  showTitle: boolean;
+  title?: string;
+  widgetId: string;
+  widgetAlgo: string;
+}
 
 export function PathwaysRecommendations({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
+  const { category, keyword, limit, pids, title, widgetId, widgetAlgo } = component.getParameters<
+    PathwaysRecommendationsParameters
+  >();
+  const {
+    smDomainKey,
+    smViewId,
+    smAccountId,
+    smAuthKey,
+    smCatalogViews,
+    smCustomAttrFields,
+    smCustomVarAttrFields,
+    smCustomVarListPriceField,
+    smCustomVarPurchasePriceField,
+  } = useContext(CommerceContext);
+  const [cookies] = useCookies(['_br_uid_2']);
+  const params: ProductGridWidgetInputProps = useMemo(() => {
+    const widgetType = widgetAlgo.split('.')[0];
+
+    return {
+      smAccountId,
+      smAuthKey,
+      smCatalogViews,
+      smDomainKey,
+      smViewId,
+      widgetId,
+      widgetType,
+      brUid2: cookies._br_uid_2,
+      searchText: keyword,
+      categoryId: category,
+      pageSize: limit,
+      productIds: pids?.split(','),
+      customAttrFields: smCustomAttrFields,
+      customVariantAttrFields: smCustomVarAttrFields,
+      customVariantListPriceField: smCustomVarListPriceField,
+      customVariantPurchasePriceField: smCustomVarPurchasePriceField,
+    };
+  }, [
+    category,
+    cookies._br_uid_2,
+    keyword,
+    limit,
+    pids,
+    smAccountId,
+    smAuthKey,
+    smCatalogViews,
+    smCustomAttrFields,
+    smCustomVarAttrFields,
+    smCustomVarListPriceField,
+    smCustomVarPurchasePriceField,
+    smDomainKey,
+    smViewId,
+    widgetAlgo,
+    widgetId,
+  ]);
+  const [, results, loading, apolloError] = useProductGridWidget(params);
+  const error = useMemo(() => {
+    if (apolloError) {
+      return apolloError.message;
+    }
+    switch (params.widgetType) {
+      case 'item':
+        return !pids ? 'Widget configured incorrectly: please add Product IDs' : undefined;
+      case 'category':
+        return !category ? 'Widget configured incorrectly: please add a Category ID' : undefined;
+      case 'keyword':
+      case 'personalized':
+        return !keyword ? 'Widget configured incorrectly: please add a Keyword' : undefined;
+      default:
+        return undefined;
+    }
+  }, [apolloError, category, keyword, params.widgetType, pids]);
 
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
   }
 
-  return <div>&nbsp;</div>;
+  if (error) {
+    return <Alert variant="danger">{error}</Alert>;
+  }
+
+  return (
+    <div className={`${styles.grid} mw-container mx-auto`}>
+      <div className={styles.grid__header}>{title && <h4 className="mb-4">{title}</h4>}</div>
+      <div className={styles.grid__products}>
+        {!loading && results?.items ? (
+          <Products products={results.items.filter(notEmpty)} />
+        ) : (
+          <ProductsPlaceholder size={limit} />
+        )}
+      </div>
+    </div>
+  );
 }

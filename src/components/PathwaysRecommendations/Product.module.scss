@@ -14,4 +14,19 @@
  * limitations under the License.
  */
 
-export { PathwaysRecommendations } from './PathwaysRecommendations';
+.product {
+  &__image-container {
+    position: relative;
+
+    padding-top: 75%;
+    height: 0;
+  }
+
+  &__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+  }
+}
