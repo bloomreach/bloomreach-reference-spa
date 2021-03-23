@@ -51,8 +51,14 @@ export function SingleBannerCarousel({ component, page }: BrProps): React.ReactE
 
   return (
     <Carousel as={Row} controls={documents.length > 1} indicators={documents.length > 1} interval={interval}>
-      {documents.map((document) => (
-        <Carousel.Item key={document.getId()} as={Banner} className={styles.carousel__banner} document={document} />
+      {documents.map((document, index) => (
+        <Carousel.Item
+          key={document.getId()}
+          as={Banner}
+          className={styles.carousel__banner}
+          document={document}
+          parameterName={`document${index + 1}`}
+        />
       ))}
     </Carousel>
   );
