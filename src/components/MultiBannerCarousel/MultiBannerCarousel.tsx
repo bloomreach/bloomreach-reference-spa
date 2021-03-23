@@ -74,12 +74,18 @@ export function MultiBannerCarousel({ component, page }: BrProps): React.ReactEl
         nextIcon={<FontAwesomeIcon icon={faChevronRight} size="2x" className="text-secondary" />}
         className={styles.carousel}
       >
-        {slides.map((slide, index) => (
+        {slides.map((slide, index1) => (
           // eslint-disable-next-line react/no-array-index-key
-          <Carousel.Item key={index}>
+          <Carousel.Item key={index1}>
             <Row>
-              {slide.map((document) => (
-                <Col key={document.getId()} as={Banner} xs={12 / DOCUMENTS_PER_SLIDE} document={document} />
+              {slide.map((document, index2) => (
+                <Col
+                  key={document.getId()}
+                  as={Banner}
+                  xs={12 / DOCUMENTS_PER_SLIDE}
+                  document={document}
+                  parameterName={`document${DOCUMENTS_PER_SLIDE * index1 + index2 + 1}`}
+                />
               ))}
             </Row>
           </Carousel.Item>
