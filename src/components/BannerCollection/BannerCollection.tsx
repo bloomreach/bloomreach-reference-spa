@@ -55,8 +55,16 @@ export function BannerCollection({ component, page }: BrProps): React.ReactEleme
     <div className="mw-container mx-auto my-4">
       {title && <h3 className="mb-4">{title}</h3>}
       <Row>
-        {documents.map((document) => (
-          <Col key={document.getId()} as={Banner} xs="6" md="4" lg="3" document={document} />
+        {documents.map((document, index) => (
+          <Col
+            key={document.getId()}
+            as={Banner}
+            xs="6"
+            md="4"
+            lg="3"
+            document={document}
+            parameterName={`document${index + 1}`}
+          />
         ))}
       </Row>
     </div>
