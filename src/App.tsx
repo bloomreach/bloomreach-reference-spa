@@ -154,7 +154,7 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
                   <BrComponent />
                 </Col>
                 <Col lg="3" xl="2" className="text-center text-lg-right py-lg-2">
-                  &copy; Bloomreach 2020
+                  &copy; Bloomreach 2021
                 </Col>
               </Row>
             </Container>
