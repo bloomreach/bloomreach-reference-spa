@@ -49,3 +49,63 @@
     }
   }
 }
+
+.autocompleteItems {
+  position: absolute;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 90vh;
+  background-color: #fff;
+}
+.autocompleteItems {
+  div,button,h6 {
+    padding: 5px 20px 5px 20px;
+    background-color: #fff;
+    color: #212529;
+    width: 100%;
+    border: 0px;
+    text-align: left;
+    display: flex;
+  }
+  button:hover {
+    cursor: pointer;
+    color: #212529;
+    background: #fff;
+  }
+  a:hover {
+    text-decoration: none;
+  }
+  img {
+    max-width: 48px;
+    height: auto;
+    display: flex;
+    margin-right: 10px;
+    object-fit: contain;
+    align-self: flex-start;
+    color: #fff;
+  }
+  hr {
+    margin: 8px 0px 0px;
+    border-color: #E9ECEF;
+    background: #fff;
+  }
+  h5 {
+    font-size: 14px;
+    line-height: 16px;
+    color: #25292F;
+    flex: 1 1 auto;
+  }
+  h6 {
+    font-family: Helvetica Neue;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    color: #6C757D;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    margin: 0px;
+  }
+}
