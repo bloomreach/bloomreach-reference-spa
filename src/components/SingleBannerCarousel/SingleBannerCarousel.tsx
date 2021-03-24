@@ -17,7 +17,7 @@
 import React from 'react';
 import { Carousel, Row } from 'react-bootstrap';
 import { Document, Reference } from '@bloomreach/spa-sdk';
-import { BrProps } from '@bloomreach/react-sdk';
+import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
 
 import { Banner } from './Banner';
 import styles from './SingleBannerCarousel.module.scss';
@@ -46,7 +46,17 @@ export function SingleBannerCarousel({ component, page }: BrProps): React.ReactE
     .filter<Document>(Boolean as any);
 
   if (!documents.length) {
-    return page.isPreview() ? <div /> : null;
+    return page.isPreview() ? (
+      <div className="has-edit-button">
+        <BrManageContentButton
+          documentTemplateQuery="new-banner-document"
+          folderTemplateQuery="new-banner-folder"
+          parameter="document1"
+          root="brxsaas/banners"
+          relative
+        />
+      </div>
+    ) : null;
   }
 
   return (

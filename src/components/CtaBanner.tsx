@@ -30,7 +30,17 @@ export function CtaBanner({ component, page }: BrProps): React.ReactElement | nu
   const document = documentRef && page.getContent<Document>(documentRef);
 
   if (!document) {
-    return page.isPreview() ? <div /> : null;
+    return page.isPreview() ? (
+      <div className="has-edit-button">
+        <BrManageContentButton
+          documentTemplateQuery="new-banner-document"
+          folderTemplateQuery="new-banner-folder"
+          parameter="document"
+          root="brxsaas/banners"
+          relative
+        />
+      </div>
+    ) : null;
   }
 
   const { content, cta, link: linkRef, title } = document.getData<BannerDocument>();

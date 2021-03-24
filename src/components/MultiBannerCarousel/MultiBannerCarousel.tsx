@@ -19,7 +19,7 @@ import { Carousel, Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Document, Reference } from '@bloomreach/spa-sdk';
-import { BrProps } from '@bloomreach/react-sdk';
+import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
 
 import { Banner } from './Banner';
 import styles from './MultiBannerCarousel.module.scss';
@@ -60,7 +60,17 @@ export function MultiBannerCarousel({ component, page }: BrProps): React.ReactEl
   }
 
   if (!slides.length) {
-    return page.isPreview() ? <div /> : null;
+    return page.isPreview() ? (
+      <div className="has-edit-button">
+        <BrManageContentButton
+          documentTemplateQuery="new-banner-document"
+          folderTemplateQuery="new-banner-folder"
+          parameter="document1"
+          root="brxsaas/banners"
+          relative
+        />
+      </div>
+    ) : null;
   }
 
   return (
