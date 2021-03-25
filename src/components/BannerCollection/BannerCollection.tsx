@@ -16,9 +16,9 @@
 
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { Document, Reference } from '@bloomreach/spa-sdk';
+import { Reference } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
-
+import { getEffectiveMultipleDocumentParameters } from '../param-utils';
 import { Banner } from './Banner';
 
 const MAX_DOCUMENTS = 8;
@@ -41,13 +41,9 @@ interface BannerCollectionParameters {
 export function BannerCollection({ component, page }: BrProps): React.ReactElement | null {
   const { title } = component.getParameters<BannerCollectionParameters>();
   const models = component.getModels<BannerCollectionModels>();
-  const documents = [...Array(MAX_DOCUMENTS).keys()]
-    .map((n) => `document${n + 1}` as keyof BannerCollectionModels)
-    .map((model) => models[model])
-    .map((reference) => reference && page.getContent<Document>(reference))
-    .filter<Document>(Boolean as any);
+  const docParams = getEffectiveMultipleDocumentParameters(page, models, MAX_DOCUMENTS);
 
-  if (!documents.length) {
+  if (!docParams.length) {
     return page.isPreview() ? (
       <div className="has-edit-button">
         <BrManageContentButton
@@ -65,15 +61,15 @@ export function BannerCollection({ component, page }: BrProps): React.ReactEleme
     <div className="mw-container mx-auto my-4">
       {title && <h3 className="mb-4">{title}</h3>}
       <Row>
-        {documents.map((document, index) => (
+        {docParams.map((docParam) => (
           <Col
-            key={document.getId()}
+            key={docParam.document.getId()}
             as={Banner}
             xs="6"
             md="4"
             lg="3"
-            document={document}
-            parameterName={`document${index + 1}`}
+            document={docParam.document}
+            parameterName={docParam.parameterName}
           />
         ))}
       </Row>

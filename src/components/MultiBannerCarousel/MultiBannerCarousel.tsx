@@ -18,8 +18,9 @@ import React from 'react';
 import { Carousel, Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { Document, Reference } from '@bloomreach/spa-sdk';
+import { Reference } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
+import { getEffectiveMultipleDocumentParameters } from '../param-utils';
 
 import { Banner } from './Banner';
 import styles from './MultiBannerCarousel.module.scss';
@@ -48,15 +49,11 @@ interface MultiBannerCarouselParameters {
 export function MultiBannerCarousel({ component, page }: BrProps): React.ReactElement | null {
   const { interval = 0, title } = component.getParameters<MultiBannerCarouselParameters>();
   const models = component.getModels<MultiBannerCarouselModels>();
-  const documents = [...Array(MAX_DOCUMENTS).keys()]
-    .map((n) => `document${n + 1}` as keyof MultiBannerCarouselModels)
-    .map((model) => models[model])
-    .map((reference) => reference && page.getContent<Document>(reference))
-    .filter<Document>(Boolean as any);
+  const docParams = getEffectiveMultipleDocumentParameters(page, models, MAX_DOCUMENTS);
   const slides = [];
 
-  while (documents.length) {
-    slides.push(documents.splice(0, DOCUMENTS_PER_SLIDE));
+  while (docParams.length) {
+    slides.push(docParams.splice(0, DOCUMENTS_PER_SLIDE));
   }
 
   if (!slides.length) {
@@ -84,17 +81,17 @@ export function MultiBannerCarousel({ component, page }: BrProps): React.ReactEl
         nextIcon={<FontAwesomeIcon icon={faChevronRight} size="2x" className="text-secondary" />}
         className={styles.carousel}
       >
-        {slides.map((slide, index1) => (
+        {slides.map((slide, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <Carousel.Item key={index1}>
+          <Carousel.Item key={index}>
             <Row>
-              {slide.map((document, index2) => (
+              {slide.map((docParam) => (
                 <Col
-                  key={document.getId()}
+                  key={docParam.document.getId()}
                   as={Banner}
                   xs={12 / DOCUMENTS_PER_SLIDE}
-                  document={document}
-                  parameterName={`document${DOCUMENTS_PER_SLIDE * index1 + index2 + 1}`}
+                  document={docParam.document}
+                  parameterName={docParam.parameterName}
                 />
               ))}
             </Row>
