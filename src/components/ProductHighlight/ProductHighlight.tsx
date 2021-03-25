@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useContext } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { useCookies } from 'react-cookie';
 import { BrProps } from '@bloomreach/react-sdk';
+import { useProductDetail } from '@bloomreach/connector-components-react';
+import { CommerceContext } from '../../CommerceContext';
 
-const MAX_PRODUCTS = 4;
+import { ProductHighlightItem } from './ProductHighlightItem';
 
 interface ProductHighlightParameters {
   title?: string;
@@ -32,8 +36,50 @@ interface ProductHighlightParameters {
 }
 
 export function ProductHighlight({ component, page }: BrProps): React.ReactElement | null {
+  const {
+    smDomainKey,
+    smConnector,
+    smViewId,
+    smAccountId,
+    smAuthKey,
+    smCustomAttrFields,
+    smCustomVarAttrFields,
+  } = useContext(CommerceContext);
+  const [cookies] = useCookies(['_br_uid_2']);
   const { title, id1, code1, id2, code2, id3, code3, id4, code4 } = component.getParameters<
     ProductHighlightParameters
   >();
-  return page.isPreview() ? <div /> : null;
+
+  const baseProps = {
+    // smAccountId,
+    // smDomainKey,
+    // smAuthKey,
+    smViewId,
+    brUid2: cookies._br_uid_2,
+    connector: smConnector,
+    // customAttrFields: smCustomAttrFields,
+    // customVariantAttrFields: smCustomVarAttrFields,
+  };
+
+  const [item1] = useProductDetail({ ...baseProps, itemId: { id: id1, code: code1 } });
+  const [item2] = useProductDetail({ ...baseProps, itemId: { id: id2, code: code2 } });
+  const [item3] = useProductDetail({ ...baseProps, itemId: { id: id3, code: code3 } });
+  const [item4] = useProductDetail({ ...baseProps, itemId: { id: id4, code: code4 } });
+
+  const items = [item1, item2, item3, item4].filter((item) => item?.itemId?.id);
+
+  if (!items.length) {
+    return page.isPreview() ? <div /> : null;
+  }
+
+  return (
+    <div className="mw-container mx-auto my-4">
+      {title && <h3 className="mb-4">{title}</h3>}
+      <Row>
+        {items.map((item) => (
+          <Col as={ProductHighlightItem} xs="6" md="4" lg="3" item={item} />
+        ))}
+      </Row>
+    </div>
+  );
 }
