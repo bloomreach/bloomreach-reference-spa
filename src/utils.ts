@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+import { useContext } from 'react';
+import { BrPageContext } from '@bloomreach/react-sdk';
 import { CommerceConfig } from './CommerceContext';
 
 export function loadCommerceConfig(): CommerceConfig {
+  const channelParams = useContext(BrPageContext)?.getChannelParameters<ChannelParameters>();
   const commerceConfig: CommerceConfig = {
-    graphqlServiceUrl: process.env.REACT_APP_GRAPHQL_SERVICE_URL || 'http://localhost:4000',
+    graphqlServiceUrl:
+      channelParams?.graphql_baseurl || process.env.REACT_APP_GRAPHQL_SERVICE_URL || 'http://localhost:4000',
     connector: process.env.REACT_APP_DEFAULT_CONNECTOR ?? '',
     smAccountId: process.env.REACT_APP_DEFAULT_SM_ACCOUNT_ID,
     smAuthKey: process.env.REACT_APP_DEFAULT_SM_AUTH_KEY,
