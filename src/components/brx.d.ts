@@ -20,6 +20,7 @@ interface ChannelParameters {
   smAccountId: string;
   smDomainKey?: string;
   smEndpoint: string;
+  graphql_baseurl?: string;
 }
 
 interface Content {
