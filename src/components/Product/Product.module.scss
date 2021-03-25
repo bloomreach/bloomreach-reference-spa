@@ -17,6 +17,7 @@
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/utilities';
 
 .product {
   &__image-container {
@@ -40,5 +41,14 @@
     }
 
     object-fit: contain;
+  }
+
+  &__list-price {
+    @extend .text-muted;
+    text-decoration: line-through;
+  }
+
+  &__sale-price {
+    @extend .text-danger;
   }
 }
