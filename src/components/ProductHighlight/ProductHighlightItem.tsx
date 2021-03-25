@@ -14,31 +14,50 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useContext } from 'react';
+import { useCookies } from 'react-cookie';
 import { BrPageContext } from '@bloomreach/react-sdk';
-import { ItemFragment } from '@bloomreach/connector-components-react';
+import { ItemIdModel, useProductDetail } from '@bloomreach/connector-components-react';
+import { CommerceContext } from '../../CommerceContext';
 import styles from './ProductHighlightItem.module.scss';
 
 import { Link } from '../Link';
 
 interface ProductHighlightItemProps extends React.ComponentPropsWithoutRef<'a'> {
-  item: ItemFragment | undefined;
+  itemId: ItemIdModel;
 }
 
-export const ProductHighlightItem = React.forwardRef(
-  ({ item, className, ...props }: ProductHighlightItemProps, ref: React.Ref<HTMLAnchorElement>) => {
-    const page = React.useContext(BrPageContext);
-    return (
-      <Link
-        ref={ref}
-        href="/"
-        className={`${styles.banner} ${page?.isPreview() ? 'has-edit-button' : ''} ${
-          className ?? ''
-        } text-reset text-decoration-none`}
-        {...props}
-      >
-        <span className="d-block h4 mb-3">{item?.displayName}</span>
-      </Link>
-    );
-  },
-);
+export function ProductHighlightItem({ itemId }: ProductHighlightItemProps): JSX.Element {
+  const {
+    smDomainKey,
+    smConnector,
+    smViewId,
+    smAccountId,
+    smAuthKey,
+    smCustomAttrFields,
+    smCustomVarAttrFields,
+  } = useContext(CommerceContext);
+  const [cookies] = useCookies(['_br_uid_2']);
+
+  const [item] = useProductDetail({
+    itemId,
+    // smAccountId,
+    // smDomainKey,
+    // smAuthKey,
+    smViewId,
+    brUid2: cookies._br_uid_2,
+    connector: smConnector,
+    // customAttrFields: smCustomAttrFields,
+    // customVariantAttrFields: smCustomVarAttrFields,
+  });
+
+  const page = React.useContext(BrPageContext);
+  return (
+    <Link
+      href="/"
+      className={`${styles.banner} ${page?.isPreview() ? 'has-edit-button' : ''} text-reset text-decoration-none`}
+    >
+      <span className="d-block h4 mb-3">{item?.displayName}</span>
+    </Link>
+  );
+}
