@@ -24,10 +24,11 @@ import styles from './Banner.module.scss';
 
 interface BannerProps extends React.ComponentPropsWithoutRef<'a'> {
   document: Document;
+  parameterName?: string;
 }
 
 export const Banner = React.forwardRef(
-  ({ document, className, ...props }: BannerProps, ref: React.Ref<HTMLAnchorElement>) => {
+  ({ document, parameterName, className, ...props }: BannerProps, ref: React.Ref<HTMLAnchorElement>) => {
     const page = React.useContext(BrPageContext);
 
     const { image: imageRef, link: linkRef, title } = document.getData<BannerDocument>();
@@ -41,7 +42,15 @@ export const Banner = React.forwardRef(
         className={`${styles.banner} ${page?.isPreview() ? 'has-edit-button' : ''} ${className ?? ''}`}
         {...props}
       >
-        <BrManageContentButton content={document} />
+        <BrManageContentButton
+          content={document}
+          documentTemplateQuery="new-banner-document"
+          folderTemplateQuery="new-banner-folder"
+          parameter={parameterName ?? 'document'}
+          root="brxsaas/banners"
+          relative
+        />
+
         {image && <Image className={`${styles.banner__image} d-block w-100 h-100`} src={image.getUrl()} alt={title} />}
       </Link>
     );
