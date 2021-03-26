@@ -38,9 +38,9 @@ export function ProductHighlight({ component }: BrProps): React.ReactElement | n
           <Col
             key={`${itemId.id ?? ''}___${itemId.code ?? ''}`}
             as={ProductHighlightItem}
-            xs="6"
-            md="4"
-            lg="3"
+            xs="4"
+            md="2"
+            lg="1"
             itemId={itemId}
           />
         ))}

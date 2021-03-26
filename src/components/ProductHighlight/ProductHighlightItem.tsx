@@ -90,20 +90,22 @@ export function ProductHighlightItem({ itemId }: ProductHighlightItemProps): JSX
   const sale = useMemo(() => purchasePrice?.moneyAmounts?.[0], [purchasePrice]);
   const thumbnail = useMemo(() => imageSet?.original?.link?.href, [imageSet]);
 
-  if (!itemId || loading) {
+  if (!item || loading) {
     return <div />;
   }
 
   return (
-    <Link href={page?.getUrl()} className={`${styles.banner} text-reset text-decoration-none`}>
+    <Link
+      href={page?.getUrl(`/products/${item?.itemId.code ?? item?.itemId.id}`)}
+      className={`${styles.banner ?? ''} col-sm-3 mb4 text-reset text-decoration-none`}>
       {thumbnail && (
-        <span className={`${styles.banner__container} d-block position-relative h-0 mb-3`}>
+        <div className={`${styles.banner__container} d-block position-relative h-0 mb-3`}>
           <Image className={`${styles.banner__image} w-100 h-100`} src={thumbnail} alt={displayName ?? ''} />
-        </span>
+        </div>
       )}
-      <span className="d-block h4 mb-3">{item?.displayName}</span>
+      <div className="d-block h4 mb-3">{item?.displayName}</div>
       <div className="text-muted">
-        Product No. <span className="text-primary ml-1">{itemId.code}</span>
+        Product No. <span className="text-primary ml-1">{item.itemId.code}</span>
       </div>
       <div className="text-muted mb-4">
         Manufacturer <span className="text-primary ml-1">{customAttributes?.brand}</span>
