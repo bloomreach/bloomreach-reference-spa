@@ -76,7 +76,7 @@ export function ProductHighlightItem({ itemId }: ProductHighlightItemProps): JSX
     ],
   );
   const [item, loading] = useProductDetail(params);
-  const { purchasePrice, displayName, imageSet, customAttrs } = item ?? {};
+  const { listPrice, purchasePrice, displayName, imageSet, customAttrs } = item ?? {};
   const customAttributes = useMemo(
     () =>
       customAttrs
@@ -87,7 +87,9 @@ export function ProductHighlightItem({ itemId }: ProductHighlightItemProps): JSX
         ),
     [customAttrs],
   );
+  const price = useMemo(() => listPrice?.moneyAmounts?.[0], [listPrice]);
   const sale = useMemo(() => purchasePrice?.moneyAmounts?.[0], [purchasePrice]);
+  const displayPrice = sale ?? price;
   const thumbnail = useMemo(() => imageSet?.original?.link?.href, [imageSet]);
 
   if (!item || loading) {
@@ -111,9 +113,9 @@ export function ProductHighlightItem({ itemId }: ProductHighlightItemProps): JSX
         Manufacturer <span className="text-primary ml-1">{customAttributes?.brand}</span>
       </div>
       <h4 className="mb-4">
-        {sale && (
+        {displayPrice && (
           <span className={styles['product__sale-price']}>
-            {sale.currency ?? '$'} {sale.amount}
+            {displayPrice.currency ?? '$'} {displayPrice.amount}
           </span>
         )}
       </h4>
