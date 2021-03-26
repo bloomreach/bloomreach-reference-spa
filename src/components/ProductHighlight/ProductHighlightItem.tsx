@@ -46,13 +46,12 @@ export function ProductHighlightItem({ itemId }: ProductHighlightItemProps): JSX
     smViewId,
   } = useContext(CommerceContext);
   const [cookies] = useCookies(['_br_uid_2']);
-  const customAttrFields = useMemo(() => [...(smCustomAttrFields ?? [])], [smCustomAttrFields]);
   const params: ProductDetailInputProps = useMemo(
     () => ({
       itemId,
       brUid2: cookies._br_uid_2,
       connector: smConnector,
-      customAttrFields,
+      customAttrFields: smCustomAttrFields,
       customVariantAttrFields: smCustomVarAttrFields,
       customVariantListPriceField: smCustomVarListPriceField,
       customVariantPurchasePriceField: smCustomVarPurchasePriceField,
@@ -64,7 +63,7 @@ export function ProductHighlightItem({ itemId }: ProductHighlightItemProps): JSX
     [
       itemId,
       cookies._br_uid_2,
-      customAttrFields,
+      smCustomAttrFields,
       smAccountId,
       smAuthKey,
       smConnector,

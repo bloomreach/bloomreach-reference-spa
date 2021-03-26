@@ -26,8 +26,8 @@ export function ProductHighlight({ component }: BrProps): React.ReactElement | n
   const { title } = params;
   const itemIds = [...Array(MAX_PRODUCTS).keys()]
     .map((i) => ({
-      id: params[`id${i + 1}`],
-      code: params[`code${i + 1}`],
+      id: params[`pid${i + 1}`],
+      code: params[`pcode${i + 1}`],
     }))
     .filter((itemId) => itemId.id || itemId.code);
   return (
