@@ -23,21 +23,17 @@ export interface DocumentParameter {
 
 export function getEffectiveMultipleDocumentParameters(
   page: Page,
-  params: Record<string, any>,
+  models: Record<string, any>,
   maxCount: number,
 ): DocumentParameter[] {
-  const docParams: DocumentParameter[] = [];
-
-  [...Array(maxCount).keys()].forEach((n) => {
-    const parameterName = `document${n + 1}`;
-    const ref = params[`document${n + 1}`];
-    if (ref) {
-      const document = page.getContent<Document>(ref);
-      if (document) {
-        docParams.push({ document, parameterName });
-      }
-    }
-  });
-
-  return docParams;
+  return [...Array(maxCount).keys()]
+    .map((n) => {
+      const parameterName = `document${n + 1}`;
+      const ref = models[`document${n + 1}`];
+      return {
+        parameterName,
+        document: ref && page.getContent<Document>(ref),
+      };
+    })
+    .filter<DocumentParameter>((docParam): docParam is DocumentParameter => !!docParam.document);
 }
