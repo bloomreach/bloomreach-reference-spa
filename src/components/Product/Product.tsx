@@ -14,49 +14,111 @@
  * limitations under the License.
  */
 
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Redirect, useRouteMatch } from 'react-router-dom';
 import { Col, Image, Row, Table } from 'react-bootstrap';
+import { useCookies } from 'react-cookie';
 import { ContainerItem, Document, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
+import { ProductDetailInputProps, useProductDetail } from '@bloomreach/connector-components-react';
 
-import { useSearch } from '../../hooks';
 import { Placeholder } from './Placeholder';
 import styles from './Product.module.scss';
+import { CommerceContext } from '../../CommerceContext';
+import { notEmpty } from '../../utils';
 
 interface ProductModels {
   specifications?: Reference;
 }
 
+type Attribute = Record<string, string>;
+
 export function Product({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
-  const { smAccountId = '', smDomainKey, smEndpoint = '' } = page.getChannelParameters<ChannelParameters>();
   const { specifications: specificationsRef } = component.getModels<ProductModels>();
   const specificationsBundle = specificationsRef && page.getContent<Document>(specificationsRef);
 
   const match = useRouteMatch<{ id: string }>('/products/:id');
-  const id = match?.params.id;
+  const pid = match?.params.id ?? '';
 
-  const params = useMemo(
+  const [cookies] = useCookies(['_br_uid_2']);
+
+  const {
+    smAccountId,
+    smAuthKey,
+    smConnector,
+    smCustomAttrFields,
+    smCustomVarAttrFields,
+    smCustomVarListPriceField,
+    smCustomVarPurchasePriceField,
+    smDomainKey,
+    smViewId,
+  } = useContext(CommerceContext);
+
+  const { keys = [], messages = [] } = specificationsBundle?.getData<ResourceBundle>() ?? {};
+  const customAttrFields = useMemo(() => {
+    const result = [...(smCustomAttrFields ?? [])];
+    keys.filter((key) => !result.includes(key)).forEach((key) => result.push(key));
+    return result;
+  }, [keys, smCustomAttrFields]);
+
+  const params: ProductDetailInputProps = useMemo(
     () => ({
-      account_id: smAccountId,
-      domain_key: smDomainKey,
-      q: id,
-      request_type: 'search',
-      search_type: 'keyword',
-      fl: ['brand', 'description', 'pid', 'price', 'sale_price', 'title', 'thumb_image'],
-      fq: `pid:"${id}"`,
-      rows: 1,
-      url: window.location.href,
+      itemId: pid,
+      brUid2: cookies._br_uid_2,
+      connector: smConnector,
+      customAttrFields,
+      customVariantAttrFields: smCustomVarAttrFields,
+      customVariantListPriceField: smCustomVarListPriceField,
+      customVariantPurchasePriceField: smCustomVarPurchasePriceField,
+      smAccountId,
+      smAuthKey,
+      smDomainKey,
+      smViewId,
     }),
-    [id, smAccountId, smDomainKey],
+    [
+      cookies._br_uid_2,
+      customAttrFields,
+      pid,
+      smAccountId,
+      smAuthKey,
+      smConnector,
+      smCustomVarAttrFields,
+      smCustomVarListPriceField,
+      smCustomVarPurchasePriceField,
+      smDomainKey,
+      smViewId,
+    ],
   );
-  const [results] = useSearch<ProductDocument>(smEndpoint, params);
+  const [item, loading] = useProductDetail(params);
+  const { itemId, listPrice, purchasePrice, displayName, description, imageSet, customAttrs } = item ?? {};
+  const customAttributes = useMemo(
+    () =>
+      customAttrs
+        ?.filter(notEmpty)
+        .reduce(
+          (result, attr) => Object.assign(result, { [attr.name]: attr.values?.filter(notEmpty).join(', ') ?? '' }),
+          {} as Attribute,
+        ),
+    [customAttrs],
+  );
+  const sale = useMemo(() => purchasePrice?.moneyAmounts?.[0], [purchasePrice]);
+  const price = useMemo(() => listPrice?.moneyAmounts?.[0], [listPrice]);
+  const thumbnail = useMemo(() => imageSet?.original?.link?.href, [imageSet]);
+  const specifications = useMemo(() => {
+    return keys
+      .map((key, index) => ({
+        key,
+        label: messages[index] || key,
+        value: customAttributes?.[key],
+      }))
+      .filter(({ value }) => !!value && value !== 'undefined');
+  }, [customAttributes, keys, messages]);
 
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
   }
 
-  if (!id || !results) {
+  if (!itemId || loading) {
     return (
       <div className="mw-container mx-auto">
         <Placeholder />
@@ -64,42 +126,45 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
     );
   }
 
-  if (results.response.numFound === 0) {
+  if (!item) {
     return <Redirect to={page.getUrl('/404')} />;
   }
-
-  const [{ brand, description, pid, sale_price: sale, price, title, thumb_image: thumbnail }] = results.response.docs;
-  const { keys = [], messages = [] } = specificationsBundle?.getData<ResourceBundle>() ?? {};
-  const specifications = keys
-    .map((key, index) => ({
-      key,
-      label: messages[index] || key,
-      value: results.facet_counts.facet_fields[key]?.[0]?.name,
-    }))
-    .filter(({ value }) => !!value);
 
   return (
     <div className="mw-container mx-auto">
       <Row>
         <Col md={{ span: 8, order: 1 }}>
-          <h2 className="mb-4">{title}</h2>
+          <h2 className="mb-4">{displayName}</h2>
           <div className="text-muted">
-            Product No. <span className="text-primary ml-1">{pid}</span>
+            Product No. <span className="text-primary ml-1">{itemId.code}</span>
           </div>
           <div className="text-muted mb-4">
-            Manufacturer <span className="text-primary ml-1">{brand}</span>
+            Manufacturer <span className="text-primary ml-1">{customAttributes?.brand}</span>
           </div>
-          <h4 className="mb-4">${(sale ?? price).toFixed(2)}</h4>
+          <h4 className="mb-4">
+            {price && (
+              <span className={`${sale ? styles['product__list-price'] : ''} mr-2`}>
+                {price.currency ?? '$'} {price.amount}
+              </span>
+            )}
+            {sale && (
+              <span className={styles['product__sale-price']}>
+                {sale.currency ?? '$'} {sale.amount}
+              </span>
+            )}
+          </h4>
         </Col>
         <Col md={{ span: 4, order: 0 }}>
           <div className={`${styles['product__image-container']} ${!thumbnail ? 'bg-light' : ''} mb-4`}>
-            {thumbnail && <Image className={`${styles.product__image} w-100 h-100`} src={thumbnail} alt={title} />}
+            {thumbnail && (
+              <Image className={`${styles.product__image} w-100 h-100`} src={thumbnail} alt={displayName ?? ''} />
+            )}
           </div>
         </Col>
         <Col md={{ order: 2 }} lg="9">
           {description && (
             <>
-              <h3 className="mb-4">Features & Benefits</h3>
+              <h3 className="mb-4">Features &amp; Benefits</h3>
               <p className="mb-4">{description}</p>
             </>
           )}
