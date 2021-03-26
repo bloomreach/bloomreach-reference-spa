@@ -15,12 +15,13 @@
  */
 
 import React from 'react';
+import { Col, Row } from 'react-bootstrap';
 import { BrProps } from '@bloomreach/react-sdk';
 import { ProductHighlightItem } from './ProductHighlightItem';
 
 const MAX_PRODUCTS = 4;
 
-export function ProductHighlight({ component, page }: BrProps): React.ReactElement | null {
+export function ProductHighlight({ component }: BrProps): React.ReactElement | null {
   const params = component.getParameters();
   const { title } = params;
   const itemIds = [...Array(MAX_PRODUCTS).keys()]
@@ -29,17 +30,21 @@ export function ProductHighlight({ component, page }: BrProps): React.ReactEleme
       code: params[`code${i + 1}`],
     }))
     .filter((itemId) => itemId.id || itemId.code);
-
-  if (!itemIds.length) {
-    return page.isPreview() ? <div /> : null;
-  }
-
   return (
     <div className="mw-container mx-auto my-4">
       {title && <h3 className="mb-4">{title}</h3>}
-      {itemIds.map((itemId) => (
-        <ProductHighlightItem itemId={itemId} />
-      ))}
+      <Row>
+        {itemIds.map((itemId) => (
+          <Col
+            key={`${itemId.id ?? ''}___${itemId.code ?? ''}`}
+            as={ProductHighlightItem}
+            xs="6"
+            md="4"
+            lg="3"
+            itemId={itemId}
+          />
+        ))}
+      </Row>
     </div>
   );
 }
