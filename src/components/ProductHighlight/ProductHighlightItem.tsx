@@ -20,7 +20,7 @@ import { useCookies } from 'react-cookie';
 import { BrPageContext } from '@bloomreach/react-sdk';
 import { ItemIdModel, ProductDetailInputProps, useProductDetail } from '@bloomreach/connector-components-react';
 import { CommerceContext } from '../../CommerceContext';
-import styles from './ProductHighlightItem.module.scss';
+import styles from './ProductHighlight.module.scss';
 import { notEmpty } from '../../utils';
 
 import { Link } from '../Link';
@@ -98,24 +98,25 @@ export function ProductHighlightItem({ itemId }: ProductHighlightItemProps): JSX
   return (
     <Link
       href={page?.getUrl(`/products/${item?.itemId.code ?? item?.itemId.id}`)}
-      className={`${styles.banner ?? ''} col-sm-3 mb4 text-reset text-decoration-none`}>
+      className="col-sm-3 mb4 text-reset text-decoration-none"
+    >
       {thumbnail && (
-        <div className={`${styles.banner__container} d-block position-relative h-0 mb-3`}>
-          <Image className={`${styles.banner__image} w-100 h-100`} src={thumbnail} alt={displayName ?? ''} />
+        <div className={`${styles['img-container']}`}>
+          <Image src={thumbnail} alt={displayName ?? ''} />
         </div>
       )}
-      <div className="d-block h4 mb-3">{item?.displayName}</div>
-      <div className="text-muted">
+      <div className={`${styles.name} d-block h4 text-truncate mb-3`}>{item?.displayName}</div>
+      <div className={`${styles['product-number']} text-muted`}>
         Product No. <span className="text-primary ml-1">{item.itemId.code}</span>
       </div>
-      <div className="text-muted mb-4">
+      <div className={`${styles.manufacturer} text-muted`}>
         Manufacturer <span className="text-primary ml-1">{customAttributes?.brand}</span>
       </div>
       <h4 className="mb-4">
         {displayPrice && (
-          <span className={styles['product__sale-price']}>
+          <div className={`${styles.price}`}>
             {displayPrice.currency ?? '$'} {displayPrice.amount}
-          </span>
+          </div>
         )}
       </h4>
     </Link>

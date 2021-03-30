@@ -17,6 +17,7 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { BrProps } from '@bloomreach/react-sdk';
+import styles from './ProductHighlight.module.scss';
 import { ProductHighlightItem } from './ProductHighlightItem';
 
 const MAX_PRODUCTS = 4;
@@ -31,16 +32,15 @@ export function ProductHighlight({ component }: BrProps): React.ReactElement | n
     }))
     .filter((itemId) => itemId.id || itemId.code);
   return (
-    <div className="mw-container mx-auto my-4">
-      {title && <h3 className="mb-4">{title}</h3>}
-      <Row>
+    <div className={`${styles.highlight} mw-container mx-auto`}>
+      <div className={styles.grid__header}>{title && <h4 className="mb-4">{title}</h4>}</div>
+      <Row className="align-items-center">
         {itemIds.map((itemId) => (
           <Col
             key={`${itemId.id ?? ''}___${itemId.code ?? ''}`}
             as={ProductHighlightItem}
-            xs="4"
-            md="2"
-            lg="1"
+            md="3"
+            className="mb-4"
             itemId={itemId}
           />
         ))}
