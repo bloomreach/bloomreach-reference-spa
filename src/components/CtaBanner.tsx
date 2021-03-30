@@ -30,7 +30,17 @@ export function CtaBanner({ component, page }: BrProps): React.ReactElement | nu
   const document = documentRef && page.getContent<Document>(documentRef);
 
   if (!document) {
-    return page.isPreview() ? <div /> : null;
+    return page.isPreview() ? (
+      <div className="has-edit-button">
+        <BrManageContentButton
+          documentTemplateQuery="new-banner-document"
+          folderTemplateQuery="new-banner-folder"
+          parameter="document"
+          root="brxsaas/banners"
+          relative
+        />
+      </div>
+    ) : null;
   }
 
   const { content, cta, link: linkRef, title } = document.getData<BannerDocument>();
@@ -39,7 +49,14 @@ export function CtaBanner({ component, page }: BrProps): React.ReactElement | nu
   return (
     <Jumbotron as={Row} fluid className="bg-primary text-light text-center my-0">
       <Container className={page.isPreview() ? 'has-edit-button' : ''}>
-        <BrManageContentButton content={document} />
+        <BrManageContentButton
+          content={document}
+          documentTemplateQuery="new-banner-document"
+          folderTemplateQuery="new-banner-folder"
+          parameter="document"
+          root="brxsaas/banners"
+          relative
+        />
 
         {title && <h3 className="mb-2">{title}</h3>}
         {content && <div dangerouslySetInnerHTML={{ __html: page.rewriteLinks(content.value) }} />}

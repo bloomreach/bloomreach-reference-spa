@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useRef, useState, Dispatch, SetStateAction } from 'react';
+import React, { useRef, useState, Dispatch, SetStateAction, FocusEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -77,15 +77,20 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
     history.push(`${url}${url.includes('?') ? '&' : '?'}${params.toString()}`);
   };
 
+  const handleBlur = (e: FocusEvent): void => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setHideSuggestions(true);
+    }
+  };
+
   return (
-    <Form ref={ref} onSubmit={handleSubmit} inline className={styles.search} autoComplete="off">
+    <Form ref={ref} onSubmit={handleSubmit} inline className={styles.search} autoComplete="off" onBlur={handleBlur}>
       <Form.Control
         type="search"
         name="q"
         placeholder="Find products and articles"
         className={`${styles.search__input} w-100`}
         onChange={(event) => handleInputChange(event.target.value)}
-        onBlur={() => handleInputChange('')}
         value={keyword}
       />
       {suggestionsEnabled && (

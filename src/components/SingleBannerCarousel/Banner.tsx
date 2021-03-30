@@ -24,6 +24,7 @@ import styles from './Banner.module.scss';
 
 interface BannerProps extends React.ComponentProps<'div'> {
   document: Document;
+  parameterName?: string;
 }
 
 interface BannerParameters {
@@ -31,7 +32,7 @@ interface BannerParameters {
 }
 
 export const Banner = React.forwardRef(
-  ({ document, className, ...props }: BannerProps, ref: React.Ref<HTMLDivElement>) => {
+  ({ document, parameterName, className, ...props }: BannerProps, ref: React.Ref<HTMLDivElement>) => {
     const component = React.useContext(BrComponentContext);
     const page = React.useContext(BrPageContext);
     const { alignment = 'center' } = component?.getParameters<BannerParameters>() ?? {};
@@ -41,7 +42,14 @@ export const Banner = React.forwardRef(
 
     return (
       <div ref={ref} className={`${className} ${page?.isPreview() ? 'has-edit-button' : ''}`} {...props}>
-        <BrManageContentButton content={document} />
+        <BrManageContentButton
+          content={document}
+          documentTemplateQuery="new-banner-document"
+          folderTemplateQuery="new-banner-folder"
+          parameter={parameterName ?? 'document'}
+          root="brxsaas/banners"
+          relative
+        />
 
         {image && (
           <Image
