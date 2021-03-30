@@ -24,10 +24,11 @@ import styles from './Banner.module.scss';
 
 interface BannerProps extends React.ComponentPropsWithoutRef<'a'> {
   document: Document;
+  parameterName?: string;
 }
 
 export const Banner = React.forwardRef(
-  ({ document, className, ...props }: BannerProps, ref: React.Ref<HTMLAnchorElement>) => {
+  ({ document, parameterName, className, ...props }: BannerProps, ref: React.Ref<HTMLAnchorElement>) => {
     const page = React.useContext(BrPageContext);
 
     const { content, image: imageRef, link: linkRef, title } = document.getData<BannerDocument>();
@@ -43,7 +44,15 @@ export const Banner = React.forwardRef(
         } text-reset text-decoration-none`}
         {...props}
       >
-        <BrManageContentButton content={document} />
+        <BrManageContentButton
+          content={document}
+          documentTemplateQuery="new-banner-document"
+          folderTemplateQuery="new-banner-folder"
+          parameter={parameterName ?? 'document'}
+          root="brxsaas/banners"
+          relative
+        />
+
         {title && <span className="d-block h4 mb-3">{title}</span>}
         {image && (
           <span className={`${styles.banner__container} d-block position-relative h-0 mb-3`}>
