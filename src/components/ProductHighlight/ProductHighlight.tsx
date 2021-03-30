@@ -34,7 +34,7 @@ export function ProductHighlight({ component }: BrProps): React.ReactElement | n
   return (
     <div className={`${styles.highlight} mw-container mx-auto`}>
       <div className={styles.grid__header}>{title && <h4 className="mb-4">{title}</h4>}</div>
-      <Row className="align-items-center">
+      <Row>
         {itemIds.map((itemId) => (
           <Col
             key={`${itemId.id ?? ''}___${itemId.code ?? ''}`}
