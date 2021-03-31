@@ -14,20 +14,34 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { Col, Row } from 'react-bootstrap';
+import React, { useMemo } from 'react';
+import { Carousel, Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { ItemFragment } from '@bloomreach/connector-components-react';
 
 import { Product } from './Product';
 
+import styles from './Products.module.scss';
+
+const DOCUMENTS_PER_SLIDE = 4;
+
 interface ProductsProps {
   products: ItemFragment[];
+  interval?: number;
 }
 
-export function Products({ products }: ProductsProps): React.ReactElement | null {
-  if (!products.length) {
+export function Products({ products, interval }: ProductsProps): React.ReactElement | null {
+  const slides = useMemo(() => {
+    const result = [];
+    const productsCpy = [...products];
+    while (productsCpy.length) {
+      result.push(productsCpy.splice(0, DOCUMENTS_PER_SLIDE));
+    }
+    return result;
+  }, [products]);
+
+  if (!slides.length) {
     return (
       <div className="text-center text-muted mb-4">
         <div className="mb-4">
@@ -39,10 +53,26 @@ export function Products({ products }: ProductsProps): React.ReactElement | null
   }
 
   return (
-    <Row>
-      {products.map((product) => (
-        <Col key={product.itemId.id} as={Product} sm="3" product={product} className="mb-4" />
+    <Carousel
+      controls={products.length > 4}
+      indicators={false}
+      interval={interval}
+      prevIcon={<FontAwesomeIcon icon={faChevronLeft} size="2x" className="text-secondary" />}
+      nextIcon={<FontAwesomeIcon icon={faChevronRight} size="2x" className="text-secondary" />}
+      className={styles.carousel}
+    >
+      {slides.map((slide, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <Carousel.Item key={index}>
+          <Row>
+            {slide.map((product) => (
+              <Col key={`${product.itemId.id}___${product.itemId.code}`} md={3} className="mb-3">
+                <Product product={product} />
+              </Col>
+            ))}
+          </Row>
+        </Carousel.Item>
       ))}
-    </Row>
+    </Carousel>
   );
 }

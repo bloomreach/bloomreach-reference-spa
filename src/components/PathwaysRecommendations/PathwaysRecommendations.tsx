@@ -16,7 +16,7 @@
 
 import React, { useContext, useMemo } from 'react';
 import { useCookies } from 'react-cookie';
-import { Alert } from 'react-bootstrap';
+import { Alert, Row } from 'react-bootstrap';
 
 import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem } from '@bloomreach/spa-sdk';
@@ -31,6 +31,7 @@ import { ProductsPlaceholder } from '../ProductGrid/ProductsPlaceholder';
 
 export interface PathwaysRecommendationsParameters {
   category?: string;
+  interval?: number;
   keyword?: string;
   limit: number;
   pids?: string;
@@ -44,7 +45,7 @@ export interface PathwaysRecommendationsParameters {
 }
 
 export function PathwaysRecommendations({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
-  const { category, keyword, limit, pids, title, widgetId, widgetAlgo } = component.getParameters<
+  const { category, interval, keyword, limit, pids, title, widgetId, widgetAlgo } = component.getParameters<
     PathwaysRecommendationsParameters
   >();
   const {
@@ -125,15 +126,15 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
   }
 
   return (
-    <div className={`${styles.grid} mw-container mx-auto`}>
+    <div className={`${styles.grid} ${styles['pathways-and-recommendations']} mw-container mx-auto`}>
       <div className={styles.grid__header}>{title && <h4 className="mb-4">{title}</h4>}</div>
-      <div className={styles.grid__products}>
+      <Row>
         {!loading && results?.items ? (
-          <Products products={results.items.filter(notEmpty)} />
+          <Products products={results.items.filter(notEmpty)} interval={interval} />
         ) : (
           <ProductsPlaceholder size={limit} />
         )}
-      </div>
+      </Row>
     </div>
   );
 }

@@ -14,19 +14,48 @@
  * limitations under the License.
  */
 
-.product {
-  &__image-container {
-    position: relative;
+$highlights-and-pathways-and-recommendations-img-max-size: 180px;
 
-    padding-top: 75%;
-    height: 0;
+.img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: $highlights-and-pathways-and-recommendations-img-max-size;
+  margin-bottom: 16px;
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: $highlights-and-pathways-and-recommendations-img-max-size;
   }
+}
 
-  &__image {
-    position: absolute;
-    top: 0;
-    left: 0;
+.name {
+  font-size: 16px;
+  line-height: 19px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
 
-    object-fit: contain;
-  }
+.manufacturer, .product-number {
+  line-height: 16px;
+}
+
+.product-number {
+  margin-bottom: 4px;
+}
+
+.price {
+  margin-bottom: 8px;
+  font-size: 18px;
+  line-height: 23px;
+  font-weight: 500;
+}
+
+.manufacturer {
+  margin-bottom: 19px;
+}
+
+.description {
+  margin-bottom: 12px;
 }

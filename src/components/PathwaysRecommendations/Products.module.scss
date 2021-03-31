@@ -18,23 +18,41 @@
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
 
-.grid {
-  @include media-breakpoint-up(lg) {
-    display: grid;
-    grid-auto-columns: 3fr;
-    grid-auto-rows: 1fr;
-    grid-column-gap: $grid-gutter-width;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
+.carousel {
+  display: flex;
 
-    &__header {
-      grid-row: 1;
+  :global {
+    .carousel-inner {
+      flex: 1 1 auto;
+      order: 1;
     }
-  }
-}
 
-.pathways-and-recommendations {
-  div {
-    font-size: 14px;
+    .carousel-control-next,
+    .carousel-control-prev {
+      position: static;
+      width: 20px;
+    }
+
+    .carousel-control-prev {
+      order: 0;
+      margin-right: $grid-gutter-width / 2;
+    }
+
+    .carousel-control-next {
+      order: 2;
+      margin-left: $grid-gutter-width / 2;
+    }
+
+    @include media-breakpoint-up(md) {
+      .carousel-control-prev {
+        order: 0;
+        margin-right: $grid-gutter-width;
+      }
+
+      .carousel-control-next {
+        order: 2;
+        margin-left: $grid-gutter-width;
+      }
+    }
   }
 }
