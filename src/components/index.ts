@@ -28,6 +28,7 @@ export * from './PageCatalog';
 export * from './PathwaysRecommendations';
 export * from './Product';
 export * from './ProductGrid';
+export * from './ProductHighlight';
 export * from './SearchBar';
 export * from './SingleBannerCarousel';
 export * from './TitleAndText';
