@@ -95,10 +95,15 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
       />
       {suggestionsEnabled && (
         <CommerceContextConsumer>
-          {({ smConnector }) => (
+          {({ smConnector, smAccountId, smAuthKey, smCatalogViews, smDomainKey, smViewId }) => (
             <ProductSuggestion
               connector={smConnector}
               text={keyword}
+              smAccountId={smAccountId}
+              smAuthKey={smAuthKey}
+              smCatalogViews={smCatalogViews}
+              smDomainKey={smDomainKey}
+              smViewId={smViewId}
               setKeyword={setKeyword}
               handleSubmit={handleSubmit}
               hideSuggestions={hideSuggestions}
@@ -135,14 +140,29 @@ interface SuggestionsProps extends ProductSearchSuggestionInputProps {
 }
 
 function ProductSuggestion({
-  text,
   connector,
+  text,
+  brUid2,
+  smAccountId,
+  smAuthKey,
+  smCatalogViews,
+  smDomainKey,
+  smViewId,
   setKeyword,
   handleSubmit,
   hideSuggestions,
   suggestionsLimit,
 }: SuggestionsProps): React.ReactElement | null {
-  const [result] = useProductSearchSuggestion({ text, connector });
+  const [result] = useProductSearchSuggestion({
+    text,
+    connector,
+    smViewId,
+    brUid2,
+    smAccountId,
+    smAuthKey,
+    smDomainKey,
+    smCatalogViews,
+  });
   const { terms, items } = result ?? {};
   const visibility = hideSuggestions ? 'invisible' : 'visible';
   const page = React.useContext(BrPageContext);
