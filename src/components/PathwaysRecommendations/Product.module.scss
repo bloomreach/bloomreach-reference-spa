@@ -58,4 +58,10 @@ $highlights-and-pathways-and-recommendations-img-max-size: 180px;
 
 .description {
   margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 16px;
+  max-height: 48px;
 }
