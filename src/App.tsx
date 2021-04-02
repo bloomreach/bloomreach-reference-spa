@@ -137,8 +137,10 @@ export default function App({ location }: RouteComponentProps): React.ReactEleme
               <Col xs="auto" className="flex-fill">
                 <BrComponent />
               </Col>
-              <Col lg="3" xl="2" className="text-center text-lg-right py-lg-2">
-                &copy; Bloomreach 2021
+            </BrComponent>
+            <BrComponent path="right">
+              <Col lg="3" className="flex-fill py-lg-2">
+                <BrComponent />
               </Col>
             </BrComponent>
           </Row>
