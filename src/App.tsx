@@ -32,8 +32,10 @@ import {
   MultiBannerCarousel,
   Navigation,
   PageCatalog,
+  PathwaysRecommendations,
   Product,
   ProductGrid,
+  ProductHighlight,
   ProductSearch,
   SearchBar,
   SingleBannerCarousel,
@@ -57,8 +59,10 @@ export default class App extends React.Component<RouteComponentProps, ErrorCodeS
     MultiBannerCarousel,
     Navigation,
     PageCatalog,
+    PathwaysRecommendations,
     Product,
     ProductGrid,
+    ProductHighlight,
     ProductSearch,
     SingleBannerCarousel,
     SearchBar,
@@ -165,8 +169,10 @@ export default class App extends React.Component<RouteComponentProps, ErrorCodeS
                 <Col xs="auto" className="flex-fill">
                   <BrComponent />
                 </Col>
-                <Col lg="3" xl="2" className="text-center text-lg-right py-lg-2">
-                  &copy; Bloomreach 2021
+              </BrComponent>
+              <BrComponent path="right">
+                <Col lg="3" className="flex-fill py-lg-2">
+                  <BrComponent />
                 </Col>
               </BrComponent>
             </Row>

@@ -1,0 +1,67 @@
+/*
+ * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$highlights-and-pathways-and-recommendations-img-max-size: 180px;
+
+.img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: $highlights-and-pathways-and-recommendations-img-max-size;
+  margin-bottom: 16px;
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: $highlights-and-pathways-and-recommendations-img-max-size;
+  }
+}
+
+.name {
+  font-size: 16px;
+  line-height: 19px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.manufacturer, .product-number {
+  line-height: 16px;
+}
+
+.product-number {
+  margin-bottom: 4px;
+}
+
+.price {
+  margin-bottom: 8px;
+  font-size: 18px;
+  line-height: 23px;
+  font-weight: 500;
+}
+
+.manufacturer {
+  margin-bottom: 19px;
+}
+
+.description {
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 16px;
+  max-height: 48px;
+}
