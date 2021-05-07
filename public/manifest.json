@@ -1,0 +1,20 @@
+{
+  "short_name": "brX SaaS + React = ♥️",
+  "name": "Example React SPA for brX SaaS",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo@2x.png",
+      "type": "image/png",
+      "sizes": "153x33"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#00b2db",
+  "background_color": "#002840"
+}
