@@ -35,7 +35,6 @@
         <include>tsconfig.json</include>
         <include>.gitignore</include>
         <include>LICENSE</include>
-        <include>LICENSE</include>
         <include>NOTICE</include>
         <include>README.md</include>
       </includes>
