@@ -28,7 +28,7 @@ interface PaginationProps extends React.ComponentPropsWithoutRef<typeof Paginati
 
 const PaginationComponent = React.forwardRef(
   ({ limit, offset, onChange, total, className, ...props }: PaginationProps, ref: React.Ref<HTMLUListElement>) => {
-    if (total <= limit || offset >= total) {
+    if (limit === 0 || total <= limit || offset >= total) {
       return null;
     }
 

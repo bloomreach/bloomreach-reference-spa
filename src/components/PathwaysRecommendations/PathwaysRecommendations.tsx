@@ -45,9 +45,16 @@ export interface PathwaysRecommendationsParameters {
 }
 
 export function PathwaysRecommendations({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
-  const { category, interval, keyword, limit, pids, title, widgetId, widgetAlgo } = component.getParameters<
-    PathwaysRecommendationsParameters
-  >();
+  const {
+    category,
+    interval,
+    keyword,
+    limit,
+    pids,
+    title,
+    widgetId,
+    widgetAlgo,
+  } = component.getParameters<PathwaysRecommendationsParameters>();
   const {
     smDomainKey,
     smViewId,
