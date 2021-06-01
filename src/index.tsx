@@ -21,12 +21,20 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 import './index.scss';
 import App from './App';
+import { ErrorContextProvider } from './ErrorContext';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Switch>
-        <Route path="/(.*)" component={App} />
+        <Route
+          path="/(.*)"
+          render={() => (
+            <ErrorContextProvider>
+              <App />
+            </ErrorContextProvider>
+          )}
+        />
         <Redirect to="/" />
       </Switch>
     </BrowserRouter>

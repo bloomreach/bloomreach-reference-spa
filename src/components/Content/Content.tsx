@@ -15,7 +15,6 @@
  */
 
 import React from 'react';
-import { useRouteMatch } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
 import { ContainerItem, Document, ImageSet } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
@@ -25,13 +24,13 @@ import { ErrorPageContent } from './ErrorPageContent';
 
 export function Content({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const document = page.getDocument<Document>();
-  const match = useRouteMatch<{ path?: string }>('/:path');
+  const pageUrl = page.getUrl() ?? '';
 
   if (!document || component.isHidden()) {
     return page.isPreview() ? <div /> : null;
   }
 
-  if (['404', '500'].includes(match?.params.path ?? '')) {
+  if (['/404', '/500'].includes(pageUrl)) {
     return <ErrorPageContent document={document} page={page} />;
   }
 
