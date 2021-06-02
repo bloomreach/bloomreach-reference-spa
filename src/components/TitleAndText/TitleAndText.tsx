@@ -15,17 +15,33 @@
  */
 
 import React from 'react';
-import { ContainerItem } from '@bloomreach/spa-sdk';
+import { ContainerItem, getContainerItemContent } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
 
 import styles from './TitleAndText.module.scss';
+
+interface TitleAndTextCompound {
+  title?: string;
+  text?: {
+    value?: string;
+  };
+}
 
 export function TitleAndText({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
   }
 
-  const { title, titlesize = 'H3', text, textalignment = 'center', style = 'style1' } = component.getParameters();
+  let title;
+  let text;
+
+  const content = getContainerItemContent<TitleAndTextCompound>(component, page);
+  if (content !== null) {
+    title = content.title;
+    text = content.text?.value;
+  }
+
+  const { titlesize = 'H3', textalignment = 'center', style = 'style1' } = component.getParameters();
   const sectionStyle = styles[style];
 
   return (
@@ -35,7 +51,7 @@ export function TitleAndText({ component, page }: BrProps<ContainerItem>): React
       {titlesize === 'H3' && <h3 className="mb-2">{title}</h3>}
       {titlesize === 'H4' && <h4 className="mb-2">{title}</h4>}
       {titlesize === 'H5' && <h5 className="mb-2">{title}</h5>}
-      <p>{text}</p>
+      {text && <div dangerouslySetInnerHTML={{ __html: page?.rewriteLinks(text) ?? '' }} />}
     </section>
   );
 }
