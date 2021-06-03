@@ -19,6 +19,7 @@ import axios, { AxiosError } from 'axios';
 import { RouteComponentProps } from 'react-router-dom';
 import { Col, Container, Image, Navbar, Row } from 'react-bootstrap';
 import { BrComponent, BrPageContext, BrPage } from '@bloomreach/react-sdk';
+import { Configuration } from '@bloomreach/spa-sdk';
 
 import {
   BannerCollection,
@@ -95,12 +96,18 @@ export default class App extends React.Component<RouteComponentProps, ErrorCodeS
 
   render(): ReactElement | null {
     const { location } = this.props;
-    const configuration = {
-      endpoint: process.env.REACT_APP_BRXM_ENDPOINT,
-      endpointQueryParameter: 'endpoint',
+    const endpointQueryParameter = 'endpoint';
+    const configuration: Configuration = {
+      endpointQueryParameter,
       httpClient: axios,
       path: `${location.pathname}${location.search}`,
     };
+
+    const urlParams = new URLSearchParams(location.search);
+    const endpoint = urlParams.get(endpointQueryParameter);
+    if (!endpoint) {
+      configuration.endpoint = process.env.REACT_APP_BRXM_ENDPOINT;
+    }
 
     return (
       <BrPage configuration={configuration} mapping={this.mapping}>
