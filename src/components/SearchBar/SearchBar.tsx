@@ -24,7 +24,6 @@ import { ProductSearchSuggestionInputProps, useProductSearchSuggestion } from '@
 import { BrPageContext, BrProps } from '@bloomreach/react-sdk';
 import { CommerceContextConsumer } from '../../CommerceContext';
 import { Link } from '../Link';
-import { isDebugMode } from '../../utils';
 
 import styles from './SearchBar.module.scss';
 
@@ -171,10 +170,7 @@ function ProductSuggestion({
   };
 
   if (error) {
-    if (isDebugMode()) {
-      // TODO: use a more robust logging framework
-      // console.log(error);
-    }
+    // console.log(error);
     return <Alert variant="danger">Autosuggest is not working properly. Try again later.</Alert>;
   }
 

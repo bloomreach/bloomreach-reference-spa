@@ -43,7 +43,3 @@ export function loadCommerceConfig(): CommerceConfig {
 export function notEmpty<T>(value: T | null | undefined): value is T {
   return !!value;
 }
-
-export function isDebugMode(): boolean {
-  return (process.env.REACT_APP_DEBUG_MODE || 'false') === 'true';
-}
