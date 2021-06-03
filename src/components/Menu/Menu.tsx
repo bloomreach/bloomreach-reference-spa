@@ -33,7 +33,7 @@ export function Menu(): React.ReactElement | null {
   const menu = menuRef && page?.getContent<BrMenu>(menuRef);
 
   if (!isMenu(menu)) {
-    return null;
+    throw new Error('Menu is not available');
   }
 
   return (

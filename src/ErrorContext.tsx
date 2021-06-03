@@ -17,20 +17,27 @@
 import React from 'react';
 import { AxiosError } from 'axios';
 
+// eslint-disable-next-line no-shadow
+export enum ErrorCode {
+  NOT_FOUND = 'NOT_FOUND',
+  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
+  GENERAL_ERROR = 'GENERAL_ERROR',
+}
+
 interface ErrorContextProps {
-  errorCode?: number;
+  errorCode?: ErrorCode;
   error?: Error;
 }
 
 interface ErrorContextState {
-  errorCode?: number;
+  errorCode?: ErrorCode;
   error?: Error;
 }
 
 export const ErrorContext = React.createContext<ErrorContextProps>({});
 export const ErrorContextConsumer = ErrorContext.Consumer;
 export class ErrorContextProvider extends React.Component<React.PropsWithChildren<any>, ErrorContextState> {
-  static hasError = false;
+  private static hasError = false;
 
   constructor(props: React.PropsWithChildren<any>) {
     super(props);
@@ -38,13 +45,16 @@ export class ErrorContextProvider extends React.Component<React.PropsWithChildre
   }
 
   static getDerivedStateFromError(error: Error | AxiosError): ErrorContextState {
-    let status;
+    let errorCode: ErrorCode;
     if ('isAxiosError' in error && error.isAxiosError) {
-      status = error.response?.status;
+      const status = error.response?.status;
+      errorCode = status === 404 ? ErrorCode.NOT_FOUND : ErrorCode.INTERNAL_SERVER_ERROR;
+    } else {
+      errorCode = ErrorCode.GENERAL_ERROR;
     }
 
     ErrorContextProvider.hasError = true;
-    return { error, errorCode: status === 404 ? 404 : 500 };
+    return { errorCode, error };
   }
 
   componentDidCatch(): void {
@@ -52,8 +62,8 @@ export class ErrorContextProvider extends React.Component<React.PropsWithChildre
   }
 
   render(): React.ReactElement | null {
-    const { error, errorCode } = this.state;
-    const value: ErrorContextProps = ErrorContextProvider.hasError ? { error, errorCode } : {};
+    const { errorCode, error } = this.state;
+    const value: ErrorContextProps = ErrorContextProvider.hasError ? { errorCode, error } : {};
     const { children } = this.props;
     return <ErrorContext.Provider value={value}>{children}</ErrorContext.Provider>;
   }
