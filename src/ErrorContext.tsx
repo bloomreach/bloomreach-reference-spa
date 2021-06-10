@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { AxiosError } from 'axios';
+import { ProductNotFoundError } from './components';
 
 // eslint-disable-next-line no-shadow
 export enum ErrorCode {
@@ -53,6 +54,8 @@ export class ErrorContextProvider extends React.Component<React.PropsWithChildre
       requestURL = error.config.url;
       const status = error.response?.status;
       errorCode = status === 404 ? ErrorCode.NOT_FOUND : ErrorCode.INTERNAL_SERVER_ERROR;
+    } else if (error instanceof ProductNotFoundError) {
+      errorCode = ErrorCode.NOT_FOUND;
     } else {
       errorCode = ErrorCode.GENERAL_ERROR;
     }

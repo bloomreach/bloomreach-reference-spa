@@ -15,8 +15,8 @@
  */
 
 import React, { useContext, useMemo } from 'react';
-import { Redirect, useRouteMatch } from 'react-router-dom';
-import { Col, Image, Row, Table } from 'react-bootstrap';
+import { useRouteMatch } from 'react-router-dom';
+import { Alert, Col, Image, Row, Table } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { ContainerItem, Document, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
@@ -26,6 +26,7 @@ import { Placeholder } from './Placeholder';
 import styles from './Product.module.scss';
 import { CommerceContext } from '../../CommerceContext';
 import { notEmpty } from '../../utils';
+import { ProductNotFoundError } from './ProductNotFoundError';
 
 interface ProductModels {
   specifications?: Reference;
@@ -89,7 +90,7 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
       smViewId,
     ],
   );
-  const [item, loading] = useProductDetail(params);
+  const [item, loading, error] = useProductDetail(params);
   const { itemId, listPrice, purchasePrice, displayName, description, imageSet, customAttrs } = item ?? {};
   const customAttributes = useMemo(
     () =>
@@ -118,7 +119,18 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
     return page.isPreview() ? <div /> : null;
   }
 
-  if (!itemId || loading) {
+  if (error) {
+    // console.log(error);
+    return (
+      <div className="mw-container mx-auto">
+        <Alert variant="danger" className="mt-3 mb-3">
+          This widget is not working properly. Try again later.
+        </Alert>
+      </div>
+    );
+  }
+
+  if (loading) {
     return (
       <div className="mw-container mx-auto">
         <Placeholder />
@@ -126,8 +138,8 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
     );
   }
 
-  if (!item) {
-    return <Redirect to={page.getUrl('/404')} />;
+  if (!itemId) {
+    throw new ProductNotFoundError(pid);
   }
 
   return (

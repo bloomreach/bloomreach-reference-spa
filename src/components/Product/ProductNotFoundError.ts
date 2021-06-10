@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2020-2021 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,8 @@
  * limitations under the License.
  */
 
-export { Product } from './Product';
-export { ProductNotFoundError } from './ProductNotFoundError';
+export class ProductNotFoundError extends Error {
+  constructor(readonly pid: string) {
+    super(`Product not found for pid: '${pid}'`);
+  }
+}
