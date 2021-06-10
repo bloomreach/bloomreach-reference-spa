@@ -110,7 +110,8 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
   const [, results, loading, apolloError] = useProductGridWidget(params);
   const error = useMemo(() => {
     if (apolloError) {
-      return apolloError.message;
+      // console.log(apolloError);
+      return 'This widget is not working properly. Try again later.';
     }
     switch (params.widgetType) {
       case 'item':
@@ -130,7 +131,11 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
   }
 
   if (error) {
-    return <Alert variant="danger">{error}</Alert>;
+    return (
+      <Alert variant="danger" className="mt-3 mb-3">
+        {error}
+      </Alert>
+    );
   }
 
   return (
