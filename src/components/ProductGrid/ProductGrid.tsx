@@ -23,7 +23,6 @@ import {
   useProductGridSearch,
   FacetFieldFilterInput,
   useProductGridCategory,
-  useProductGridWidget,
   CommonProductInputProps,
 } from '@bloomreach/connector-components-react';
 
@@ -40,7 +39,7 @@ import styles from './ProductGrid.module.scss';
 import { CommerceContext } from '../../CommerceContext';
 import { notEmpty } from '../../utils';
 
-type SearchHookType = typeof useProductGridSearch | typeof useProductGridCategory | typeof useProductGridWidget;
+type SearchHookType = typeof useProductGridSearch | typeof useProductGridCategory;
 type ProductGridParamsType = Parameters<SearchHookType>[0];
 
 interface ProductGridProps {

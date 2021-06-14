@@ -30,7 +30,6 @@ interface ProductGridParameters {
   title?: string;
   total: boolean;
   view?: string;
-  widget?: string;
 }
 
 export function CategoryProductGrid({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
