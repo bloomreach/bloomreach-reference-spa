@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { Image } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { BrPageContext } from '@bloomreach/react-sdk';
@@ -27,11 +27,12 @@ import { Link } from '../Link';
 
 interface ProductHighlightItemProps extends React.ComponentPropsWithoutRef<'a'> {
   itemId: ItemIdModel;
+  setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
 }
 
 type Attribute = Record<string, string>;
 
-export function ProductHighlightItem({ itemId }: ProductHighlightItemProps): JSX.Element {
+export function ProductHighlightItem({ itemId, setError }: ProductHighlightItemProps): JSX.Element {
   const page = React.useContext(BrPageContext);
 
   const {
@@ -74,7 +75,13 @@ export function ProductHighlightItem({ itemId }: ProductHighlightItemProps): JSX
       smViewId,
     ],
   );
-  const [item, loading] = useProductDetail(params);
+  const [item, loading, error] = useProductDetail(params);
+  useEffect(() => {
+    if (error) {
+      setError(error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
   const { listPrice, purchasePrice, displayName, imageSet, customAttrs } = item ?? {};
   const customAttributes = useMemo(
     () =>
