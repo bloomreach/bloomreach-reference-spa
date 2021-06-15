@@ -16,7 +16,7 @@
 
 import React, { useContext, useMemo } from 'react';
 import { useCookies } from 'react-cookie';
-import { Alert, Row } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 
 import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem } from '@bloomreach/spa-sdk';
@@ -109,22 +109,33 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
   ]);
   const [, results, loading, apolloError] = useProductGridWidget(params);
   const error = useMemo(() => {
-    if (apolloError) {
-      // console.log(apolloError);
-      return 'This widget is not working properly. Try again later.';
+    let message;
+    if ((widgetId ?? 'undefined') !== 'undefined' && params.widgetType) {
+      switch (params.widgetType) {
+        case 'item':
+          message = !pids ? 'Widget configured incorrectly: please add Product IDs' : undefined;
+          break;
+        case 'category':
+          message = !category ? 'Widget configured incorrectly: please add a Category ID' : undefined;
+          break;
+        case 'keyword':
+        case 'personalized':
+          message = !keyword ? 'Widget configured incorrectly: please add a Keyword' : undefined;
+          break;
+        default:
+          message = undefined;
+      }
+
+      if (!message && !results && apolloError) {
+        // console.log(apolloError);
+        message = 'This widget is not working properly. Try again later.';
+      }
+    } else {
+      message = 'Please configure Widget ID and Widget Type first';
     }
-    switch (params.widgetType) {
-      case 'item':
-        return !pids ? 'Widget configured incorrectly: please add Product IDs' : undefined;
-      case 'category':
-        return !category ? 'Widget configured incorrectly: please add a Category ID' : undefined;
-      case 'keyword':
-      case 'personalized':
-        return !keyword ? 'Widget configured incorrectly: please add a Keyword' : undefined;
-      default:
-        return undefined;
-    }
-  }, [apolloError, category, keyword, params.widgetType, pids]);
+
+    return message;
+  }, [widgetId, params.widgetType, results, apolloError, pids, category, keyword]);
 
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
@@ -139,15 +150,13 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
   }
 
   return (
-    <div className={`${styles.grid} ${styles['pathways-and-recommendations']} mw-container mx-auto`}>
-      <div className={styles.grid__header}>{title && <h4 className="mb-4">{title}</h4>}</div>
-      <Row>
-        {!loading && results?.items ? (
-          <Products products={results.items.filter(notEmpty)} interval={interval} />
-        ) : (
-          <ProductsPlaceholder size={limit} />
-        )}
-      </Row>
+    <div className={`${styles['pathways-and-recommendations']} mw-container mx-auto`}>
+      {title && <h4 className="mb-4">{title}</h4>}
+      {!loading && results?.items ? (
+        <Products products={results.items.filter(notEmpty)} interval={interval} />
+      ) : (
+        <ProductsPlaceholder size={1} />
+      )}
     </div>
   );
 }
