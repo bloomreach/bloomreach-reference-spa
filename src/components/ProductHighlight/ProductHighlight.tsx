@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, Col, Row } from 'react-bootstrap';
 import { BrProps } from '@bloomreach/react-sdk';
 import styles from './ProductHighlight.module.scss';
@@ -33,6 +33,13 @@ export function ProductHighlight({ component }: BrProps): React.ReactElement | n
       code: params[`pcode${i + 1}`],
     }))
     .filter((itemId) => itemId.id || itemId.code);
+
+  // Reset error when no items configured
+  useEffect(() => {
+    if (!itemIds.length) {
+      setError(undefined);
+    }
+  }, [itemIds]);
 
   if (error) {
     return (
