@@ -269,7 +269,7 @@ export function ProductGrid({
           <div className={`${styles.grid__facets} d-lg-block`}>
             {filtersError && (
               <Alert variant="danger" className="mt-3 mb-3">
-                The filters is not working properly. Try again later.
+                The filters are not working properly. Try again later.
               </Alert>
             )}
             {results?.items ? (
