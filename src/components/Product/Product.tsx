@@ -115,6 +115,11 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
       .filter(({ value }) => !!value && value !== 'undefined');
   }, [customAttributes, keys, messages]);
 
+  // To fix ENT-3089
+  if (!match) {
+    return null;
+  }
+
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
   }

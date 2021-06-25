@@ -47,7 +47,7 @@ export function CtaBanner({ component, page }: BrProps): React.ReactElement | nu
     }
     // If there is document defined, but cannot be loaded:
     return (
-      <Alert variant="danger" className="mt-3 mb-3">
+      <Alert variant="danger" className="mt-3 mb-3 text-center">
         The widget is not working properly. Try again later.
       </Alert>
     );
