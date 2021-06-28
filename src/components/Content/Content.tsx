@@ -18,9 +18,10 @@ import React from 'react';
 import { Image } from 'react-bootstrap';
 import { ContainerItem, Document, ImageSet } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
+import { ErrorPageContent } from './ErrorPageContent';
+import { ERROR_PAGE_PATH_MAP } from '../../App';
 
 import styles from './Content.module.scss';
-import { ErrorPageContent } from './ErrorPageContent';
 
 export function Content({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const document = page.getDocument<Document>();
@@ -30,7 +31,7 @@ export function Content({ component, page }: BrProps<ContainerItem>): React.Reac
     return page.isPreview() ? <div /> : null;
   }
 
-  if (['/404', '/500'].includes(pageUrl)) {
+  if (Object.values(ERROR_PAGE_PATH_MAP).some((path) => pageUrl.startsWith(path))) {
     return <ErrorPageContent document={document} page={page} />;
   }
 

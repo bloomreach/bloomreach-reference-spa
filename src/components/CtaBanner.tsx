@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { Button, Container, Jumbotron, Row } from 'react-bootstrap';
+import { Alert, Button, Container, Jumbotron, Row } from 'react-bootstrap';
 import { Document, Reference } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
 
@@ -28,19 +28,29 @@ interface CtaBannerModels {
 export function CtaBanner({ component, page }: BrProps): React.ReactElement | null {
   const { document: documentRef } = component.getModels<CtaBannerModels>();
   const document = documentRef && page.getContent<Document>(documentRef);
+  const { document: documentParam } = component.getParameters();
 
   if (!document) {
-    return page.isPreview() ? (
-      <div className="has-edit-button">
-        <BrManageContentButton
-          documentTemplateQuery="new-banner-document"
-          folderTemplateQuery="new-banner-folder"
-          parameter="document"
-          root="brxsaas/banners"
-          relative
-        />
-      </div>
-    ) : null;
+    if (!documentParam) {
+      // If no document defined:
+      return page.isPreview() ? (
+        <div className="has-edit-button">
+          <BrManageContentButton
+            documentTemplateQuery="new-banner-document"
+            folderTemplateQuery="new-banner-folder"
+            parameter="document"
+            root="brxsaas/banners"
+            relative
+          />
+        </div>
+      ) : null;
+    }
+    // If there is document defined, but cannot be loaded:
+    return (
+      <Alert variant="danger" className="mt-3 mb-3 text-center">
+        The widget is not working properly. Try again later.
+      </Alert>
+    );
   }
 
   const { content, cta, link: linkRef, title } = document.getData<BannerDocument>();

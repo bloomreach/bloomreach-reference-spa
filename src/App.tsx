@@ -43,34 +43,53 @@ import {
   TitleAndText,
   Video,
 } from './components';
-import styles from './App.module.scss';
 import { CommerceContextProvider, CommerceContextConsumer } from './CommerceContext';
-import { ErrorContext } from './ErrorContext';
+import { ErrorContext, ErrorCode } from './ErrorContext';
+import ErrorPage from './ErrorPage';
+
+import styles from './App.module.scss';
+
+export const ERROR_PAGE_PATH_MAP = {
+  [ErrorCode.NOT_FOUND]: '/404',
+  [ErrorCode.INTERNAL_SERVER_ERROR]: '/500',
+  [ErrorCode.GENERAL_ERROR]: '/_error',
+};
+
+const MAPPING = {
+  BannerCollection,
+  Content,
+  CtaBanner,
+  Images,
+  Map,
+  MultiBannerCarousel,
+  Navigation,
+  PageCatalog,
+  PathwaysRecommendations,
+  Product,
+  ProductGrid,
+  ProductHighlight,
+  ProductSearch,
+  SingleBannerCarousel,
+  SearchBar,
+  TitleAndText,
+  Video,
+};
 
 export default function App(): ReactElement | null {
-  const mapping = {
-    BannerCollection,
-    Content,
-    CtaBanner,
-    Images,
-    Map,
-    MultiBannerCarousel,
-    Navigation,
-    PageCatalog,
-    PathwaysRecommendations,
-    Product,
-    ProductGrid,
-    ProductHighlight,
-    ProductSearch,
-    SingleBannerCarousel,
-    SearchBar,
-    TitleAndText,
-    Video,
-  };
-
-  const { error, errorCode } = useContext(ErrorContext);
+  const { errorCode, requestURL } = useContext(ErrorContext);
   const location = useLocation();
-  const path = error ? `/${errorCode}` : `${location.pathname}${location.search}`;
+  if (errorCode && requestURL) {
+    const { pathname } = new URL(requestURL);
+    if (pathname.endsWith(ERROR_PAGE_PATH_MAP[errorCode])) {
+      // To avoid infinite loop
+      return <ErrorPage />;
+    }
+  }
+
+  const path = errorCode
+    ? `${ERROR_PAGE_PATH_MAP[errorCode] ?? ERROR_PAGE_PATH_MAP[ErrorCode.GENERAL_ERROR]}${location.search}`
+    : `${location.pathname}${location.search}`;
+
   const endpointQueryParameter = 'endpoint';
   const configuration: Configuration = {
     endpointQueryParameter,
@@ -85,61 +104,9 @@ export default function App(): ReactElement | null {
   }
 
   return (
-    <BrPage configuration={configuration} mapping={mapping}>
+    <BrPage configuration={configuration} mapping={MAPPING}>
       <CommerceContextProvider>
-        <header>
-          <Navbar bg="light" expand="lg" sticky="top" className="py-2 py-lg-3">
-            <Container className="justify-content-start px-sm-3">
-              <BrPageContext.Consumer>
-                {(page) => (
-                  <Navbar.Brand as={Link} href={page?.getUrl('/')} title="Pacific Nuts & Bolts">
-                    <Image
-                      alt="Pacific Nuts & Bolts"
-                      src={`${process.env.PUBLIC_URL}/logo.png`}
-                      srcSet={`${process.env.PUBLIC_URL}/logo.png 1x, ${process.env.PUBLIC_URL}/logo@2x.png 2x`}
-                      height="30"
-                      className="d-none d-sm-block"
-                    />
-
-                    <Image
-                      alt="Pacific Nuts & Bolts"
-                      src={`${process.env.PUBLIC_URL}/logo-sm.png`}
-                      srcSet={`${process.env.PUBLIC_URL}/logo-sm.png 1x, ${process.env.PUBLIC_URL}/logo-sm@2x.png 2x`}
-                      height="30"
-                      className="d-block d-sm-none"
-                    />
-
-                    <CommerceContextConsumer>
-                      {({ smAccountId, smDomainKey }) => (
-                        <BrPixel
-                          accountId={smAccountId ?? ''}
-                          domainKey={smDomainKey ?? ''}
-                          page={page!}
-                          pageType="search"
-                          pageLabels="pacific,nut,bolt,commerce"
-                          type="pageview"
-                        />
-                      )}
-                    </CommerceContextConsumer>
-                  </Navbar.Brand>
-                )}
-              </BrPageContext.Consumer>
-
-              <BrComponent path="header">
-                <div className={`${styles.navbar__container} order-lg-2 mr-3 mr-lg-0`}>
-                  <BrComponent />
-                </div>
-              </BrComponent>
-
-              <Navbar.Toggle className="ml-auto" />
-              <Navbar.Collapse className="order-lg-1 mr-lg-3">
-                <BrComponent path="menu">
-                  <Menu />
-                </BrComponent>
-              </Navbar.Collapse>
-            </Container>
-          </Navbar>
-        </header>
+        <Header />
         <BrComponent path="top">
           <Container as="section" fluid>
             <BrComponent />
@@ -180,5 +147,62 @@ export default function App(): ReactElement | null {
         </BrComponent>
       </CommerceContextProvider>
     </BrPage>
+  );
+}
+
+function Header(): ReactElement {
+  const page = useContext(BrPageContext);
+  return (
+    <header>
+      <Navbar bg="light" expand="lg" sticky="top" className="py-2 py-lg-3">
+        <Container className="justify-content-start px-sm-3">
+          <Navbar.Brand as={Link} href={page?.getUrl('/')} title="Pacific Nuts & Bolts">
+            <Image
+              alt="Pacific Nuts & Bolts"
+              src={`${process.env.PUBLIC_URL}/logo.png`}
+              srcSet={`${process.env.PUBLIC_URL}/logo.png 1x, ${process.env.PUBLIC_URL}/logo@2x.png 2x`}
+              height="30"
+              className="d-none d-sm-block"
+            />
+
+            <Image
+              alt="Pacific Nuts & Bolts"
+              src={`${process.env.PUBLIC_URL}/logo-sm.png`}
+              srcSet={`${process.env.PUBLIC_URL}/logo-sm.png 1x, ${process.env.PUBLIC_URL}/logo-sm@2x.png 2x`}
+              height="30"
+              className="d-block d-sm-none"
+            />
+
+            <CommerceContextConsumer>
+              {({ smAccountId, smDomainKey }) => (
+                <BrPixel
+                  accountId={smAccountId ?? ''}
+                  domainKey={smDomainKey ?? ''}
+                  page={page!}
+                  pageType="search"
+                  pageLabels="pacific,nut,bolt,commerce"
+                  type="pageview"
+                />
+              )}
+            </CommerceContextConsumer>
+          </Navbar.Brand>
+          {!page?.getUrl()?.startsWith('/_error') && (
+            <>
+              <BrComponent path="header">
+                <div className={`${styles.navbar__container} order-lg-2 mr-3 mr-lg-0`}>
+                  <BrComponent />
+                </div>
+              </BrComponent>
+              <Navbar.Toggle className="ml-auto" />
+              <Navbar.Collapse className="order-lg-1 mr-lg-3">
+                <BrComponent path="menu">
+                  <Menu />
+                </BrComponent>
+              </Navbar.Collapse>
+            </>
+          )}
+        </Container>
+      </Navbar>
+    </header>
   );
 }

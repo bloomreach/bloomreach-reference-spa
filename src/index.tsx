@@ -17,6 +17,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
+
 import 'bootstrap/dist/css/bootstrap.css';
 
 import './index.scss';
@@ -25,19 +27,21 @@ import { ErrorContextProvider } from './ErrorContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Switch>
-        <Route
-          path="/(.*)"
-          render={() => (
-            <ErrorContextProvider>
-              <App />
-            </ErrorContextProvider>
-          )}
-        />
-        <Redirect to="/" />
-      </Switch>
-    </BrowserRouter>
+    <CookiesProvider>
+      <BrowserRouter>
+        <Switch>
+          <Route
+            path="/(.*)"
+            render={() => (
+              <ErrorContextProvider>
+                <App />
+              </ErrorContextProvider>
+            )}
+          />
+          <Redirect to="/" />
+        </Switch>
+      </BrowserRouter>
+    </CookiesProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
