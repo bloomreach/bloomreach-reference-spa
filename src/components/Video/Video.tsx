@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import ReactPlayer from 'react-player';
+import { Alert } from 'react-bootstrap';
 import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem } from '@bloomreach/spa-sdk';
 
@@ -27,6 +28,7 @@ interface VideoParameters {
 
 export function Video({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const { url } = component.getParameters<VideoParameters>();
+  const [hasError, setHasError] = useState(false);
 
   if (!url || component.isHidden()) {
     return page.isPreview() ? <div /> : null;
@@ -34,8 +36,18 @@ export function Video({ component, page }: BrProps<ContainerItem>): React.ReactE
 
   return (
     <div className="mw-container mx-auto my-4">
+      {page.isPreview() && <div className="pb-3" />}
+      {hasError && <Alert variant="danger">This widget is not working properly. Try again later.</Alert>}
       <div className={`${styles.video__container} position-relative h-0`}>
-        <ReactPlayer url={url} controls width="100%" height="100%" style={{ position: 'absolute' }} />
+        <ReactPlayer
+          url={url}
+          controls
+          width="100%"
+          height="100%"
+          style={{ position: 'absolute' }}
+          onError={() => setHasError(true)}
+          onReady={() => setHasError(false)}
+        />
       </div>
     </div>
   );

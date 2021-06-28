@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React, { useRef, useState, Dispatch, SetStateAction, FocusEvent } from 'react';
+import React, { useRef, useState, Dispatch, SetStateAction, FocusEvent, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Form } from 'react-bootstrap';
+import { Alert, Button, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ContainerItem, Document, Reference } from '@bloomreach/spa-sdk';
@@ -42,6 +42,9 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
   const { suggestionsEnabled, suggestionsLimit } = component.getParameters<SearchBarCatalogParameters>();
   const [keyword, setKeyword] = useState<string>('');
   const [hideSuggestions, setHideSuggestions] = useState<boolean>(true);
+  const showSuggestions = useMemo(() => {
+    return suggestionsEnabled && keyword && !hideSuggestions;
+  }, [suggestionsEnabled, keyword, hideSuggestions]);
 
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
@@ -49,9 +52,7 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
 
   const handleInputChange = (value: string): void => {
     setKeyword(value);
-    if (value?.length > 0) {
-      setHideSuggestions(false);
-    }
+    setHideSuggestions(!value?.length);
   };
 
   const handleSubmit = (e?: React.FormEvent, term?: string): void => {
@@ -93,7 +94,7 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
         onChange={(event) => handleInputChange(event.target.value)}
         value={keyword}
       />
-      {suggestionsEnabled && (
+      {showSuggestions && (
         <CommerceContextConsumer>
           {({ smConnector, smAccountId, smAuthKey, smCatalogViews, smDomainKey, smViewId }) => (
             <ProductSuggestion
@@ -106,7 +107,6 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
               smViewId={smViewId}
               setKeyword={setKeyword}
               handleSubmit={handleSubmit}
-              hideSuggestions={hideSuggestions}
               suggestionsLimit={suggestionsLimit ?? 5}
             />
           )}
@@ -135,7 +135,6 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
 interface SuggestionsProps extends ProductSearchSuggestionInputProps {
   setKeyword: Dispatch<SetStateAction<string>>;
   handleSubmit: (event?: React.FormEvent, term?: string) => void;
-  hideSuggestions: boolean;
   suggestionsLimit: number;
 }
 
@@ -150,10 +149,9 @@ function ProductSuggestion({
   smViewId,
   setKeyword,
   handleSubmit,
-  hideSuggestions,
   suggestionsLimit,
 }: SuggestionsProps): React.ReactElement | null {
-  const [result] = useProductSearchSuggestion({
+  const [result, , error] = useProductSearchSuggestion({
     text,
     connector,
     smViewId,
@@ -164,7 +162,6 @@ function ProductSuggestion({
     smCatalogViews,
   });
   const { terms, items } = result ?? {};
-  const visibility = hideSuggestions ? 'invisible' : 'visible';
   const page = React.useContext(BrPageContext);
 
   const handleClick = (term: string | null): void => {
@@ -172,12 +169,17 @@ function ProductSuggestion({
     handleSubmit(undefined, term ?? '');
   };
 
+  if (error) {
+    // console.log(error);
+    return <Alert variant="danger">Autosuggest is not working properly. Try again later.</Alert>;
+  }
+
   if (!terms?.length && !items?.length) {
     return <div />;
   }
 
   return (
-    <div className={`${styles.autocompleteItems} ${visibility} border overflow-auto`}>
+    <div className={`${styles.autocompleteItems} border overflow-auto`}>
       {terms?.length && <h6 className="border-top-right-radius border-top-left-radius">Suggested keywords</h6>}
       {terms?.slice(0, Math.min(suggestionsLimit, terms.length)).map((term) => (
         <button type="button" key={term} onClick={() => handleClick(term)} onKeyDown={() => handleClick(term)}>

@@ -15,7 +15,7 @@
  */
 
 import React, { useContext, useEffect, useState, useMemo } from 'react';
-import { Button, Col, Collapse, Row } from 'react-bootstrap';
+import { Alert, Button, Col, Collapse, Row } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { BrComponentContext } from '@bloomreach/react-sdk';
@@ -23,7 +23,6 @@ import {
   useProductGridSearch,
   FacetFieldFilterInput,
   useProductGridCategory,
-  useProductGridWidget,
   CommonProductInputProps,
 } from '@bloomreach/connector-components-react';
 
@@ -40,7 +39,7 @@ import styles from './ProductGrid.module.scss';
 import { CommerceContext } from '../../CommerceContext';
 import { notEmpty } from '../../utils';
 
-type SearchHookType = typeof useProductGridSearch | typeof useProductGridCategory | typeof useProductGridWidget;
+type SearchHookType = typeof useProductGridSearch | typeof useProductGridCategory;
 type ProductGridParamsType = Parameters<SearchHookType>[0];
 
 interface ProductGridProps {
@@ -137,8 +136,14 @@ export function ProductGrid({
   const [sortingState, setSorting] = useState(sorting);
   const [filtersState, setFilters] = useState<FacetFieldFilterInput[]>(filters);
   const [filteringVisibility, toggleFiltering] = useState(false);
+  const [action, setAction] = useState<string>();
+  const [error, setError] = useState<Error>();
 
-  const [onLoadMore, results, loading] = useSearch(params as any);
+  const [onLoadMore, results, loading, searchError] = useSearch(params as any);
+  useEffect(() => {
+    setError(searchError);
+  }, [searchError]);
+
   const availableFilters = useMemo(() => {
     const facets = results?.facetResult?.fields.filter(notEmpty);
     if (!facets?.length || !allowedFilters?.length) {
@@ -195,11 +200,26 @@ export function ProductGrid({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowedFilters, filtersState, id, pageState, sortingState]);
 
+  const filtersError = useMemo(() => {
+    if (error && action === 'filters') {
+      return true;
+    }
+    return false;
+  }, [action, error]);
+
   const setPage = async (pageNum: number): Promise<void> => {
     const offset = (pageNum - 1) * limit;
-    await onLoadMore(offset);
-    setPageState(pageNum);
+    try {
+      await onLoadMore(offset);
+      setPageState(pageNum);
+    } catch (err) {
+      setError(err);
+    }
   };
+
+  // if (error) {
+  //   console.log('[ProductGrid Error]: ', error);
+  // }
 
   return (
     <div className={`${styles.grid} mw-container mx-auto`}>
@@ -217,7 +237,16 @@ export function ProductGrid({
           <Col sm="auto">
             <Row className="align-items-center">
               <Col xs="auto" className="flex-fill">
-                {isSorting && <Sorting id={`${id}-sorting`} value={sorting} onChange={setSorting} />}
+                {isSorting && (
+                  <Sorting
+                    id={`${id}-sorting`}
+                    value={sorting}
+                    onChange={(value) => {
+                      setSorting(value);
+                      setAction('sort');
+                    }}
+                  />
+                )}
               </Col>
               {isFiltering && (
                 <Col xs="auto" className="d-lg-none">
@@ -238,6 +267,11 @@ export function ProductGrid({
       {isFiltering && (
         <Collapse in={filteringVisibility}>
           <div className={`${styles.grid__facets} d-lg-block`}>
+            {filtersError && (
+              <Alert variant="danger" className="mt-3 mb-3">
+                The filters are not working properly. Try again later.
+              </Alert>
+            )}
             {results?.items ? (
               <Filters
                 filters={availableFilters!}
@@ -245,6 +279,7 @@ export function ProductGrid({
                 onChange={(newFilters) => {
                   setPage(1);
                   setFilters(newFilters);
+                  setAction('filters');
                 }}
               />
             ) : (
@@ -254,13 +289,26 @@ export function ProductGrid({
         </Collapse>
       )}
       <div className={styles.grid__products}>
+        {error && !filtersError && (
+          <Alert variant="danger" className="mt-3 mb-3">
+            This widget is not working properly. Try again later.
+          </Alert>
+        )}
         {!loading && results?.items ? (
           <Products products={results.items.filter(notEmpty)} />
         ) : (
           <ProductsPlaceholder size={limit} />
         )}
         {isPagination && results && (
-          <Pagination limit={limit} offset={results.offset} total={results.total} onChange={setPage} />
+          <Pagination
+            limit={limit}
+            offset={results.offset}
+            total={results.total}
+            onChange={(pageNum: number) => {
+              setPage(pageNum);
+              setAction('page');
+            }}
+          />
         )}
       </div>
     </div>

@@ -43,9 +43,11 @@ import {
   TitleAndText,
   Video,
 } from './components';
-import styles from './App.module.scss';
 import { CommerceContextProvider, CommerceContextConsumer } from './CommerceContext';
 import { ErrorContext, ErrorCode } from './ErrorContext';
+import ErrorPage from './ErrorPage';
+
+import styles from './App.module.scss';
 
 export const ERROR_PAGE_PATH_MAP = {
   [ErrorCode.NOT_FOUND]: '/404',
@@ -74,11 +76,20 @@ const MAPPING = {
 };
 
 export default function App(): ReactElement | null {
-  const { errorCode } = useContext(ErrorContext);
+  const { errorCode, requestURL } = useContext(ErrorContext);
   const location = useLocation();
+  if (errorCode && requestURL) {
+    const { pathname } = new URL(requestURL);
+    if (pathname.endsWith(ERROR_PAGE_PATH_MAP[errorCode])) {
+      // To avoid infinite loop
+      return <ErrorPage />;
+    }
+  }
+
   const path = errorCode
     ? `${ERROR_PAGE_PATH_MAP[errorCode] ?? ERROR_PAGE_PATH_MAP[ErrorCode.GENERAL_ERROR]}${location.search}`
     : `${location.pathname}${location.search}`;
+
   const endpointQueryParameter = 'endpoint';
   const configuration: Configuration = {
     endpointQueryParameter,

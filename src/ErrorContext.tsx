@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { AxiosError } from 'axios';
+import { ProductNotFoundError } from './components';
 
 // eslint-disable-next-line no-shadow
 export enum ErrorCode {
@@ -27,11 +28,13 @@ export enum ErrorCode {
 interface ErrorContextProps {
   errorCode?: ErrorCode;
   error?: Error;
+  requestURL?: string;
 }
 
 interface ErrorContextState {
   errorCode?: ErrorCode;
   error?: Error;
+  requestURL?: string;
 }
 
 export const ErrorContext = React.createContext<ErrorContextProps>({});
@@ -46,15 +49,19 @@ export class ErrorContextProvider extends React.Component<React.PropsWithChildre
 
   static getDerivedStateFromError(error: Error | AxiosError): ErrorContextState {
     let errorCode: ErrorCode;
+    let requestURL: string | undefined;
     if ('isAxiosError' in error && error.isAxiosError) {
+      requestURL = error.config.url;
       const status = error.response?.status;
       errorCode = status === 404 ? ErrorCode.NOT_FOUND : ErrorCode.INTERNAL_SERVER_ERROR;
+    } else if (error instanceof ProductNotFoundError) {
+      errorCode = ErrorCode.NOT_FOUND;
     } else {
       errorCode = ErrorCode.GENERAL_ERROR;
     }
 
     ErrorContextProvider.hasError = true;
-    return { errorCode, error };
+    return { errorCode, error, requestURL };
   }
 
   componentDidCatch(): void {
@@ -62,8 +69,8 @@ export class ErrorContextProvider extends React.Component<React.PropsWithChildre
   }
 
   render(): React.ReactElement | null {
-    const { errorCode, error } = this.state;
-    const value: ErrorContextProps = ErrorContextProvider.hasError ? { errorCode, error } : {};
+    const { errorCode, error, requestURL } = this.state;
+    const value: ErrorContextProps = ErrorContextProvider.hasError ? { errorCode, error, requestURL } : {};
     const { children } = this.props;
     return <ErrorContext.Provider value={value}>{children}</ErrorContext.Provider>;
   }

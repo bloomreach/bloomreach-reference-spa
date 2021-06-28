@@ -28,7 +28,7 @@ export interface BrPixelProps {
 }
 
 export function BrPixel(props: BrPixelProps): React.ReactElement | null {
-  const [cookies, setCookie] = useCookies(['_br_uid_2']);
+  const setCookie = useCookies(['_br_uid_2'])[1];
   useEffect(() => {
     if (/^\d+$/.test(props.accountId)) {
       (window as any).br_data = {
@@ -46,15 +46,14 @@ export function BrPixel(props: BrPixelProps): React.ReactElement | null {
       brtrk.type = 'text/javascript';
       brtrk.async = true;
       brtrk.src = `//cdns.brsrvr.com/v1/br-trk-${props.accountId}.js`;
-      if (!cookies._br_uid_2) {
-        brtrk.addEventListener('load', () => {
-          const brUid2 = document.cookie
-            .split('; ')
-            .find((cookie) => cookie.trim().startsWith('_br_uid_2='))
-            ?.split('=')[1];
-          setCookie('_br_uid_2', brUid2);
-        });
-      }
+      // Update react cookie with the latest value
+      brtrk.addEventListener('load', () => {
+        const brUid2 = document.cookie
+          .split('; ')
+          .find((cookie) => cookie.trim().startsWith('_br_uid_2='))
+          ?.split('=')[1];
+        setCookie('_br_uid_2', brUid2, { path: '/' });
+      });
       const s = document.getElementsByTagName('script')[0];
       s.parentNode?.insertBefore(brtrk, s);
     }
