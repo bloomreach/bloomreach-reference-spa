@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { GoogleMap, Marker, withGoogleMap, withScriptjs } from 'react-google-maps';
+import React, { useEffect, useState } from 'react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem } from '@bloomreach/spa-sdk';
 
 import styles from './Map.module.scss';
-
-const GoogleMaps = withScriptjs(withGoogleMap(GoogleMap));
 
 interface MapParameters {
   token?: string;
@@ -29,10 +27,12 @@ interface MapParameters {
   longitude: number;
   marker?: boolean;
   zoom: number;
+  address?: string;
+  type: string;
 }
 
 export function Map({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
-  const { latitude: lat, longitude: lng, marker = false, token, zoom } = component.getParameters<MapParameters>();
+  const { token } = component.getParameters<MapParameters>();
 
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
@@ -40,16 +40,49 @@ export function Map({ component, page }: BrProps<ContainerItem>): React.ReactEle
 
   return (
     <div className="mw-container mx-auto my-4">
-      <GoogleMaps
-        googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places${token && `&key=${token}`}`}
-        defaultCenter={{ lat, lng }}
-        defaultZoom={zoom}
-        containerElement={<div className={`${styles.map__container} position-relative h-0`} />}
+      <LoadScript
+        key={token}
+        googleMapsApiKey={token ?? ''}
         loadingElement={<div className="shimmer position-absolute w-100 h-100" />}
-        mapElement={<div className="position-absolute w-100 h-100" />}
       >
-        {marker && <Marker position={{ lat, lng }} />}
-      </GoogleMaps>
+        <RenderMap component={component} />
+      </LoadScript>
     </div>
+  );
+}
+
+function RenderMap({ component }: { component: ContainerItem }): React.ReactElement {
+  const {
+    latitude: lat,
+    longitude: lng,
+    marker = false,
+    zoom,
+    address,
+    type,
+  } = component.getParameters<MapParameters>();
+  const [center, setCenter] = useState<google.maps.LatLngLiteral | google.maps.LatLng>({ lat, lng });
+
+  useEffect(() => {
+    if (address) {
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === window.google.maps.GeocoderStatus.OK) {
+          setCenter(results[0].geometry.location);
+        }
+      });
+    } else {
+      setCenter({ lat, lng });
+    }
+  }, [address, lat, lng]);
+
+  return (
+    <GoogleMap
+      center={center}
+      zoom={zoom}
+      mapContainerClassName={`${styles.map__container} position-relative h-0`}
+      mapTypeId={type}
+    >
+      {marker && <Marker position={center} />}
+    </GoogleMap>
   );
 }
