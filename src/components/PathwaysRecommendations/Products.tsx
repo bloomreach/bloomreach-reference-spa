@@ -20,11 +20,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { ItemFragment } from '@bloomreach/connector-components-react';
 
+import { DOCUMENTS_PER_SLIDE } from './PathwaysRecommendations';
 import { Product } from './Product';
 
 import styles from './Products.module.scss';
-
-const DOCUMENTS_PER_SLIDE = 4;
 
 interface ProductsProps {
   products: ItemFragment[];

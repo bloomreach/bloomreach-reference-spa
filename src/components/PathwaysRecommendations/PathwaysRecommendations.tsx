@@ -29,6 +29,8 @@ import { DUMMY_BR_UID_2_FOR_PREVIEW, notEmpty } from '../../utils';
 import styles from './PathwaysRecommendations.module.scss';
 import { ProductsPlaceholder } from '../ProductGrid/ProductsPlaceholder';
 
+export const DOCUMENTS_PER_SLIDE = 4;
+
 export interface PathwaysRecommendationsParameters {
   category?: string;
   interval?: number;
@@ -82,7 +84,7 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
       brUid2,
       searchText: keyword,
       categoryId: category,
-      pageSize: limit,
+      pageSize: limit || DOCUMENTS_PER_SLIDE,
       productIds: pids?.split(','),
       customAttrFields: smCustomAttrFields,
       customVariantAttrFields: smCustomVarAttrFields,
