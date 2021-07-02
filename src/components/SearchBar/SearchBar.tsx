@@ -194,7 +194,7 @@ function ProductSuggestion({
       )}
       {items?.slice(0, Math.min(suggestionsLimit, items.length)).map((item) => (
         <Link
-          href={page?.getUrl(`/products/${item?.itemId.code ?? item?.itemId.id}`)}
+          href={page?.getUrl(`/products/${item?.itemId.id ?? ''}___${item?.itemId.code ?? ''}`)}
           key={item?.itemId.id}
           onClick={() => setKeyword('')}
         >
