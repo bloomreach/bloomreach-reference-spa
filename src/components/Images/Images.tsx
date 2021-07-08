@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { Col, Image, Row } from 'react-bootstrap';
+import React, { useMemo } from 'react';
+import { Col, Image, Row, Alert, Container } from 'react-bootstrap';
 import { ImageSet, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
 
 import styles from './Images.module.scss';
 
 const MAX_IMAGES = 4;
+
+const IMAGE_PARAMS = [...Array(MAX_IMAGES).keys()].map((n) => `image${n + 1}`);
 
 interface ImagesModels {
   image1?: Reference;
@@ -32,29 +34,41 @@ interface ImagesModels {
 
 export function Images({ component, page }: BrProps): React.ReactElement | null {
   const models = component.getModels<ImagesModels>();
-  const images = [...Array(MAX_IMAGES).keys()]
-    .map((n) => `image${n + 1}` as keyof ImagesModels)
-    .map((model) => models[model])
-    .map((reference) => reference && page.getContent<ImageSet>(reference))
-    .filter<ImageSet>(Boolean as any);
+  const params = component.getParameters();
+  const images = useMemo(() => {
+    return IMAGE_PARAMS.map((model) => models[model as keyof ImagesModels])
+      .map((reference) => reference && page.getContent<ImageSet>(reference))
+      .filter<ImageSet>(Boolean as any);
+  }, [models, page]);
+
+  const error = useMemo(() => {
+    return Object.entries(params).filter(([key, value]) => IMAGE_PARAMS.includes(key) && value).length > images.length;
+  }, [images.length, params]);
 
   if (!images.length) {
     return page.isPreview() ? <div /> : null;
   }
 
   return (
-    <Row className="no-gutters mw-container mx-auto my-4">
-      {images.map((image) => (
-        <Col key={image.getId()} md={Math.max(12 / images.length, 6)} lg={Math.max(12 / images.length, 3)}>
-          <div className={`${styles.images__container} position-relative h-0`}>
-            <Image
-              src={image.getOriginal()?.getUrl()}
-              alt=""
-              className={`${styles.images__image} position-absolute w-100 h-100`}
-            />
-          </div>
-        </Col>
-      ))}
-    </Row>
+    <Container>
+      {error && (
+        <Alert variant="danger" className="mt-3 mx-3">
+          Image(s) referred by this component cannot be loaded
+        </Alert>
+      )}
+      <Row className="no-gutters mw-container mx-auto my-4">
+        {images.map((image) => (
+          <Col key={image.getId()} md={Math.max(12 / images.length, 6)} lg={Math.max(12 / images.length, 3)}>
+            <div className={`${styles.images__container} position-relative h-0`}>
+              <Image
+                src={image.getOriginal()?.getUrl()}
+                alt=""
+                className={`${styles.images__image} position-absolute w-100 h-100`}
+              />
+            </div>
+          </Col>
+        ))}
+      </Row>
+    </Container>
   );
 }
