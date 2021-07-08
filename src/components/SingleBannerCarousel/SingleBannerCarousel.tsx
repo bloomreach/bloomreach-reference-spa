@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { Carousel, Row } from 'react-bootstrap';
+import React, { useMemo } from 'react';
+import { Carousel, Row, Alert } from 'react-bootstrap';
 import { Reference } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
 import { getEffectiveMultipleDocumentParameters } from '../param-utils';
@@ -24,6 +24,8 @@ import { Banner } from './Banner';
 import styles from './SingleBannerCarousel.module.scss';
 
 const MAX_DOCUMENTS = 5;
+
+const DOCUMENT_PARAMS = [...Array(MAX_DOCUMENTS).keys()].map((n) => `document${n + 1}`);
 
 interface SingleBannerCarouselModels {
   document1?: Reference;
@@ -38,11 +40,16 @@ interface SingleBannerCarouselParameters {
 }
 
 export function SingleBannerCarousel({ component, page }: BrProps): React.ReactElement | null {
-  const { interval = 0 } = component.getParameters<SingleBannerCarouselParameters>();
+  const { interval = 0, ...params } = component.getParameters<SingleBannerCarouselParameters & Record<string, any>>();
   const models = component.getModels<SingleBannerCarouselModels>();
   const docParams = getEffectiveMultipleDocumentParameters(page, models, MAX_DOCUMENTS);
+  const error = useMemo(() => {
+    return (
+      Object.entries(params).filter(([key, value]) => DOCUMENT_PARAMS.includes(key) && value).length > docParams.length
+    );
+  }, [docParams.length, params]);
 
-  if (!docParams.length) {
+  if (!docParams.length && !error) {
     return page.isPreview() ? (
       <div className="has-edit-button">
         <BrManageContentButton
@@ -57,16 +64,23 @@ export function SingleBannerCarousel({ component, page }: BrProps): React.ReactE
   }
 
   return (
-    <Carousel as={Row} controls={docParams.length > 1} indicators={docParams.length > 1} interval={interval}>
-      {docParams.map((docParam) => (
-        <Carousel.Item
-          key={docParam.document.getId()}
-          as={Banner}
-          className={styles.carousel__banner}
-          document={docParam.document}
-          parameterName={docParam.parameterName}
-        />
-      ))}
-    </Carousel>
+    <div>
+      {error && (
+        <Alert variant="danger" className="mt-3 ml-3" style={{ position: 'absolute', zIndex: 900 }}>
+          Document(s) referred by this component cannot be loaded
+        </Alert>
+      )}
+      <Carousel as={Row} controls={docParams.length > 1} indicators={docParams.length > 1} interval={interval}>
+        {docParams.map((docParam) => (
+          <Carousel.Item
+            key={docParam.document.getId()}
+            as={Banner}
+            className={styles.carousel__banner}
+            document={docParam.document}
+            parameterName={docParam.parameterName}
+          />
+        ))}
+      </Carousel>
+    </div>
   );
 }
