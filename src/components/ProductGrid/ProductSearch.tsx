@@ -52,12 +52,9 @@ export function ProductSearch({ component, page }: BrProps<ContainerItem>): Reac
       params={params}
       sorting={sorting}
       stats={total}
-      title={
-        <>
-          <span className="font-weight-normal">Search results for</span>{' '}
-          <span className="font-weight-bold text-capitalize">{query}</span>
-        </>
-      }
+      query={query}
+      title="Search results for"
+      appendQueryToTitle
       useSearch={useProductGridSearch}
     />
   );
