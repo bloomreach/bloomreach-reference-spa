@@ -52,7 +52,9 @@ interface ProductGridProps {
   >;
   sorting?: boolean;
   stats?: boolean;
-  title?: string | React.ReactElement;
+  query?: string;
+  title?: string;
+  appendQueryToTitle?: boolean;
   useSearch: SearchHookType;
 }
 
@@ -63,7 +65,9 @@ export function ProductGrid({
   params: defaults,
   sorting: isSorting,
   stats: isStats,
+  query,
   title,
+  appendQueryToTitle,
   useSearch,
 }: ProductGridProps): React.ReactElement {
   const id = useContext(BrComponentContext)?.getId() ?? '';
@@ -217,6 +221,9 @@ export function ProductGrid({
     }
   };
 
+  const autoCorrectQuery = results?.queryHint?.autoCorrectQuery;
+  const effectiveQuery = autoCorrectQuery && autoCorrectQuery !== query ? autoCorrectQuery : query;
+
   // if (error) {
   //   console.log('[ProductGrid Error]: ', error);
   // }
@@ -224,7 +231,24 @@ export function ProductGrid({
   return (
     <div className={`${styles.grid} mw-container mx-auto`}>
       <div className={styles.grid__header}>
-        {title && <h4 className="mb-4">{title}</h4>}
+        {title && (
+          <h4 className="mb-4">
+            {effectiveQuery && effectiveQuery !== query && (
+              <div>
+                <span className="font-weight-normal">
+                  Did you mean <span className="font-weight-bold">{effectiveQuery}</span>?
+                </span>{' '}
+              </div>
+            )}
+            {appendQueryToTitle && (
+              <div>
+                <span className="font-weight-normal">{title}</span>{' '}
+                <span className="font-weight-bold text-capitalize">{effectiveQuery}</span>
+              </div>
+            )}
+            {!appendQueryToTitle && <>{title}</>}
+          </h4>
+        )}
         <Row className="align-items-center">
           <Col sm="auto" className="flex-fill">
             {isStats &&
