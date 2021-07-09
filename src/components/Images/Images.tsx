@@ -45,7 +45,7 @@ export function Images({ component, page }: BrProps): React.ReactElement | null 
     return Object.entries(params).filter(([key, value]) => IMAGE_PARAMS.includes(key) && value).length > images.length;
   }, [images.length, params]);
 
-  if (!images.length) {
+  if (!images.length && !error) {
     return page.isPreview() ? <div /> : null;
   }
 
