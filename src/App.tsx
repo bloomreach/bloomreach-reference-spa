@@ -40,6 +40,7 @@ import {
   ProductSearch,
   SearchBar,
   SingleBannerCarousel,
+  SingleBannerCarouselX,
   TitleAndText,
   Video,
 } from './components';
@@ -70,6 +71,7 @@ const MAPPING = {
   ProductHighlight,
   ProductSearch,
   SingleBannerCarousel,
+  SingleBannerCarouselX,
   SearchBar,
   TitleAndText,
   Video,

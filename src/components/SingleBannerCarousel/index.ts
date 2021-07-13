@@ -15,3 +15,4 @@
  */
 
 export { SingleBannerCarousel } from './SingleBannerCarousel';
+export { SingleBannerCarouselX } from './SingleBannerCarouselX';
