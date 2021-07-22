@@ -23,6 +23,7 @@ import { Configuration } from '@bloomreach/spa-sdk';
 
 import {
   BannerCollection,
+  BannerCTA,
   BrPixel,
   Content,
   CtaBanner,
@@ -58,6 +59,7 @@ export const ERROR_PAGE_PATH_MAP = {
 
 const MAPPING = {
   BannerCollection,
+  BannerCTA,
   Content,
   CtaBanner,
   Images,

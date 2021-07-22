@@ -15,6 +15,7 @@
  */
 
 export * from './BannerCollection';
+export * from './BannerCTA';
 export * from './BrPixel';
 export * from './Content';
 export * from './CtaBanner';
