@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2021 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,32 @@
  */
 
 import React from 'react';
-import { Reference } from '@bloomreach/spa-sdk';
-import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
-import { Banner } from './Banner';
+import { ContainerItem, Document, getContainerItemContent, Reference } from '@bloomreach/spa-sdk';
+import { BrProps } from '@bloomreach/react-sdk';
+import { Link } from '../Link';
 
-interface BannerCTAModels {
-  document?: Reference;
-}
-
-interface BannerCTAParameters {
+interface BannerCTACompound {
   title?: string;
+  content?: Content;
+  cta?: string;
+  link?: Reference;
 }
 
-export function BannerCTA({ component, page }: BrProps): React.ReactElement | null {
-  const { title } = component.getParameters<BannerCTAParameters>();
-  const models = component.getModels<BannerCTAModels>();
-  const document = page.getContent('banner');
+export function BannerCTA({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
+  const { title, content, cta, link } = getContainerItemContent<BannerCTACompound>(component, page) ?? {};
+  const linkedDoc = link && page?.getContent<Document>(link);
 
-  if (!document) {
-    return page.isPreview() ? (
-      <div className="has-edit-button">
-        <BrManageContentButton
-          documentTemplateQuery="new-banner-document"
-          folderTemplateQuery="new-banner-folder"
-          parameter="document1"
-          root="brxsaas/banners"
-          relative
-        />
-      </div>
-    ) : null;
-  }
-
-  return <h1>Banner CTA</h1>; // </h1><Banner document={document} parameterName="document" />;
+  return (
+    <Link
+      // ref={ref}
+      href={linkedDoc?.getUrl()}
+      {...{}}
+    >
+      {title && <span className="d-block h4 mb-3">{title}</span>}
+      {content?.value && (
+        <span className="d-block text-muted mb-4" dangerouslySetInnerHTML={{ __html: content.value }} />
+      )}
+      {cta && <span className="d-block h4 mb-3">{cta}</span>}
+    </Link>
+  );
 }
