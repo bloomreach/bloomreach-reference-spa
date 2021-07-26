@@ -19,6 +19,7 @@ import { Button, Container, Jumbotron, Row } from 'react-bootstrap';
 import { ContainerItem, Document, getContainerItemContent, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
 import { Link } from '../Link';
+import styles from './BannerCTA.module.scss';
 
 interface BannerCTACompound {
   title?: string;
@@ -32,7 +33,7 @@ export function BannerCTA({ component, page }: BrProps<ContainerItem>): React.Re
   const document = link && page?.getContent<Document>(link);
 
   return (
-    <Jumbotron as={Row} fluid className="bg-primary text-light text-center my-0">
+    <Jumbotron as={Row} fluid className={`${styles.bannerCTA} bg-primary text-light my-0`}>
       <Container>
         {title && <h3 className="mb-2">{title}</h3>}
         {content && <div dangerouslySetInnerHTML={{ __html: page.rewriteLinks(content.value) }} />}
