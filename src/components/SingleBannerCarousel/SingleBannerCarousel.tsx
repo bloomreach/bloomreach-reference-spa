@@ -63,10 +63,20 @@ export function SingleBannerCarousel({ component, page }: BrProps): React.ReactE
     ) : null;
   }
 
+  if (error && !docParams.length) {
+    return (
+      <div className={`${styles.placeholder} shimmer`}>
+        <Alert variant="danger" className={`${styles.error} mt-3 ml-3`}>
+          Document(s) referred by this component cannot be loaded
+        </Alert>
+      </div>
+    );
+  }
+
   return (
     <div>
       {error && (
-        <Alert variant="danger" className="mt-3 ml-3" style={{ position: 'absolute', zIndex: 900 }}>
+        <Alert variant="danger" className={`${styles.error} mt-3 ml-3`}>
           Document(s) referred by this component cannot be loaded
         </Alert>
       )}

@@ -19,3 +19,12 @@
     height: 400px;
   }
 }
+
+.placeholder {
+  min-height: 240px;
+}
+
+.error {
+  position: absolute;
+  z-index: 900;
+}
