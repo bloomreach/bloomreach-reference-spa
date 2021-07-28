@@ -163,6 +163,7 @@
                 <exclude>npm.lock</exclude>
                 <exclude>**/ADDITIONAL-LICENSES.yml</exclude>
                 <exclude>build/**</exclude>
+                <exclude>public/_redirects</exclude>
               </excludes>
             </configuration>
           </plugin>
