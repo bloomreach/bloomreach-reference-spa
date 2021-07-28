@@ -16,7 +16,7 @@
 
 import React, { useMemo } from 'react';
 import { Col, Image, Row, Alert, Container } from 'react-bootstrap';
-import { ImageSet, Reference } from '@bloomreach/spa-sdk';
+import { ImageSet, isImageSet, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
 
 import styles from './Images.module.scss';
@@ -57,17 +57,24 @@ export function Images({ component, page }: BrProps): React.ReactElement | null 
         </Alert>
       )}
       <Row className="no-gutters mw-container mx-auto my-4">
-        {images.map((image) => (
-          <Col key={image.getId()} md={Math.max(12 / images.length, 6)} lg={Math.max(12 / images.length, 3)}>
-            <div className={`${styles.images__container} position-relative h-0`}>
-              <Image
-                src={image.getOriginal()?.getUrl()}
-                alt=""
-                className={`${styles.images__image} position-absolute w-100 h-100`}
-              />
-            </div>
-          </Col>
-        ))}
+        {images.map((image, index) =>
+          isImageSet(image) ? (
+            <Col key={image.getId()} md={Math.max(12 / images.length, 6)} lg={Math.max(12 / images.length, 3)}>
+              <div className={`${styles.images__container} position-relative h-0`}>
+                <Image
+                  src={image.getOriginal()?.getUrl()}
+                  alt=""
+                  className={`${styles.images__image} position-absolute w-100 h-100`}
+                />
+              </div>
+            </Col>
+          ) : (
+            // eslint-disable-next-line react/no-array-index-key
+            <Alert key={index} variant="danger" className="mt-3 mx-3">
+              Image referred by this component cannot be loaded
+            </Alert>
+          ),
+        )}
       </Row>
     </Container>
   );
