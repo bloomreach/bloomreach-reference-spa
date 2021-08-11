@@ -56,7 +56,7 @@ export function SingleBannerCarousel({ component, page }: BrProps): React.ReactE
           documentTemplateQuery="new-banner-document"
           folderTemplateQuery="new-banner-folder"
           parameter="document1"
-          root="brxsaas/banners"
+          root="banners"
           relative
         />
       </div>

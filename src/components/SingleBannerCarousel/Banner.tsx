@@ -47,7 +47,7 @@ export const Banner = React.forwardRef(
           documentTemplateQuery="new-banner-document"
           folderTemplateQuery="new-banner-folder"
           parameter={parameterName ?? 'document'}
-          root="brxsaas/banners"
+          root="banners"
           relative
         />
 

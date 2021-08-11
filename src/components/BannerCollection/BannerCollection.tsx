@@ -50,7 +50,7 @@ export function BannerCollection({ component, page }: BrProps): React.ReactEleme
           documentTemplateQuery="new-banner-document"
           folderTemplateQuery="new-banner-folder"
           parameter="document1"
-          root="brxsaas/banners"
+          root="banners"
           relative
         />
       </div>
