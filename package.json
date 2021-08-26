@@ -22,6 +22,7 @@
     "@react-google-maps/api": "^2.2.0",
     "axios": "^0.21",
     "bootstrap": "^4.5",
+    "path-parse": "^1.0.7",
     "react": "^16.14",
     "react-bootstrap": "^1.4",
     "react-cookie": "^4.0.3",
