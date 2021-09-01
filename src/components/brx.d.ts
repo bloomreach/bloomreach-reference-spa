@@ -58,3 +58,7 @@ interface ResourceBundle {
   keys: string[];
   messages: string[];
 }
+
+interface SelectionType {
+  selectionValues: { key: string; label: string }[];
+}

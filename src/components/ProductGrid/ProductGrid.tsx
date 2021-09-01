@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2020-2021 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,62 +14,95 @@
  * limitations under the License.
  */
 
-import React, { useContext, useEffect, useState, useMemo } from 'react';
-import { Alert, Button, Col, Collapse, Row } from 'react-bootstrap';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { BrComponentContext } from '@bloomreach/react-sdk';
+import { Alert, Col, Collapse, Row, Button } from 'react-bootstrap';
+import { BrComponentContext, BrProps } from '@bloomreach/react-sdk';
+import { ContainerItem, getContainerItemContent } from '@bloomreach/spa-sdk';
 import {
-  useProductGridSearch,
   FacetFieldFilterInput,
   useProductGridCategory,
-  CommonProductInputProps,
+  useProductGridSearch,
 } from '@bloomreach/connector-components-react';
-
-import { Filters } from './Filters';
-import { FiltersPlaceholder } from './FiltersPlaceholder';
-import { Pagination } from './Pagination';
-import { Products } from './Products';
-import { ProductsPlaceholder } from './ProductsPlaceholder';
-import { Sorting } from './Sorting';
-import { Stats } from './Stats';
-import { StatsPlaceholder } from './StatsPlaceholder';
-
-import styles from './ProductGrid.module.scss';
 import { CommerceContext } from '../../CommerceContext';
 import { notEmpty } from '../../utils';
+import { Stats } from './Stats';
+import { StatsPlaceholder } from './StatsPlaceholder';
+import { Filters } from './Filters';
+import { FiltersPlaceholder } from './FiltersPlaceholder';
+import { Sorting } from './Sorting';
+import { Products } from './Products';
+import { ProductsPlaceholder } from './ProductsPlaceholder';
+import { Pagination } from './Pagination';
+
+import styles from './ProductGrid.module.scss';
+
+interface ProductGridParameters {
+  filters?: string;
+  limit: number;
+  pagination: boolean;
+  sorting: boolean;
+  total: boolean;
+  facets: boolean;
+  view?: string;
+}
+
+interface ProductGridCompound {
+  title?: string;
+  searchtype: SelectionType;
+  query?: string;
+  category?: { categoryid: string };
+}
+
+interface ProductGridProps {
+  title?: string;
+  searchType: string;
+  query?: string;
+  categoryId?: string;
+  component: ContainerItem;
+}
 
 type SearchHookType = typeof useProductGridSearch | typeof useProductGridCategory;
 type ProductGridParamsType = Parameters<SearchHookType>[0];
 
-interface ProductGridProps {
-  filters?: string[];
-  limit: number;
-  pagination?: boolean;
-  params: Omit<
-    ProductGridParamsType,
-    keyof CommonProductInputProps | 'facetFieldFilters' | 'pageSize' | 'sortFields' | 'connector' | 'brUid2' | 'offset'
-  >;
-  sorting?: boolean;
-  stats?: boolean;
-  query?: string;
-  title?: string;
-  appendQueryToTitle?: boolean;
-  useSearch: SearchHookType;
+export function ProductGrid({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
+  const { title, searchtype, query, category } = getContainerItemContent<ProductGridCompound>(component, page) ?? {};
+
+  const searchType = searchtype?.selectionValues[0].key;
+
+  if (component.isHidden() || !searchType) {
+    return page.isPreview() ? <div /> : null;
+  }
+
+  return (
+    <ProductGridProcessor
+      component={component}
+      searchType={searchType}
+      categoryId={category?.categoryid}
+      query={query}
+      title={title}
+    />
+  );
 }
 
-export function ProductGrid({
-  filters: allowedFilters,
-  limit,
-  pagination: isPagination,
-  params: defaults,
-  sorting: isSorting,
-  stats: isStats,
-  query,
+function ProductGridProcessor({
   title,
-  appendQueryToTitle,
-  useSearch,
-}: ProductGridProps): React.ReactElement {
+  searchType,
+  query: queryParameter,
+  categoryId,
+  component,
+}: ProductGridProps): React.ReactElement | null {
+  const {
+    filters: filtersParameter = '',
+    limit,
+    pagination: isPagination,
+    sorting: isSorting,
+    total: isStats,
+    facets: isFacets,
+    view,
+  } = component.getParameters<ProductGridParameters>();
+
   const id = useContext(BrComponentContext)?.getId() ?? '';
   const {
     smDomainKey,
@@ -83,15 +116,29 @@ export function ProductGrid({
     smCustomVarPurchasePriceField,
   } = useContext(CommerceContext);
   const [cookies] = useCookies(['_br_uid_2']);
-
   const history = useHistory();
 
-  const { page, sorting, filters } = useMemo(() => {
+  const allowedFilters = useMemo(
+    () =>
+      filtersParameter
+        .split(';')
+        .map((filter) => filter.trim())
+        .filter(Boolean),
+    [filtersParameter],
+  );
+
+  const query = useMemo(() => {
+    const search = new URLSearchParams(history.location.search);
+
+    return search.get('q') ?? queryParameter;
+  }, [history.location.search, queryParameter]);
+
+  const { page, sortFields, filters } = useMemo(() => {
     const search = new URLSearchParams(history.location.search);
 
     return {
       page: Number(search.get(`${id}:page`) ?? 1),
-      sorting: search.get(`${id}:sort`) ?? undefined,
+      sortFields: search.get(`${id}:sort`) ?? undefined,
       filters:
         allowedFilters
           ?.map((filter) => ({ id: filter, values: search.getAll(`${id}:filter:${filter}`) }))
@@ -99,49 +146,63 @@ export function ProductGrid({
     };
   }, [history.location.search, id, allowedFilters]);
 
-  const params: ProductGridParamsType = useMemo(
-    () => ({
-      ...defaults,
-      smViewId,
+  const params: ProductGridParamsType = useMemo(() => {
+    const defaults: ProductGridParamsType = {
       smAccountId,
       smAuthKey,
       smDomainKey,
+      sortFields,
       customAttrFields: smCustomAttrFields,
       customVariantAttrFields: smCustomVarAttrFields,
       customVariantListPriceField: smCustomVarListPriceField,
       customVariantPurchasePriceField: smCustomVarPurchasePriceField,
       facetFieldFilters: filters,
       pageSize: limit,
-      sortFields: sorting,
       connector: smConnector,
       offset: limit * (page - 1),
       brUid2: cookies._br_uid_2,
-    }),
-    [
-      cookies._br_uid_2,
-      defaults,
-      filters,
-      limit,
-      page,
-      smAccountId,
-      smAuthKey,
-      smConnector,
-      smCustomAttrFields,
-      smCustomVarAttrFields,
-      smCustomVarListPriceField,
-      smCustomVarPurchasePriceField,
-      smDomainKey,
-      smViewId,
-      sorting,
-    ],
-  );
+      smViewId: view || smViewId,
+    };
+    if (searchType === 'category') {
+      return {
+        ...defaults,
+        categoryId: categoryId || ' ', // workaround for "All categories"
+      };
+    }
+
+    return {
+      ...defaults,
+      searchText: query,
+    };
+  }, [
+    smAccountId,
+    smAuthKey,
+    smDomainKey,
+    sortFields,
+    smCustomAttrFields,
+    smCustomVarAttrFields,
+    smCustomVarListPriceField,
+    smCustomVarPurchasePriceField,
+    filters,
+    limit,
+    smConnector,
+    page,
+    cookies._br_uid_2,
+    view,
+    smViewId,
+    searchType,
+    query,
+    categoryId,
+  ]);
 
   const [pageState, setPageState] = useState(page);
-  const [sortingState, setSorting] = useState(sorting);
+  const [sortingState, setSorting] = useState(sortFields);
   const [filtersState, setFilters] = useState<FacetFieldFilterInput[]>(filters);
   const [filteringVisibility, toggleFiltering] = useState(false);
   const [action, setAction] = useState<string>();
   const [error, setError] = useState<Error>();
+
+  const useSearch: SearchHookType = searchType === 'category' ? useProductGridCategory : useProductGridSearch;
 
   const [onLoadMore, results, loading, searchError] = useSearch(params as any);
   useEffect(() => {
@@ -170,10 +231,10 @@ export function ProductGrid({
       .concat(caseSensitiveResult);
   }, [allowedFilters, results]);
 
-  const isFiltering = !!allowedFilters?.length && (!results?.items || !!availableFilters?.length);
+  const isFiltering = isFacets && !!allowedFilters?.length && (!results?.items || !!availableFilters?.length);
 
   useEffect(() => setPageState(page), [page]);
-  useEffect(() => setSorting(sorting), [sorting]);
+  useEffect(() => setSorting(sortFields), [sortFields]);
   useEffect(() => setFilters(filters), [filters]);
   useEffect(() => {
     const search = new URLSearchParams(history.location.search);
@@ -211,6 +272,35 @@ export function ProductGrid({
     return false;
   }, [action, error]);
 
+  const effectiveTitle = useMemo(() => {
+    if (searchType === 'category' && title) {
+      return <h4 className="mb-4">{title}</h4>;
+    }
+    if (searchType === 'search') {
+      const autoCorrectQuery = results?.queryHint?.autoCorrectQuery;
+      const effectiveQuery = autoCorrectQuery && autoCorrectQuery !== query ? autoCorrectQuery : query;
+      return (
+        <>
+          {title && <h4 className="mb-4">{title}</h4>}
+          <h4 className="mb-4">
+            {effectiveQuery && effectiveQuery !== query && (
+              <div>
+                <span className="font-weight-normal">
+                  Did you mean <span className="font-weight-bold">{effectiveQuery}</span>?
+                </span>{' '}
+              </div>
+            )}
+            <div>
+              <span className="font-weight-normal">Search results for</span>{' '}
+              <span className="font-weight-bold text-capitalize">{effectiveQuery}</span>
+            </div>
+          </h4>
+        </>
+      );
+    }
+    return null;
+  }, [query, results?.queryHint?.autoCorrectQuery, searchType, title]);
+
   const setPage = async (pageNum: number): Promise<void> => {
     const offset = (pageNum - 1) * limit;
     try {
@@ -221,9 +311,6 @@ export function ProductGrid({
     }
   };
 
-  const autoCorrectQuery = results?.queryHint?.autoCorrectQuery;
-  const effectiveQuery = autoCorrectQuery && autoCorrectQuery !== query ? autoCorrectQuery : query;
-
   // if (error) {
   //   console.log('[ProductGrid Error]: ', error);
   // }
@@ -231,24 +318,7 @@ export function ProductGrid({
   return (
     <div className={`${styles.grid} mw-container mx-auto`}>
       <div className={styles.grid__header}>
-        {title && (
-          <h4 className="mb-4">
-            {effectiveQuery && effectiveQuery !== query && (
-              <div>
-                <span className="font-weight-normal">
-                  Did you mean <span className="font-weight-bold">{effectiveQuery}</span>?
-                </span>{' '}
-              </div>
-            )}
-            {appendQueryToTitle && (
-              <div>
-                <span className="font-weight-normal">{title}</span>{' '}
-                <span className="font-weight-bold text-capitalize">{effectiveQuery}</span>
-              </div>
-            )}
-            {!appendQueryToTitle && <>{title}</>}
-          </h4>
-        )}
+        {effectiveTitle}
         <Row className="align-items-center">
           <Col sm="auto" className="flex-fill">
             {isStats &&
@@ -264,7 +334,7 @@ export function ProductGrid({
                 {isSorting && (
                   <Sorting
                     id={`${id}-sorting`}
-                    value={sorting}
+                    value={sortFields}
                     onChange={(value) => {
                       setSorting(value);
                       setAction('sort');

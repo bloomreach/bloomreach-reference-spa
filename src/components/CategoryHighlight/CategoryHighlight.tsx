@@ -14,40 +14,30 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, Col, Row } from 'react-bootstrap';
 import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem, getContainerItemContent } from '@bloomreach/spa-sdk';
-import styles from './ProductHighlight.module.scss';
-import { ProductHighlightItem } from './ProductHighlightItem';
+import styles from './CategoryHighlight.module.scss';
+import { CategoryHighlightItem } from './CategoryHighlightItem';
 
-interface ProductHighlightCompound {
+interface CategoryHighlightCompound {
   title: string;
   connectorid: { selectionValues: [{ key: string; label: string }] };
-  commerceProductCompound?: [{ productid: string; variantid: string }];
+  commerceCategoryCompound?: [{ categoryid: string }];
 }
 
-export function ProductHighlight({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
+export function CategoryHighlight({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const [error, setError] = useState<Error>();
-  const { title, connectorid, commerceProductCompound } =
-    getContainerItemContent<ProductHighlightCompound>(component, page) ?? {};
+  const { title, connectorid, commerceCategoryCompound } =
+    getContainerItemContent<CategoryHighlightCompound>(component, page) ?? {};
   const connectorId = connectorid?.selectionValues[0].key;
-  const productRefs = useMemo(
-    () =>
-      commerceProductCompound?.map(({ productid, variantid }) => {
-        const selectedId = variantid?.length ? variantid : productid;
-        const [, id, code] = selectedId.match(/id=([\w\d._=-]+[\w\d=]?)?;code=([\w\d._=/-]+[\w\d=]?)?/i) ?? [];
-        return { id, code };
-      }),
-    [commerceProductCompound],
-  );
-
   // Reset error when no items configured
   useEffect(() => {
-    if (!productRefs?.length) {
+    if (!commerceCategoryCompound?.length) {
       setError(undefined);
     }
-  }, [productRefs]);
+  }, [commerceCategoryCompound]);
 
   if (error) {
     return (
@@ -61,13 +51,13 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
     <div className={`${styles.highlight} mw-container mx-auto`}>
       <div className={styles.grid__header}>{title && <h4 className="mb-4">{title}</h4>}</div>
       <Row>
-        {productRefs?.map((productRef) => (
+        {commerceCategoryCompound?.map(({ categoryid }) => (
           <Col
-            key={`${productRef.id ?? ''}___${productRef.code ?? ''}`}
-            as={ProductHighlightItem}
+            key={`${categoryid}`}
+            as={CategoryHighlightItem}
             md="3"
             className="mb-4"
-            itemId={{ id: productRef.id, code: productRef.code }}
+            categoryId={categoryid}
             connectorId={connectorId}
             setError={setError}
           />

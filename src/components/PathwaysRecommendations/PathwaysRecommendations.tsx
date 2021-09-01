@@ -19,7 +19,7 @@ import { useCookies } from 'react-cookie';
 import { Alert } from 'react-bootstrap';
 
 import { BrProps } from '@bloomreach/react-sdk';
-import { ContainerItem } from '@bloomreach/spa-sdk';
+import { ContainerItem, getContainerItemContent } from '@bloomreach/spa-sdk';
 import { ProductGridWidgetInputProps, useProductGridWidget } from '@bloomreach/connector-components-react';
 
 import { CommerceContext } from '../../CommerceContext';
@@ -32,31 +32,39 @@ import { ProductsPlaceholder } from '../ProductGrid/ProductsPlaceholder';
 export const DOCUMENTS_PER_SLIDE = 4;
 
 export interface PathwaysRecommendationsParameters {
-  category?: string;
   interval?: number;
-  keyword?: string;
   limit: number;
-  pids?: string;
   showDescription: boolean;
   showPid: boolean;
   showPrice: boolean;
   showTitle: boolean;
   title?: string;
-  widgetId: string;
-  widgetAlgo: string;
+}
+
+export interface PathwaysRecommendationsCompound {
+  categoryCompound?: { categoryid: string };
+  keyword?: string;
+  productCompound?: [{ productid: string }];
+  widgetCompound?: {
+    widgetid: string;
+    widgetalgo: {
+      sourceName: string;
+      selectionValues: [{ key: string; label: string }];
+    };
+  };
 }
 
 export function PathwaysRecommendations({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
-  const {
-    category,
-    interval,
-    keyword,
-    limit,
-    pids,
-    title,
-    widgetId,
-    widgetAlgo,
-  } = component.getParameters<PathwaysRecommendationsParameters>();
+  const { interval, limit, title } = component.getParameters<PathwaysRecommendationsParameters>();
+
+  const { categoryCompound, keyword, productCompound, widgetCompound } =
+    getContainerItemContent<PathwaysRecommendationsCompound>(component, page) ?? {};
+  const { categoryid: category } = categoryCompound ?? {};
+  const pids = productCompound?.map(({ productid }) => {
+    const [, id, code] = productid.match(/id=([\w\d._=-]+[\w\d=]?)?;code=([\w\d._=/-]+[\w\d=]?)?/i) ?? [];
+    return code ?? id;
+  });
+  const { widgetid: widgetId = '', widgetalgo: widgetAlgo } = widgetCompound ?? {};
   const {
     smDomainKey,
     smViewId,
@@ -71,7 +79,7 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
   const [cookies] = useCookies(['_br_uid_2']);
   const brUid2 = cookies._br_uid_2 || (page.isPreview() ? DUMMY_BR_UID_2_FOR_PREVIEW : undefined);
   const params: ProductGridWidgetInputProps = useMemo(() => {
-    const widgetType = widgetAlgo.split('.')[0];
+    const widgetType = widgetAlgo?.selectionValues?.[0].key.split('.')[0] ?? '';
 
     return {
       smAccountId,
@@ -85,7 +93,7 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
       searchText: keyword,
       categoryId: category,
       pageSize: limit || DOCUMENTS_PER_SLIDE,
-      productIds: pids?.split(','),
+      productIds: pids,
       customAttrFields: smCustomAttrFields,
       customVariantAttrFields: smCustomVarAttrFields,
       customVariantListPriceField: smCustomVarListPriceField,

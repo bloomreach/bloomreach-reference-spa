@@ -26,13 +26,14 @@ import { notEmpty } from '../../utils';
 import { Link } from '../Link';
 
 interface ProductHighlightItemProps extends React.ComponentPropsWithoutRef<'a'> {
+  connectorId?: string;
   itemId: ItemIdModel;
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
 }
 
 type Attribute = Record<string, string>;
 
-export function ProductHighlightItem({ itemId, setError }: ProductHighlightItemProps): JSX.Element {
+export function ProductHighlightItem({ connectorId, itemId, setError }: ProductHighlightItemProps): JSX.Element {
   const page = React.useContext(BrPageContext);
 
   const {
@@ -51,7 +52,7 @@ export function ProductHighlightItem({ itemId, setError }: ProductHighlightItemP
     () => ({
       itemId,
       brUid2: cookies._br_uid_2,
-      connector: smConnector,
+      connector: connectorId ?? smConnector,
       customAttrFields: smCustomAttrFields,
       customVariantAttrFields: smCustomVarAttrFields,
       customVariantListPriceField: smCustomVarListPriceField,
@@ -73,6 +74,7 @@ export function ProductHighlightItem({ itemId, setError }: ProductHighlightItemP
       smCustomVarPurchasePriceField,
       smDomainKey,
       smViewId,
+      connectorId,
     ],
   );
   const [item, loading, error] = useProductDetail(params);
@@ -82,7 +84,11 @@ export function ProductHighlightItem({ itemId, setError }: ProductHighlightItemP
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
-  const { listPrice, purchasePrice, displayName, imageSet, customAttrs } = item ?? {};
+  const selectedItemId = params.itemId as ItemIdModel;
+  const selectedVariant = item?.variants?.find(
+    (variant) => variant?.itemId.id === selectedItemId.id && variant?.itemId.code === selectedItemId.code,
+  );
+  const { listPrice, purchasePrice, displayName, imageSet, customAttrs } = selectedVariant ?? item ?? {};
   const customAttributes = useMemo(
     () =>
       customAttrs

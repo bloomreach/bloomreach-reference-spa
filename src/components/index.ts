@@ -17,6 +17,7 @@
 export * from './BannerCollection';
 export * from './BannerCTA';
 export * from './BrPixel';
+export * from './CategoryHighlight';
 export * from './Content';
 export * from './Link';
 export * from './Images';
