@@ -38,7 +38,7 @@ export function TitleAndText({ component, page }: BrProps<ContainerItem>): React
   const content = getContainerItemContent<TitleAndTextCompound>(component, page);
   if (content !== null) {
     title = content.title;
-    text = content.text?.value;
+    text = content.text;
   }
 
   const { titlesize = 'H3', textalignment = 'center', style = 'style1' } = component.getParameters();
@@ -51,7 +51,7 @@ export function TitleAndText({ component, page }: BrProps<ContainerItem>): React
       {titlesize === 'H3' && <h3 className="mb-2">{title}</h3>}
       {titlesize === 'H4' && <h4 className="mb-2">{title}</h4>}
       {titlesize === 'H5' && <h5 className="mb-2">{title}</h5>}
-      {text && <div dangerouslySetInnerHTML={{ __html: page?.rewriteLinks(text) ?? '' }} />}
+      <div>{text}</div>
     </section>
   );
 }
