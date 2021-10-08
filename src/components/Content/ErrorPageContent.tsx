@@ -18,6 +18,7 @@ import React from 'react';
 import { Image } from 'react-bootstrap';
 import { BrManageContentButton } from '@bloomreach/react-sdk';
 import { Document, ImageSet, Page } from '@bloomreach/spa-sdk';
+import { BrRichTextContent } from '..';
 
 import styles from './ErrorPageContent.module.scss';
 
@@ -35,10 +36,7 @@ export function ErrorPageContent({ document, page }: ErrorPageContentProps): Rea
       <BrManageContentButton content={document} />
       {title && <h1>{title}</h1>}
       {content?.value && (
-        <div
-          className={styles['error-text']}
-          dangerouslySetInnerHTML={{ __html: page?.rewriteLinks(content.value) ?? '' }}
-        />
+        <BrRichTextContent page={page!} content={{ html: content.value }} className={styles['error-text']} />
       )}
       {image && (
         <p>

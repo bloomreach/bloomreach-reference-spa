@@ -18,6 +18,7 @@ import React from 'react';
 import { Image } from 'react-bootstrap';
 import { ContainerItem, Document, ImageSet } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
+import { BrRichTextContent } from '..';
 import { ErrorPageContent } from './ErrorPageContent';
 import { ERROR_PAGE_PATH_MAP } from '../../App';
 
@@ -47,9 +48,7 @@ export function Content({ component, page }: BrProps<ContainerItem>): React.Reac
           <Image className={`${styles.content__image} d-block w-100 h-100`} src={image.getUrl()} alt={title} />
         </div>
       )}
-      {content?.value && (
-        <div className="mb-4" dangerouslySetInnerHTML={{ __html: page?.rewriteLinks(content.value) ?? '' }} />
-      )}
+      {content?.value && <BrRichTextContent page={page!} content={{ html: content.value }} className="mb-4" />}
     </article>
   );
 }

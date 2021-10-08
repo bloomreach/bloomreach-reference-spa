@@ -20,6 +20,7 @@ import { Document, ImageSet } from '@bloomreach/spa-sdk';
 import { BrPageContext } from '@bloomreach/react-sdk';
 
 import { Link } from '../Link';
+import { BrRichTextContent } from '..';
 import styles from './Banner.module.scss';
 
 interface BannerProps extends React.ComponentPropsWithoutRef<'a'> {
@@ -50,9 +51,10 @@ export const Banner = React.forwardRef(
             </h3>
           )}
           {content?.value && (
-            <div
+            <BrRichTextContent
+              page={page!}
+              content={{ html: content.value }}
               className={`${styles.banner__contents} d-inline-block mark mt-1`}
-              dangerouslySetInnerHTML={{ __html: page?.rewriteLinks(content.value) ?? '' }}
             />
           )}
           {cta && (
