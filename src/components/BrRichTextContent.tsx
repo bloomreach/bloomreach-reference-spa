@@ -40,9 +40,9 @@ export interface BrRichTextContentProps {
    */
   content: BrRichTextContentData;
   /**
-   * The container HTML tag name.
+   * The React dom element component type.
    */
-  tagName?: 'span' | 'div';
+  tagName?: React.ElementType;
   /**
    * The style class name on the container HTML tag.
    */
@@ -56,16 +56,11 @@ export interface BrRichTextContentProps {
  */
 export function BrRichTextContent(props: BrRichTextContentProps): React.ReactElement | null {
   const { page, content, tagName, className } = props;
-  if (tagName === 'span') {
-    return (
-      <span
-        className={className}
-        dangerouslySetInnerHTML={{ __html: page.rewriteLinks(page.sanitize(content.html)) }}
-      />
-    );
-  }
-
+  const Component = tagName || 'div';
   return (
-    <div className={className} dangerouslySetInnerHTML={{ __html: page.rewriteLinks(page.sanitize(content.html)) }} />
+    <Component
+      className={className}
+      dangerouslySetInnerHTML={{ __html: page.rewriteLinks(page.sanitize(content.html)) }}
+    />
   );
 }
