@@ -21,7 +21,9 @@ import { Alert, Col, Collapse, Row, Button } from 'react-bootstrap';
 import { BrComponentContext, BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem, getContainerItemContent } from '@bloomreach/spa-sdk';
 import {
+  CategoryInputProps,
   FacetFieldFilterInput,
+  useCategory,
   useProductGridCategory,
   useProductGridSearch,
 } from '@bloomreach/connector-components-react';
@@ -90,7 +92,7 @@ function ProductGridProcessor({
   title,
   searchType,
   query: queryParameter,
-  categoryId,
+  categoryId: categoryIdParameter,
   component,
 }: ProductGridProps): React.ReactElement | null {
   const {
@@ -132,6 +134,19 @@ function ProductGridProcessor({
 
     return search.get('q') ?? queryParameter;
   }, [history.location.search, queryParameter]);
+
+  const categoryId = useMemo(() => {
+    if (categoryIdParameter) {
+      return categoryIdParameter;
+    }
+
+    const matches = history.location.pathname.match(/\/categories\/([^/].*)/);
+    if (matches && matches.length > 1) {
+      return matches[1];
+    }
+
+    return undefined;
+  }, [categoryIdParameter, history.location.pathname]);
 
   const { page, sortFields, filters } = useMemo(() => {
     const search = new URLSearchParams(history.location.search);
@@ -273,8 +288,8 @@ function ProductGridProcessor({
   }, [action, error]);
 
   const effectiveTitle = useMemo(() => {
-    if (searchType === 'category' && title) {
-      return <h4 className="mb-4">{title}</h4>;
+    if (searchType === 'category' && categoryId) {
+      return <CategoryName categoryId={categoryId} title={title} />;
     }
     if (searchType === 'search') {
       const autoCorrectQuery = results?.queryHint?.autoCorrectQuery;
@@ -299,7 +314,7 @@ function ProductGridProcessor({
       );
     }
     return null;
-  }, [query, results?.queryHint?.autoCorrectQuery, searchType, title]);
+  }, [categoryId, query, results?.queryHint?.autoCorrectQuery, searchType, title]);
 
   const setPage = async (pageNum: number): Promise<void> => {
     const offset = (pageNum - 1) * limit;
@@ -406,5 +421,58 @@ function ProductGridProcessor({
         )}
       </div>
     </div>
+  );
+}
+
+function CategoryName({ categoryId, title }: { categoryId: string; title?: string }): React.ReactElement | null {
+  const {
+    smAccountId,
+    smAuthKey,
+    smConnector,
+    smCustomAttrFields,
+    smCustomVarAttrFields,
+    smCustomVarListPriceField,
+    smCustomVarPurchasePriceField,
+    smDomainKey,
+    smViewId,
+  } = useContext(CommerceContext);
+  const [cookies] = useCookies(['_br_uid_2']);
+  const params: CategoryInputProps = useMemo(
+    () => ({
+      categoryId,
+      brUid2: cookies._br_uid_2,
+      connector: smConnector,
+      customAttrFields: smCustomAttrFields,
+      customVariantAttrFields: smCustomVarAttrFields,
+      customVariantListPriceField: smCustomVarListPriceField,
+      customVariantPurchasePriceField: smCustomVarPurchasePriceField,
+      smAccountId,
+      smAuthKey,
+      smDomainKey,
+      smViewId,
+    }),
+    [
+      categoryId,
+      cookies._br_uid_2,
+      smCustomAttrFields,
+      smAccountId,
+      smAuthKey,
+      smConnector,
+      smCustomVarAttrFields,
+      smCustomVarListPriceField,
+      smCustomVarPurchasePriceField,
+      smDomainKey,
+      smViewId,
+    ],
+  );
+  const [category] = useCategory(params);
+  if (!category) {
+    return null;
+  }
+  return (
+    <>
+      {title && <h4 className="mb-4">{title}</h4>}
+      <h4 className="mb-4">Category &quot;{category.displayName}&quot;</h4>
+    </>
   );
 }
