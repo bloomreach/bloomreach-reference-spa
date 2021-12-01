@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2021 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,30 +34,30 @@ $highlight-img-max-size: 180px;
       max-height: $highlight-img-max-size;
     }
   }
-  
+
   .name {
     font-size: 16px;
     line-height: 19px;
     font-weight: 500;
     margin-bottom: 10px;
   }
-  
+
   .manufacturer, .product-number {
     line-height: 16px;
   }
-  
+
   .product-number {
     margin-bottom: 4px;
   }
-  
+
   .price {
     margin-bottom: 8px;
     font-size: 18px;
     line-height: 23px;
     font-weight: 500;
   }
-  
-  .manufacturer { 
+
+  .manufacturer {
     margin-bottom: 12px;
   }
 }
