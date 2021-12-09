@@ -61,17 +61,19 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
     <div className={`${styles.highlight} mw-container mx-auto`}>
       <div className={styles.grid__header}>{title && <h4 className="mb-4">{title}</h4>}</div>
       <Row>
-        {productRefs?.map((productRef) => (
-          <Col
-            key={`${productRef.id ?? ''}___${productRef.code ?? ''}`}
-            as={ProductHighlightItem}
-            md="3"
-            className="mb-4"
-            itemId={{ id: productRef.id, code: productRef.code }}
-            connectorId={connectorId}
-            setError={setError}
-          />
-        ))}
+        {productRefs
+          ?.filter((productRef) => !!productRef.id || !!productRef.code)
+          ?.map((productRef) => (
+            <Col
+              key={`${productRef.id ?? ''}___${productRef.code ?? ''}`}
+              as={ProductHighlightItem}
+              md="3"
+              className="mb-4"
+              itemId={{ id: productRef.id, code: productRef.code }}
+              connectorId={connectorId}
+              setError={setError}
+            />
+          ))}
       </Row>
     </div>
   );
