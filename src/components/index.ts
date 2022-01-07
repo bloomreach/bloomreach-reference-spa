@@ -16,6 +16,7 @@
 
 export * from './BannerCollection';
 export * from './BannerCTA';
+export * from './BrCookieConsent';
 export * from './BrPixel';
 export * from './BrRichTextContent';
 export * from './CategoryHighlight';

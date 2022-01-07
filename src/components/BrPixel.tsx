@@ -17,6 +17,7 @@
 import React, { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { Page } from '@bloomreach/spa-sdk';
+import { getCookieConsentValue } from 'react-cookie-consent';
 
 export interface BrPixelProps {
   accountId: string;
@@ -42,20 +43,22 @@ export function BrPixel(props: BrPixelProps): React.ReactElement | null {
         (window as any).br_data.domain_key = `${props.domainKey}`;
       }
 
-      const brtrk = document.createElement('script');
-      brtrk.type = 'text/javascript';
-      brtrk.async = true;
-      brtrk.src = `//cdns.brsrvr.com/v1/br-trk-${props.accountId}.js`;
-      // Update react cookie with the latest value
-      brtrk.addEventListener('load', () => {
-        const brUid2 = document.cookie
-          .split('; ')
-          .find((cookie) => cookie.trim().startsWith('_br_uid_2='))
-          ?.split('=')[1];
-        setCookie('_br_uid_2', brUid2, { path: '/' });
-      });
-      const s = document.getElementsByTagName('script')[0];
-      s.parentNode?.insertBefore(brtrk, s);
+      if (getCookieConsentValue() === 'true') {
+        const brtrk = document.createElement('script');
+        brtrk.type = 'text/javascript';
+        brtrk.async = true;
+        brtrk.src = `//cdns.brsrvr.com/v1/br-trk-${props.accountId}.js`;
+        // Update react cookie with the latest value
+        brtrk.addEventListener('load', () => {
+          const brUid2 = document.cookie
+            .split('; ')
+            .find((cookie) => cookie.trim().startsWith('_br_uid_2='))
+            ?.split('=')[1];
+          setCookie('_br_uid_2', brUid2, { path: '/' });
+        });
+        const s = document.getElementsByTagName('script')[0];
+        s.parentNode?.insertBefore(brtrk, s);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

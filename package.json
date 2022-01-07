@@ -26,6 +26,7 @@
     "react": "^16.14",
     "react-bootstrap": "^1.4",
     "react-cookie": "^4.0.3",
+    "react-cookie-consent": "^7.2.1",
     "react-dom": "^16.14",
     "react-player": "^2.6",
     "react-router-dom": "^5.2"

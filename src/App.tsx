@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, useContext } from 'react';
+import React, { ReactElement, useContext, useState } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { Col, Container, Image, Navbar, Row } from 'react-bootstrap';
 import { BrComponent, BrPageContext, BrPage } from '@bloomreach/react-sdk';
 import { Configuration } from '@bloomreach/spa-sdk';
+import { getCookieConsentValue } from 'react-cookie-consent';
 
 import {
   BannerCollection,
   BannerCTA,
+  BrCookieConsent,
   BrPixel,
   CategoryHighlight,
   Content,
@@ -79,6 +81,7 @@ const MAPPING = {
 
 export default function App(): ReactElement | null {
   const { errorCode, requestURL } = useContext(ErrorContext);
+  const [, setCookieConsentVal] = useState<boolean>();
   const location = useLocation();
   if (errorCode && requestURL) {
     const { pathname } = new URL(requestURL);
@@ -104,6 +107,10 @@ export default function App(): ReactElement | null {
   if (!endpoint) {
     configuration.endpoint = process.env.REACT_APP_BRXM_ENDPOINT;
   }
+
+  const updateCookieConsentVal = (val: boolean): void => {
+    setCookieConsentVal(val);
+  };
 
   return (
     <BrPage configuration={configuration} mapping={MAPPING}>
@@ -145,6 +152,7 @@ export default function App(): ReactElement | null {
                 </Col>
               </Row>
             </Container>
+            <BrCookieConsent csUpdate={updateCookieConsentVal} />
           </footer>
         </BrComponent>
       </CommerceContextProvider>
@@ -176,16 +184,18 @@ function Header(): ReactElement {
             />
 
             <CommerceContextConsumer>
-              {({ smAccountId, smDomainKey }) => (
-                <BrPixel
-                  accountId={smAccountId ?? ''}
-                  domainKey={smDomainKey ?? ''}
-                  page={page!}
-                  pageType="search"
-                  pageLabels="pacific,nut,bolt,commerce"
-                  type="pageview"
-                />
-              )}
+              {({ smAccountId, smDomainKey }) =>
+                getCookieConsentValue() && (
+                  <BrPixel
+                    accountId={smAccountId ?? ''}
+                    domainKey={smDomainKey ?? ''}
+                    page={page!}
+                    pageType="search"
+                    pageLabels="pacific,nut,bolt,commerce"
+                    type="pageview"
+                  />
+                )
+              }
             </CommerceContextConsumer>
           </Navbar.Brand>
           {!page?.getUrl()?.startsWith('/_error') && (
