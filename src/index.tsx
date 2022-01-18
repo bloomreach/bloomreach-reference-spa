@@ -24,6 +24,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './index.scss';
 import App from './App';
 import { ErrorContextProvider } from './ErrorContext';
+import ScrollToTop from './ScrollToTop';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -34,6 +35,7 @@ ReactDOM.render(
             path="/(.*)"
             render={() => (
               <ErrorContextProvider>
+                <ScrollToTop />
                 <App />
               </ErrorContextProvider>
             )}
