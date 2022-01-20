@@ -152,7 +152,9 @@ export default function App(): ReactElement | null {
                 </Col>
               </Row>
             </Container>
-            <BrCookieConsent csUpdate={updateCookieConsentVal} />
+            <BrPageContext.Consumer>
+              {(page) => !page?.isPreview() && <BrCookieConsent csUpdate={updateCookieConsentVal} />}
+            </BrPageContext.Consumer>
           </footer>
         </BrComponent>
       </CommerceContextProvider>
