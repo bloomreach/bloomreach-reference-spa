@@ -17,6 +17,11 @@
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 
+.carouselTitle {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
 .carousel {
   display: flex;
 

@@ -46,7 +46,7 @@ export function MultiBannerCarousel({ component, page }: BrProps<ContainerItem>)
 
   return (
     <div className="mw-container mx-auto my-4">
-      {title && <h3 className="mb-4 text-center">{title}</h3>}
+      {title && <h3 className={styles.carouselTitle}>{title}</h3>}
       <Carousel
         controls={slides.length > 1}
         indicators={false}

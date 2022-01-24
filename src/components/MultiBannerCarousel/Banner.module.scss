@@ -15,9 +15,36 @@
  */
 
 .banner {
-  height: 160px;
-
+  font-family: "Helvetica Neue";
+  padding-bottom: 24px;
   &__image {
+    height: 160px !important;
     object-fit: contain;
+    margin-bottom: 16px;
+  }
+  &__data {
+    text-align: center;
+    color: #25292F;
+    &__title {
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+    &__content {
+      overflow: hidden;
+      font-size: 14px;
+      letter-spacing: 0;
+      line-height: 20px;
+      pre {
+        white-space: pre-wrap;
+        overflow: hidden;
+        font-family: "Helvetica Neue";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 20px;
+      }
+    }
+  }
+  &:hover {
+    text-decoration: none;
   }
 }
