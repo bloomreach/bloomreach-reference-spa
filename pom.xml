@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2019-2021 Bloomreach
+  Copyright 2019-2022 Bloomreach
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -37,6 +37,9 @@
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
+        <configuration>
+          <skip>${skipFE}</skip>
+        </configuration>
         <executions>
           <execution>
             <id>install node and npm</id>
@@ -116,31 +119,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>npm-clean</id>
-          </execution>
-        </executions>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>build</directory>
-              <includes>
-                <include>**</include>
-              </includes>
-            </fileset>
-            <fileset>
-              <directory>node</directory>
-            </fileset>
-            <fileset>
-              <directory>node_modules</directory>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
@@ -167,6 +145,39 @@
                 <exclude>netlify.toml</exclude>
               </excludes>
             </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>clean-frontend</id>
+      <activation>
+        <property>
+          <name>!skipFE</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-clean-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-clean</id>
+                <configuration>
+                  <filesets>
+                    <fileset>
+                      <directory>build</directory>
+                    </fileset>
+                    <fileset>
+                      <directory>node</directory>
+                    </fileset>
+                    <fileset>
+                      <directory>node_modules</directory>
+                    </fileset>
+                  </filesets>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
