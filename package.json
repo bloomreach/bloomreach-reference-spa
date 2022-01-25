@@ -11,6 +11,7 @@
     "resolution": "npx npm-force-resolutions",
     "dev": "next dev",
     "build": "next build",
+    "build:dev": "npm run build",
     "start": "next start",
     "lint": "next lint --dir ."
   },
