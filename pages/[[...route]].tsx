@@ -56,7 +56,7 @@ import {
 import MyApp from './_app';
 import { deleteUndefined, loadCommerceConfig } from '../src/utils';
 import { CommerceContextProvider } from '../components/CommerceContext';
-
+import styles from './App.module.scss';
 
 let commerceClientFactory: CommerceApiClientFactory;
 
@@ -262,7 +262,6 @@ function Common({
         <BrPageContext.Consumer>
           {(contextPage) => (
             <CommerceContextProvider page={page} commerceClientFactory={clientCommerceFactory}>
-              {/* <LoginProvider> */}
               <header>
                 <Navbar bg="light" expand="lg" sticky="top" className="py-2 py-lg-3">
                   <Container className="justify-content-start px-sm-3">
@@ -288,7 +287,7 @@ function Common({
                     {!contextPage?.getUrl()?.startsWith('/_error') && (
                       <>
                         <BrComponent path="header">
-                          <div className="order-lg-2 mr-3 mr-lg-0">
+                          <div className={`${styles.navbar__container} order-lg-2 mr-3 mr-lg-0`}>
                             <BrComponent />
                           </div>
                         </BrComponent>
@@ -325,7 +324,6 @@ function Common({
                 accountId=""
                 domainKey=""
               />
-              {/* </LoginProvider> */}
             </CommerceContextProvider>
           )}
         </BrPageContext.Consumer>
