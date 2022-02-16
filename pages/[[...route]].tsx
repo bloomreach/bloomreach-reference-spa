@@ -54,12 +54,9 @@ import {
   Video,
 } from '../components';
 import MyApp from './_app';
-import { deleteUndefined, getTokenFromSession, loadCommerceConfig, SESSION_TOKEN } from '../src/utils';
+import { deleteUndefined, loadCommerceConfig } from '../src/utils';
 import { CommerceContextProvider } from '../components/CommerceContext';
-// import { handleMockPmaRequest } from '../src/mockpma';
 
-// const axiosInstance = axios.create();
-// axiosInstance.interceptors.request.use(handleMockPmaRequest);
 
 let commerceClientFactory: CommerceApiClientFactory;
 
@@ -87,7 +84,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const accountEnvId = `${smAccountId}_${smDomainKey}`;
   const defaultRequestHeaders = undefined;
   const defaultAnonymousCredentials = undefined;
-  const existingToken = getTokenFromSession(cookies);
 
   // For SSG and SSR always create a new Apollo Client
   commerceClientFactory = new CommerceApiClientFactory(
@@ -96,8 +92,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
     accountEnvId,
     defaultRequestHeaders,
     defaultAnonymousCredentials,
-    true,
-    existingToken,
+    true
   );
   // Apollo client will go thru all components on the page and perform queries necessary.
   // The results will be stored in the cache for client-side rendering.
@@ -105,13 +100,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const apolloData = await commerceClientFactory.getDataFromTree(<MyApp.AppTree {...pageProps} />);
   // console.log('[getServerSideProps]: apolloData.content=', apolloData.content);
   props = { ...props, ...apolloData.stateProp, apolloContent: apolloData.content };
-
-  const token = commerceClientFactory.getCurrentToken();
-  if (token) {
-    props.cookies[SESSION_TOKEN] = token;
-  } else {
-    delete props.cookies[SESSION_TOKEN];
-  }
 
   // eslint-disable-next-line max-len
   // Hack needed to avoid JSON-Serialization validation error from Next.js https://github.com/zeit/next.js/discussions/11209
@@ -183,15 +171,13 @@ function CSR({
   const defaultRequestHeaders = undefined;
   const defaultAnonymousCredentials = undefined;
   const factory = useMemo(() => {
-    const existingToken = getTokenFromSession(cookies);
     return new CommerceApiClientFactory(
       graphqlServiceUrl,
       connector,
       accountEnvId,
       defaultRequestHeaders,
       defaultAnonymousCredentials,
-      false,
-      existingToken,
+      false
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphqlServiceUrl, connector, accountEnvId, defaultRequestHeaders, defaultAnonymousCredentials]);

@@ -20,7 +20,8 @@ import { AppTreeType } from 'next/dist/shared/lib/utils';
 import React, { ErrorInfo } from 'react';
 import { CookiesProvider } from 'react-cookie';
 
-import './app.css';
+import 'bootstrap/scss/bootstrap.scss';
+import './_index.scss';
 
 export default class MyApp extends App {
   static AppTree: AppTreeType;
@@ -38,6 +39,7 @@ export default class MyApp extends App {
     console.log('[Error]: ', error);
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   render() {
     // console.log('[App]: AppProps=', this.props);
     const { Component, pageProps } = this.props;
@@ -46,27 +48,15 @@ export default class MyApp extends App {
       <>
         <Head>
           <meta charSet="utf-8" />
-          <meta name="description" content="Example Next.js SPA for Bloomreach Experience" />
+          <meta name="description" content="Example React SPA for brX SaaS" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta name="theme-color" content="#00b2db" />
 
-          <link rel="shortcut icon" type="image/png" href="/favicon.ico" sizes="64x64" />
-          <link
-            rel="stylesheet"
-            media="screen"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-            crossOrigin="anonymous"
-          />
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
-          <script defer src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" />
-          <link
-            rel="stylesheet"
-            href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-            integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
-            crossOrigin="anonymous"
-          />
+          <title>Pacific Nuts & Bolts</title>
 
-          <title>brXM + Next.js = ♥️</title>
+          <link rel="apple-touch-icon" href="/logo@2x.png" />
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         </Head>
         <CookiesProvider>
           <Component {...pageProps} />

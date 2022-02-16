@@ -30,6 +30,7 @@ export interface CommerceConfig {
   smCustomVarAttrFields?: string[];
   smCustomVarListPriceField?: string;
   smCustomVarPurchasePriceField?: string;
+  brEnvType?: string;
 }
 
 interface CommerceContextProps {

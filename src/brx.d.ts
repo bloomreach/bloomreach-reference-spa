@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins';
+/* eslint-disable camelcase */
 
-.page-catalog {
-  &__page {
-    @each $breakpoint in sm, md, lg, xl {
-      @include media-breakpoint-only($breakpoint) {
-        width: calc(map-get($container-max-widths, $breakpoint) / 2);
-      }
-    }
-  }
+interface ChannelParameters {
+  smAccountId: string;
+  smDomainKey?: string;
+  smEndpoint: string;
+  graphql_baseurl?: string;
 }

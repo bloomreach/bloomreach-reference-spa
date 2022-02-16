@@ -18,41 +18,16 @@
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
 
-.carousel {
-  display: flex;
+.navbar {
+  &__container {
+    max-width: 300px;
 
-  :global {
-    .carousel-inner {
-      flex: 1 1 auto;
-      order: 1;
+    @include media-breakpoint-up(lg) {
+      width: 300px;
     }
 
-    .carousel-control-next,
-    .carousel-control-prev {
-      position: static;
-      width: 20px;
-    }
-
-    .carousel-control-prev {
-      order: 0;
-      margin-right: calc($grid-gutter-width / 2);
-    }
-
-    .carousel-control-next {
-      order: 2;
-      margin-left: calc($grid-gutter-width / 2);
-    }
-
-    @include media-breakpoint-up(md) {
-      .carousel-control-prev {
-        order: 0;
-        margin-right: $grid-gutter-width;
-      }
-
-      .carousel-control-next {
-        order: 2;
-        margin-left: $grid-gutter-width;
-      }
+    @include media-breakpoint-down(md) {
+      flex: 1 1;
     }
   }
 }

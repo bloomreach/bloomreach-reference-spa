@@ -14,104 +14,8 @@
  * limitations under the License.
  */
 
-import { useContext } from 'react';
-import { useCookies } from 'react-cookie';
-import { Page, PageModel } from '@bloomreach/spa-sdk';
-import { CommonProductInputProps } from '@bloomreach/connector-components-react';
-
-import { CommerceContext, CommerceConfig } from '../components/CommerceContext';
-
-type CookiesType = Partial<Record<string, any>>;
-type SetCookieType = ReturnType<typeof useCookies>[1];
-type RemoveCookieType = ReturnType<typeof useCookies>[2];
-
-export const SESSION_CART = 'cartId';
-export const SESSION_TOKEN = 'token';
-
-export function getDefaultConnector(): string {
-  return process.env.NEXT_PUBLIC_DEFAULT_CONNECTOR ?? '';
-}
-
-export function getConnector(): string {
-  const useBrsm = process.env.NEXT_PUBLIC_USE_BRSM === 'true';
-  return useBrsm ? 'brsm' : getDefaultConnector();
-}
-
-export function setCartIdInSession(
-  cartId: string | undefined,
-  setCookie: SetCookieType,
-  removeCookie: RemoveCookieType,
-): void {
-  if (cartId) {
-    setCookie(SESSION_CART, cartId, { path: '/' });
-  } else {
-    removeCookie(SESSION_CART);
-  }
-}
-
-export function getCartIdFromSession(cookies: CookiesType): string | undefined {
-  return cookies[SESSION_CART];
-}
-
-export function setTokenInSession(
-  token: string | undefined,
-  setCookie: SetCookieType,
-  removeCookie: RemoveCookieType,
-): void {
-  if (token) {
-    setCookie(SESSION_TOKEN, token, { path: '/' });
-  } else {
-    removeCookie(SESSION_TOKEN);
-  }
-}
-
-export function getTokenFromSession(cookies: CookiesType): string | undefined {
-  return cookies[SESSION_TOKEN];
-}
-
-export function getGraphqlServiceUrl(page: Page): string {
-  return page.getChannelParameters<ChannelParameters>().graphql_baseurl ?? '';
-}
-
-const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
-
-export function convertDateToLocalTimezone(date: Date) {
-  return new Date(date.getTime() + timezoneOffset);
-}
-
-export function convertDateToUTCTimezone(date: Date) {
-  return new Date(date.getTime() - timezoneOffset);
-}
-
-export function loadBrSMProps(): CommonProductInputProps {
-  const {
-    smCustomAttrFields,
-    smCustomVarAttrFields,
-    smCustomVarListPriceField,
-    smCustomVarPurchasePriceField,
-    smAccountId,
-    smAuthKey,
-    smDomainKey,
-    smViewId,
-    brEnvType,
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-  } = useContext(CommerceContext);
-  return {
-    customAttrFields: smCustomAttrFields,
-    customVariantAttrFields: smCustomVarAttrFields,
-    customVariantListPriceField: smCustomVarListPriceField,
-    customVariantPurchasePriceField: smCustomVarPurchasePriceField,
-    smAccountId,
-    smAuthKey,
-    smDomainKey,
-    smViewId,
-    brEnvType,
-    params: [
-      { name: 'testParam1', values: ['test1'] },
-      { name: 'testParam2', values: ['test2'] },
-    ],
-  };
-}
+import { PageModel } from '@bloomreach/spa-sdk';
+import { CommerceConfig } from './CommerceContext';
 
 export const DUMMY_BR_UID_2_FOR_PREVIEW = 'uid%3D0000000000000%3Av%3D11.5%3Ats%3D1428617911187%3Ahc%3D55';
 
@@ -120,7 +24,7 @@ export function loadCommerceConfig(page: PageModel): CommerceConfig {
   const commerceConfig: CommerceConfig = {
     graphqlServiceUrl:
       channelParams?.graphql_baseurl || process.env.NEXT_PUBLIC_APOLLO_SERVER_URI || 'http://localhost:4000',
-    connector: getDefaultConnector(),
+    connector: process.env.NEXT_PUBLIC_DEFAULT_CONNECTOR ?? '',
     smAccountId: channelParams?.smAccountId || process.env.NEXT_PUBLIC_BRSM_ACCOUNT_ID,
     smAuthKey: process.env.NEXT_PUBLIC_BRSM_AUTH_KEY,
     smDomainKey: channelParams?.smDomainKey || process.env.NEXT_PUBLIC_BRSM_DOMAIN_KEY,
