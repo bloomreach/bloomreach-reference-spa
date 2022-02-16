@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { AxiosError } from 'axios';
-import { ProductNotFoundError } from './components';
+import { ProductNotFoundError } from '../components';
 
 // eslint-disable-next-line no-shadow
 export enum ErrorCode {
