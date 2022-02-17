@@ -22,7 +22,7 @@ import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem, getContainerItemContent } from '@bloomreach/spa-sdk';
 import { ProductGridWidgetInputProps, useProductGridWidget } from '@bloomreach/connector-components-react';
 
-import { CommerceContext } from '../../src/CommerceContext';
+import { CommerceContext } from '../CommerceContext';
 import { Products } from './Products';
 import { DUMMY_BR_UID_2_FOR_PREVIEW, notEmpty } from '../../src/utils';
 

@@ -22,7 +22,7 @@ import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ContainerItem, Document, Reference } from '@bloomreach/spa-sdk';
 import { ProductSearchSuggestionInputProps, useProductSearchSuggestion } from '@bloomreach/connector-components-react';
 import { BrPageContext, BrProps } from '@bloomreach/react-sdk';
-import { CommerceContextConsumer } from '../../src/CommerceContext';
+import { CommerceContextConsumer } from '../CommerceContext';
 import { Link } from '../Link';
 
 import styles from './SearchBar.module.scss';

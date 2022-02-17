@@ -19,7 +19,7 @@ import { Image } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { BrPageContext } from '@bloomreach/react-sdk';
 import { ItemIdModel, ProductDetailInputProps, useProductDetail } from '@bloomreach/connector-components-react';
-import { CommerceContext } from '../../src/CommerceContext';
+import { CommerceContext } from '../CommerceContext';
 import styles from './ProductHighlight.module.scss';
 import { notEmpty } from '../../src/utils';
 

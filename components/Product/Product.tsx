@@ -23,7 +23,7 @@ import { ProductDetailInputProps, useProductDetail } from '@bloomreach/connector
 
 import { Placeholder } from './Placeholder';
 import styles from './Product.module.scss';
-import { CommerceContext } from '../../src/CommerceContext';
+import { CommerceContext } from '../CommerceContext';
 import { notEmpty } from '../../src/utils';
 import { ProductNotFoundError } from './ProductNotFoundError';
 

@@ -26,7 +26,7 @@ import {
   useProductGridCategory,
   useProductGridSearch,
 } from '@bloomreach/connector-components-react';
-import { CommerceContext } from '../../src/CommerceContext';
+import { CommerceContext } from '../CommerceContext';
 import { notEmpty } from '../../src/utils';
 import { Stats } from './Stats';
 import { StatsPlaceholder } from './StatsPlaceholder';
