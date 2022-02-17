@@ -40,8 +40,9 @@ export function MultiBannerCarousel({ component, page }: BrProps<ContainerItem>)
   const { title, banners } = getContainerItemContent<MultiBannerCarouselCompound>(component, page) ?? {};
   const slides = [];
 
-  while (banners?.length) {
-    slides.push(banners.splice(0, DOCUMENTS_PER_SLIDE));
+  // Because the props object is used in both SSR and CSR, we should avoid mutating it.
+  for (let i = 0; i < (banners?.length ?? 0); i += DOCUMENTS_PER_SLIDE) {
+    slides.push(banners!.slice(i, i + DOCUMENTS_PER_SLIDE));
   }
 
   return (
