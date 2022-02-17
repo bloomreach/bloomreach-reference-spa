@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-has-content */
 /*
  * Copyright 2020 Bloomreach
  *
@@ -15,13 +16,15 @@
  */
 
 import React from 'react';
-// import { Link as RouterLink } from 'react-router-dom';
+import NextLink from 'next/link';
 
 export const Link = React.forwardRef(
-  ({ href, ...props }: React.ComponentPropsWithoutRef<'a'>, ref: React.Ref<HTMLAnchorElement>) => (
-    // eslint-disable-next-line jsx-a11y/anchor-has-content
-    // href ? <RouterLink ref={ref} to={href} {...props} /> :
-    // eslint-disable-next-line jsx-a11y/anchor-has-content
-    <a ref={ref} role="button" {...props} />
-  ),
+  ({ href, ...props }: React.ComponentPropsWithoutRef<'a'>, ref: React.Ref<HTMLAnchorElement>) =>
+    href ? (
+      <NextLink href={href}>
+        <a ref={ref} {...props} />
+      </NextLink>
+    ) : (
+      <a ref={ref} {...props} />
+    ),
 );
