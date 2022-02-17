@@ -17,7 +17,7 @@
 import App, { AppContext, AppInitialProps } from 'next/app';
 import Head from 'next/head';
 import { AppTreeType } from 'next/dist/shared/lib/utils';
-import React, { ErrorInfo } from 'react';
+import { ErrorInfo } from 'react';
 import { CookiesProvider } from 'react-cookie';
 
 import 'bootstrap/scss/bootstrap.scss';
@@ -35,6 +35,7 @@ export default class MyApp extends App {
     return { ...appProps };
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.log('[Error]: ', error);
   }

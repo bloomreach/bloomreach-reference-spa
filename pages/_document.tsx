@@ -17,6 +17,7 @@
 import Document, { Html, Main, NextScript, Head } from 'next/document';
 
 class MyDocument extends Document {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   render() {
     // console.log('[MyDocument.render()]: props=', this.props);
     return (
@@ -29,7 +30,7 @@ class MyDocument extends Document {
           <NextScript />
         </body>
       </Html>
-    )
+    );
   }
 }
 

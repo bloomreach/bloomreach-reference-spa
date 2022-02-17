@@ -15,7 +15,7 @@
  */
 
 import { PageModel } from '@bloomreach/spa-sdk';
-import { CommerceConfig } from './CommerceContext';
+import { CommerceConfig } from '../components/CommerceContext';
 
 export const DUMMY_BR_UID_2_FOR_PREVIEW = 'uid%3D0000000000000%3Av%3D11.5%3Ats%3D1428617911187%3Ahc%3D55';
 

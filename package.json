@@ -45,7 +45,7 @@
     "typescript": "~4.5"
   },
   "eslintConfig": {
-    "extends": "@bloomreach/eslint-config",
+    "extends": ["@bloomreach/eslint-config", "plugin:react/jsx-runtime"],
     "overrides": [
       {
         "files": [
