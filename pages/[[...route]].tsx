@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import Link from 'next/link';
 import axios from 'axios';
 import cookie from 'cookie';
 import { BrComponent, BrPage, BrPageContext } from '@bloomreach/react-sdk';
@@ -28,7 +27,7 @@ import {
   CommerceApiClientFactory,
   CommerceConnectorProvider,
 } from '@bloomreach/connector-components-react';
-import { Container, Navbar, Image } from 'react-bootstrap';
+import { Container, Navbar, Image, Row, Col } from 'react-bootstrap';
 import {
   BannerCollection,
   BannerCTA,
@@ -36,7 +35,7 @@ import {
   BrPixel,
   CategoryHighlight,
   Content,
-  // Link,
+  Link,
   Images,
   Map,
   Menu,
@@ -55,22 +54,27 @@ import {
 } from '../components';
 import MyApp from './_app';
 import { deleteUndefined, loadCommerceConfig } from '../src/utils';
-import { CommerceContextProvider } from '../components/CommerceContext';
+import { CommerceContextConsumer, CommerceContextProvider } from '../components/CommerceContext';
 import styles from './App.module.scss';
 
 let commerceClientFactory: CommerceApiClientFactory;
 
 export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const { req: request, res: response, resolvedUrl: path } = ctx;
+  const { req: request, res: response, resolvedUrl: path, query } = ctx;
   // console.log('[getServerSideProps]: path=', path);
 
   relevance(request, response);
 
-  const configuration = {
+  const endpointQueryParameter = 'endpoint';
+  const configuration: Record<string, any> = {
+    endpointQueryParameter,
     path,
-    endpoint: process.env.BRXM_ENDPOINT ?? null,
-    endpointQueryParameter: 'endpoint',
   };
+
+  const endpoint = query[endpointQueryParameter];
+  if (!endpoint) {
+    configuration.endpoint = process.env.BRXM_ENDPOINT;
+  }
   const page = await initialize({ ...configuration, request, httpClient: axios });
   let props: Record<string, any> = { configuration, page: page.toJSON() };
 
@@ -92,19 +96,23 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
     accountEnvId,
     defaultRequestHeaders,
     defaultAnonymousCredentials,
-    true
+    true,
   );
   // Apollo client will go thru all components on the page and perform queries necessary.
   // The results will be stored in the cache for client-side rendering.
   const pageProps = { pageProps: { ...props } };
   const apolloData = await commerceClientFactory.getDataFromTree(<MyApp.AppTree {...pageProps} />);
-  // console.log('[getServerSideProps]: apolloData.content=', apolloData.content);
+  // console.log('[getServerSideProps]: apolloData=', apolloData);
   props = { ...props, ...apolloData.stateProp, apolloContent: apolloData.content };
 
   // eslint-disable-next-line max-len
   // Hack needed to avoid JSON-Serialization validation error from Next.js https://github.com/zeit/next.js/discussions/11209
   // >>> Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value all together.
-  deleteUndefined(props);
+  if (process.env.NODE_ENV !== 'production') {
+    deleteUndefined(props);
+  }
+
+  //
 
   return { props };
 };
@@ -120,7 +128,6 @@ export default function Index({
   cookies,
   apolloContent,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-  // console.log('[Index]:cookies=', cookies);
   const ssrMode = typeof window === 'undefined';
 
   if (apolloContent && ssrMode) {
@@ -177,7 +184,7 @@ function CSR({
       accountEnvId,
       defaultRequestHeaders,
       defaultAnonymousCredentials,
-      false
+      false,
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphqlServiceUrl, connector, accountEnvId, defaultRequestHeaders, defaultAnonymousCredentials]);
@@ -265,25 +272,36 @@ function Common({
               <header>
                 <Navbar bg="light" expand="lg" sticky="top" className="py-2 py-lg-3">
                   <Container className="justify-content-start px-sm-3">
-                    <Link href={contextPage?.getUrl('/') ?? ''}>
-                      <a className="navbar-brand">
-                        <Image
-                          alt="Pacific Nuts & Bolts"
-                          src="/logo.png"
-                          srcSet="/logo.png 1x, /logo@2x.png 2x"
-                          height="30"
-                          className="d-none d-sm-block"
-                        />
+                    <Navbar.Brand as={Link} href={contextPage?.getUrl('/')} title="Pacific Nuts & Bolts">
+                      <Image
+                        alt="Pacific Nuts & Bolts"
+                        src="/logo.png"
+                        srcSet="/logo.png 1x, /logo@2x.png 2x"
+                        height="30"
+                        className="d-none d-sm-block"
+                      />
 
-                        <Image
-                          alt="Pacific Nuts & Bolts"
-                          src="/logo-sm.png"
-                          srcSet="/logo-sm.png 1x, /logo-sm@2x.png 2x"
-                          height="30"
-                          className="d-block d-sm-none"
-                        />
-                      </a>
-                    </Link>
+                      <Image
+                        alt="Pacific Nuts & Bolts"
+                        src="/logo-sm.png"
+                        srcSet="/logo-sm.png 1x, /logo-sm@2x.png 2x"
+                        height="30"
+                        className="d-block d-sm-none"
+                      />
+
+                      <CommerceContextConsumer>
+                        {({ smAccountId, smDomainKey }) => (
+                          <BrPixel
+                            accountId={smAccountId ?? ''}
+                            domainKey={smDomainKey ?? ''}
+                            page={page!}
+                            pageType="search"
+                            pageLabels="pacific,nut,bolt,commerce"
+                            type="pageview"
+                          />
+                        )}
+                      </CommerceContextConsumer>
+                    </Navbar.Brand>
                     {!contextPage?.getUrl()?.startsWith('/_error') && (
                       <>
                         <BrComponent path="header">
@@ -302,28 +320,44 @@ function Common({
                   </Container>
                 </Navbar>
               </header>
-              <section className="container-fluid">
-                <BrComponent path="top" />
-              </section>
-              <section className="container flex-fill pt-3">
-                <BrComponent path="main" />
-              </section>
-              <footer className="bg-dark text-light py-3">
-                <div className="container clearfix">
-                  <div className="float-left pr-3">&copy; Bloomreach</div>
-                  <div className="overflow-hidden">
-                    <BrComponent path="footer" />
-                  </div>
-                </div>
-              </footer>
-              <BrPixel
-                page={contextPage!}
-                pageType="search"
-                pageLabels="bloomreach,commerce,spa"
-                type="pageview"
-                accountId=""
-                domainKey=""
-              />
+              <BrComponent path="top">
+                <Container as="section" fluid>
+                  <BrComponent />
+                </Container>
+              </BrComponent>
+              <Container as="section" className="flex-fill pt-4">
+                <Row className="flex-lg-nowrap">
+                  <BrComponent path="main">
+                    <Col xs="auto" className="flex-fill">
+                      <BrComponent />
+                    </Col>
+                  </BrComponent>
+                  <BrComponent path="right">
+                    <Col lg="3" className="flex-fill py-lg-2">
+                      <BrComponent />
+                    </Col>
+                  </BrComponent>
+                </Row>
+              </Container>
+              <BrComponent path="bottom">
+                <Container as="section" fluid>
+                  <BrComponent />
+                </Container>
+              </BrComponent>
+              <BrComponent path="footer">
+                <footer className="bg-secondary text-light py-3">
+                  <Container>
+                    <Row>
+                      <Col lg="9" xl="10">
+                        <BrComponent />
+                      </Col>
+                      <Col lg="3" xl="2" className="text-center text-lg-right py-lg-2">
+                        &copy; Bloomreach 2021
+                      </Col>
+                    </Row>
+                  </Container>
+                </footer>
+              </BrComponent>
             </CommerceContextProvider>
           )}
         </BrPageContext.Consumer>
