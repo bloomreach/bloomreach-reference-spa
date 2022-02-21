@@ -21,6 +21,7 @@ import { ContainerItem, Document, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
 import { ProductDetailInputProps, useProductDetail } from '@bloomreach/connector-components-react';
 
+import { useRouter } from 'next/router';
 import { Placeholder } from './Placeholder';
 import styles from './Product.module.scss';
 import { CommerceContext } from '../CommerceContext';
@@ -37,8 +38,8 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
   const { specifications: specificationsRef } = component.getModels<ProductModels>();
   const specificationsBundle = specificationsRef && page.getContent<Document>(specificationsRef);
 
-  // const match = useRouteMatch<{ id: string }>('/products/:id');
-  const pid = 123;
+  const { query } = useRouter();
+  const pid = (query.route && query.route[0] === 'products' && query.route[1]) ?? '';
 
   const [cookies] = useCookies(['_br_uid_2']);
 
@@ -114,10 +115,10 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
       .filter(({ value }) => !!value && value !== 'undefined');
   }, [customAttributes, keys, messages]);
 
-  // To fix ENT-3089
-  if (!match) {
-    return null;
-  }
+  // To fix ENT-3089 - This is not reproducible
+  // if (!match) {
+  //   return null;
+  // }
 
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
