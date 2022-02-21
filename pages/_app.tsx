@@ -19,9 +19,13 @@ import Head from 'next/head';
 import { AppTreeType } from 'next/dist/shared/lib/utils';
 import { ErrorInfo } from 'react';
 import { CookiesProvider } from 'react-cookie';
+import { config } from '@fortawesome/fontawesome-svg-core';
 
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import 'bootstrap/scss/bootstrap.scss';
 import './_index.scss';
+
+config.autoAddCss = false;
 
 export default class MyApp extends App {
   static AppTree: AppTreeType;

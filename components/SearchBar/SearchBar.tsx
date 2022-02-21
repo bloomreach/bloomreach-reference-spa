@@ -15,7 +15,7 @@
  */
 
 import React, { useRef, useState, Dispatch, SetStateAction, FocusEvent, useMemo } from 'react';
-// import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Alert, Button, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -38,7 +38,7 @@ interface SearchBarCatalogParameters {
 
 export function SearchBar({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const ref = useRef<HTMLFormElement>(null);
-  // const history = useHistory();
+  const router = useRouter();
   const { suggestionsEnabled, suggestionsLimit } = component.getParameters<SearchBarCatalogParameters>();
   const [keyword, setKeyword] = useState<string>('');
   const [hideSuggestions, setHideSuggestions] = useState<boolean>(true);
@@ -75,7 +75,7 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
       params = new URLSearchParams({ q: term });
     }
 
-    // history.push(`${url}${url.includes('?') ? '&' : '?'}${params.toString()}`);
+    router.push(`${url}${url.includes('?') ? '&' : '?'}${params.toString()}`);
   };
 
   const handleBlur = (e: FocusEvent): void => {
@@ -114,7 +114,7 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
       )}
       {!keyword && (
         <Button type="submit" variant="link" className={`${styles.search__button}`} title="Search">
-          {/* <FontAwesomeIcon icon={faSearch} /> */}
+          <FontAwesomeIcon icon={faSearch} />
         </Button>
       )}
       {keyword && (
@@ -125,7 +125,7 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
           title="Reset"
           onClick={() => handleInputChange('')}
         >
-          {/* <FontAwesomeIcon icon={faTimes} /> */}
+          <FontAwesomeIcon icon={faTimes} />
         </Button>
       )}
     </Form>
