@@ -39,7 +39,7 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
   const specificationsBundle = specificationsRef && page.getContent<Document>(specificationsRef);
 
   const { query } = useRouter();
-  const pid = (query.route && query.route[0] === 'products' && query.route[1]) ?? '';
+  const pid = (query.route && query.route[0] === 'products' && query.route[1]) || '';
 
   const [cookies] = useCookies(['_br_uid_2']);
 
@@ -116,9 +116,9 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
   }, [customAttributes, keys, messages]);
 
   // To fix ENT-3089
-  // if (!match) {
-  //   return null;
-  // }
+  if (!pid) {
+    return null;
+  }
 
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
