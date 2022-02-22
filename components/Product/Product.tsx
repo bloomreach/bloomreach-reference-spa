@@ -39,7 +39,7 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
   const specificationsBundle = specificationsRef && page.getContent<Document>(specificationsRef);
 
   const { query } = useRouter();
-  const pid = (query.route && query.route[0] === 'products' && query.route[1]) ?? '';
+  const pid = (query.route && query.route[0] === 'products' && query.route[1]) || '';
 
   const [cookies] = useCookies(['_br_uid_2']);
 
@@ -115,10 +115,10 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
       .filter(({ value }) => !!value && value !== 'undefined');
   }, [customAttributes, keys, messages]);
 
-  // To fix ENT-3089 - This is not reproducible
-  // if (!match) {
-  //   return null;
-  // }
+  // To fix ENT-3089
+  if (!pid) {
+    return null;
+  }
 
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
