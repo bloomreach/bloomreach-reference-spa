@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import axios from 'axios';
 import cookie from 'cookie';
@@ -28,6 +28,7 @@ import {
   CommerceConnectorProvider,
 } from '@bloomreach/connector-components-react';
 import { Container, Navbar, Image, Row, Col } from 'react-bootstrap';
+import { getCookieConsentValue } from 'react-cookie-consent';
 import {
   BannerCollection,
   BannerCTA,
@@ -233,7 +234,7 @@ function Common({
   accountEnvId,
   apolloState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-  // console.log('>>>> pageeeeeee', page);
+  const [, setCookieConsentVal] = useState<boolean>();
 
   const mapping = {
     BannerCollection,
@@ -257,6 +258,9 @@ function Common({
     Video,
   };
 
+  const updateCookieConsentVal = (val: boolean): void => {
+    setCookieConsentVal(val);
+  };
   return (
     <CommerceConnectorProvider
       graphqlServiceUrl={graphqlServiceUrl}
@@ -290,16 +294,18 @@ function Common({
                       />
 
                       <CommerceContextConsumer>
-                        {({ smAccountId, smDomainKey }) => (
-                          <BrPixel
-                            accountId={smAccountId ?? ''}
-                            domainKey={smDomainKey ?? ''}
-                            page={page!}
-                            pageType="search"
-                            pageLabels="pacific,nut,bolt,commerce"
-                            type="pageview"
-                          />
-                        )}
+                        {({ smAccountId, smDomainKey }) =>
+                          getCookieConsentValue() && (
+                            <BrPixel
+                              accountId={smAccountId ?? ''}
+                              domainKey={smDomainKey ?? ''}
+                              page={page!}
+                              pageType="search"
+                              pageLabels="pacific,nut,bolt,commerce"
+                              type="pageview"
+                            />
+                          )
+                        }
                       </CommerceContextConsumer>
                     </Navbar.Brand>
                     {!contextPage?.getUrl()?.startsWith('/_error') && (
@@ -356,6 +362,9 @@ function Common({
                       </Col>
                     </Row>
                   </Container>
+                  <BrPageContext.Consumer>
+                    {(brPage) => !brPage?.isPreview() && <BrCookieConsent csUpdate={updateCookieConsentVal} />}
+                  </BrPageContext.Consumer>
                 </footer>
               </BrComponent>
             </CommerceContextProvider>
