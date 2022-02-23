@@ -362,9 +362,7 @@ function Common({
                       </Col>
                     </Row>
                   </Container>
-                  <BrPageContext.Consumer>
-                    {(brPage) => !brPage?.isPreview() && <BrCookieConsent csUpdate={updateCookieConsentVal} />}
-                  </BrPageContext.Consumer>
+                  {!contextPage?.isPreview() && <BrCookieConsent csUpdate={updateCookieConsentVal} />}
                 </footer>
               </BrComponent>
             </CommerceContextProvider>
