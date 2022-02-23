@@ -14,9 +14,9 @@
     "lint": "eslint --ext js,ts,tsx src"
   },
   "dependencies": {
-    "@bloomreach/connector-components-react": "0.9.0-beta",
+    "@bloomreach/connector-components-react": "0.9.0-beta3",
     "@bloomreach/react-sdk": "15.4.3-react17-1",
-    "@bloomreach/spa-sdk": "15.4.3",
+    "@bloomreach/spa-sdk": "15.4.3-react17-1",
     "@fortawesome/fontawesome-svg-core": "^1.2",
     "@fortawesome/free-solid-svg-icons": "^5.15",
     "@fortawesome/react-fontawesome": "^0.1",
@@ -24,7 +24,7 @@
     "axios": "^0.21.4",
     "bootstrap": "^4.5",
     "cookie": "^0.4.1",
-    "next": "^12.0.10",
+    "next": "^12.1.0",
     "path-parse": "^1.0.7",
     "react": "^17.0.2",
     "react-bootstrap": "^1.4",
@@ -34,7 +34,7 @@
     "react-player": "^2.6"
   },
   "devDependencies": {
-    "@bloomreach/eslint-config": "^0.1",
+    "@bloomreach/eslint-config-react": "^1.1.4",
     "@types/googlemaps": "^3.43",
     "@types/markerclustererplus": "^2.1",
     "@types/node": "^17.0.18",
@@ -45,7 +45,10 @@
     "typescript": "~4.5"
   },
   "eslintConfig": {
-    "extends": ["@bloomreach/eslint-config", "plugin:react/jsx-runtime"],
+    "extends": [
+      "@bloomreach/eslint-config-react",
+      "plugin:react/jsx-runtime"
+    ],
     "overrides": [
       {
         "files": [

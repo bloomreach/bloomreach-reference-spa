@@ -129,11 +129,7 @@ function ProductGridProcessor({
     [filtersParameter],
   );
 
-  const query = useMemo(() => {
-    const search = new URLSearchParams(router.asPath.substring(1) || '');
-
-    return search.get('q') ?? queryParameter;
-  }, [queryParameter, router.asPath]);
+  const query = useMemo(() => (router.query.q as string) ?? queryParameter, [router.query.q, queryParameter]);
 
   const categoryId = useMemo(() => {
     if (categoryIdParameter) {
@@ -149,8 +145,7 @@ function ProductGridProcessor({
   }, [categoryIdParameter, router.query.route]);
 
   const { page, sortFields, filters } = useMemo(() => {
-    const search = new URLSearchParams(router.asPath.substring(1) || '');
-
+    const search = new URLSearchParams(router.asPath.split('?')[1] ?? '');
     return {
       page: Number(search.get(`${id}:page`) ?? 1),
       sortFields: search.get(`${id}:sort`) ?? undefined,
@@ -252,7 +247,9 @@ function ProductGridProcessor({
   useEffect(() => setSorting(sortFields), [sortFields]);
   useEffect(() => setFilters(filters), [filters]);
   useEffect(() => {
-    const search = new URLSearchParams(router.asPath.substring(1) || '');
+    const pathAndSearch = router.asPath.split('?');
+    const pathname = pathAndSearch[0];
+    const search = new URLSearchParams(pathAndSearch[1] ?? '');
     const current = search.toString();
 
     if (sortingState) {
@@ -274,8 +271,8 @@ function ProductGridProcessor({
     );
 
     if (current !== search.toString()) {
-      const searchStr = search.toString() ? `${router.asPath}?${search.toString()}` : '';
-      router.push(searchStr);
+      const searchStr = search.toString() ? `?${search.toString()}` : '';
+      router.push({ pathname, search: searchStr }, undefined, { shallow: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowedFilters, filtersState, id, pageState, sortingState]);
