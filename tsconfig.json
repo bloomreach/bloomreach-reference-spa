@@ -21,7 +21,8 @@
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
-    "incremental": true
+    "incremental": true,
+    "useUnknownInCatchVariables": false
   },
   "exclude": [
     "node_modules"

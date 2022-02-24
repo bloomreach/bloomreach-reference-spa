@@ -38,7 +38,14 @@ export function Filters({ filters, values, onChange }: FiltersProps): React.Reac
 
   const handleChange = (): void => {
     const data = new FormData(formRef?.current ?? undefined);
-    const newValues = [...data.keys()].map((facetId) => ({ id: facetId, values: data.getAll(facetId) as string[] }));
+    const selectedFacets = new Map<string, Array<string>>();
+    [...data.entries()].forEach(([facetId, optionId]) => {
+      if (!selectedFacets.has(facetId)) {
+        selectedFacets.set(facetId, []);
+      }
+      selectedFacets.get(facetId)!.push(optionId.toString());
+    });
+    const newValues = [...selectedFacets.keys()].map((id) => ({ id, values: selectedFacets.get(id) ?? [] }));
 
     onChange?.(newValues);
   };
@@ -46,21 +53,20 @@ export function Filters({ filters, values, onChange }: FiltersProps): React.Reac
   return (
     <Form ref={formRef} className="border rounded px-4 pt-1 pb-3 mb-4">
       {filters.map(({ id: facetId, name: filter, values: options }) => (
-        <React.Fragment key={facetId}>
+        <Form.Group key={facetId} className="mb-1">
           <div className="h5 text-capitalize my-3">{filter}</div>
           {options.filter(notEmpty).map(({ id: optionId, count, name }) => (
-            <Form.Group key={optionId} className="mb-1">
-              <Form.Check
-                name={facetId}
-                value={optionId}
-                id={`${facetId}-${optionId}`}
-                label={`${name} (${count})`}
-                checked={facetSelected(facetId, optionId)}
-                onChange={handleChange}
-              />
-            </Form.Group>
+            <Form.Check
+              key={`${facetId}-${optionId}`}
+              name={facetId}
+              value={optionId}
+              id={`${facetId}-${optionId}`}
+              label={`${name} (${count})`}
+              checked={facetSelected(facetId, optionId)}
+              onChange={handleChange}
+            />
           ))}
-        </React.Fragment>
+        </Form.Group>
       ))}
     </Form>
   );

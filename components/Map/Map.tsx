@@ -66,7 +66,7 @@ function RenderMap({ component }: { component: ContainerItem }): React.ReactElem
     if (address) {
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ address }, (results, status) => {
-        if (status === window.google.maps.GeocoderStatus.OK) {
+        if (status === window.google.maps.GeocoderStatus.OK && results?.length) {
           setCenter(results[0].geometry.location);
         }
       });

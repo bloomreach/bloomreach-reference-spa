@@ -26,6 +26,7 @@ import {
   useProductGridCategory,
   useProductGridSearch,
 } from '@bloomreach/connector-components-react';
+import { useRouter } from 'next/router';
 import { CommerceContext } from '../CommerceContext';
 import { notEmpty } from '../../src/utils';
 import { Stats } from './Stats';
@@ -117,7 +118,7 @@ function ProductGridProcessor({
     smCustomVarPurchasePriceField,
   } = useContext(CommerceContext);
   const [cookies] = useCookies(['_br_uid_2']);
-  // const history = useHistory();
+  const router = useRouter();
 
   const allowedFilters = useMemo(
     () =>
@@ -128,28 +129,23 @@ function ProductGridProcessor({
     [filtersParameter],
   );
 
-  const query = useMemo(() => {
-    const search = new URLSearchParams("");
-
-    return search.get('q') ?? queryParameter;
-  }, [queryParameter]);
+  const query = useMemo(() => (router.query.q as string) ?? queryParameter, [router.query.q, queryParameter]);
 
   const categoryId = useMemo(() => {
     if (categoryIdParameter) {
       return categoryIdParameter;
     }
 
-    // const matches = history.location.pathname.match(/\/categories\/([^/].*)/);
-    // if (matches && matches.length > 1) {
-    //   return matches[1];
-    // }
+    const rQuery = router.query.route;
+    if (rQuery && rQuery.length > 0 && rQuery[0] === 'categories') {
+      return rQuery[1];
+    }
 
     return undefined;
-  }, [categoryIdParameter]);
+  }, [categoryIdParameter, router.query.route]);
 
   const { page, sortFields, filters } = useMemo(() => {
-    const search = new URLSearchParams("");
-
+    const search = new URLSearchParams(router.asPath.split('?')[1] ?? '');
     return {
       page: Number(search.get(`${id}:page`) ?? 1),
       sortFields: search.get(`${id}:sort`) ?? undefined,
@@ -158,7 +154,7 @@ function ProductGridProcessor({
           ?.map((filter) => ({ id: filter, values: search.getAll(`${id}:filter:${filter}`) }))
           .filter(({ values }) => values.length) ?? [],
     };
-  }, [id, allowedFilters]);
+  }, [id, allowedFilters, router.asPath]);
 
   const params: ProductGridParamsType = useMemo(() => {
     const defaults: ProductGridParamsType = {
@@ -251,7 +247,9 @@ function ProductGridProcessor({
   useEffect(() => setSorting(sortFields), [sortFields]);
   useEffect(() => setFilters(filters), [filters]);
   useEffect(() => {
-    const search = new URLSearchParams("");
+    const pathAndSearch = router.asPath.split('?');
+    const pathname = pathAndSearch[0];
+    const search = new URLSearchParams(pathAndSearch[1] ?? '');
     const current = search.toString();
 
     if (sortingState) {
@@ -274,7 +272,7 @@ function ProductGridProcessor({
 
     if (current !== search.toString()) {
       const searchStr = search.toString() ? `?${search.toString()}` : '';
-      // history.push({ search: searchStr });
+      router.push({ pathname, search: searchStr }, undefined, { shallow: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowedFilters, filtersState, id, pageState, sortingState]);
