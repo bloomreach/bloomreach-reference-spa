@@ -17,8 +17,8 @@
 import App, { AppContext, AppInitialProps } from 'next/app';
 import Head from 'next/head';
 import { AppTreeType } from 'next/dist/shared/lib/utils';
-import { ErrorInfo } from 'react';
-import { CookiesProvider } from 'react-cookie';
+import cookie from 'cookie';
+import { Cookies, CookiesProvider } from 'react-cookie';
 import { config } from '@fortawesome/fontawesome-svg-core';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -36,18 +36,19 @@ export default class MyApp extends App {
     // console.log('[MyApp.getInitialProps]: appProps=', appProps);
     const { ctx, AppTree: tree } = appContext;
     MyApp.AppTree = tree;
+
+    const { req } = ctx;
+    if (req?.headers.cookie) {
+      const cookies = cookie.parse(req.headers.cookie);
+      appProps.pageProps.cookies = cookies;
+    }
     return { ...appProps };
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.log('[Error]: ', error);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  render() {
+  render(): JSX.Element {
     // console.log('[App]: AppProps=', this.props);
     const { Component, pageProps } = this.props;
+    const cookies = pageProps.cookies ? new Cookies(pageProps.cookies) : undefined;
 
     return (
       <>
@@ -63,7 +64,7 @@ export default class MyApp extends App {
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         </Head>
-        <CookiesProvider>
+        <CookiesProvider cookies={cookies}>
           <Component {...pageProps} />
         </CookiesProvider>
       </>
