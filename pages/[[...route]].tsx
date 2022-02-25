@@ -18,6 +18,7 @@
 import { useMemo } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import axios from 'axios';
+import cookie from 'cookie';
 import { initialize } from '@bloomreach/spa-sdk';
 import { relevance } from '@bloomreach/spa-sdk/lib/express';
 import {
@@ -25,6 +26,7 @@ import {
   CommerceApiClientFactory,
   CommerceConnectorProvider,
 } from '@bloomreach/connector-components-react';
+import { Cookies, CookiesProvider } from 'react-cookie';
 import MyApp from './_app';
 import { buildConfiguration, deleteUndefined, loadCommerceConfig } from '../src/utils';
 import { CommerceContextProvider } from '../components/CommerceContext';
@@ -40,7 +42,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
 
   const configuration = buildConfiguration(path, query);
   const page = await initialize({ ...configuration, request, httpClient: axios });
-  let props: Record<string, any> = { configuration, page: page.toJSON() };
+  const cookies = cookie.parse(request.headers.cookie ?? '');
+
+  let props: Record<string, any> = { configuration, page: page.toJSON(), cookies };
 
   const commerceConfig = loadCommerceConfig(props.page);
 
@@ -86,6 +90,7 @@ export default function Index({
   smAccountId,
   [APOLLO_STATE_PROP_NAME]: apolloState,
   apolloContent,
+  cookies,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const ssrMode = typeof window === 'undefined';
 
@@ -103,6 +108,7 @@ export default function Index({
           connector={connector}
           smDomainKey={smDomainKey}
           smAccountId={smAccountId}
+          cookies={cookies}
         />
       ) : (
         <div>
@@ -165,6 +171,7 @@ function SSR({
   connector,
   smDomainKey,
   smAccountId,
+  cookies,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const accountEnvId = `${smAccountId}_${smDomainKey}`;
 
@@ -176,6 +183,7 @@ function SSR({
       connector={connector}
       clientCommerceFactory={commerceClientFactory}
       accountEnvId={accountEnvId}
+      cookies={cookies}
     />
   );
 }
@@ -188,18 +196,22 @@ function Common({
   clientCommerceFactory,
   accountEnvId,
   apolloState,
+  cookies,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
+  const reactCookies = cookies ? new Cookies(cookies) : undefined;
   return (
-    <CommerceConnectorProvider
-      graphqlServiceUrl={graphqlServiceUrl}
-      connector={connector}
-      accountEnvId={accountEnvId}
-      commerceClientFactory={clientCommerceFactory}
-      apolloState={apolloState}
-    >
-      <CommerceContextProvider page={page} commerceClientFactory={clientCommerceFactory}>
-        <App configuration={configuration} page={page} />
-      </CommerceContextProvider>
-    </CommerceConnectorProvider>
+    <CookiesProvider cookies={reactCookies}>
+      <CommerceConnectorProvider
+        graphqlServiceUrl={graphqlServiceUrl}
+        connector={connector}
+        accountEnvId={accountEnvId}
+        commerceClientFactory={clientCommerceFactory}
+        apolloState={apolloState}
+      >
+        <CommerceContextProvider page={page} commerceClientFactory={clientCommerceFactory}>
+          <App configuration={configuration} page={page} />
+        </CommerceContextProvider>
+      </CommerceConnectorProvider>
+    </CookiesProvider>
   );
 }

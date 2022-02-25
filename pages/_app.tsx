@@ -17,8 +17,6 @@
 import App, { AppContext, AppInitialProps } from 'next/app';
 import Head from 'next/head';
 import { AppTreeType } from 'next/dist/shared/lib/utils';
-import cookie from 'cookie';
-import { Cookies, CookiesProvider } from 'react-cookie';
 import { config } from '@fortawesome/fontawesome-svg-core';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -34,22 +32,15 @@ export default class MyApp extends App {
     // calls page's `getInitialProps` and fills `appProps.pageProps`
     const appProps = await App.getInitialProps(appContext);
     // console.log('[MyApp.getInitialProps]: appProps=', appProps);
-    const { ctx, AppTree: tree } = appContext;
+    const { AppTree: tree } = appContext;
     MyApp.AppTree = tree;
 
-    const { req } = ctx;
-    if (req?.headers.cookie) {
-      const cookies = cookie.parse(req.headers.cookie);
-      appProps.pageProps.cookies = cookies;
-    }
     return { ...appProps };
   }
 
   render(): JSX.Element {
     // console.log('[App]: AppProps=', this.props);
     const { Component, pageProps } = this.props;
-    const cookies = pageProps.cookies ? new Cookies(pageProps.cookies) : undefined;
-
     return (
       <>
         <Head>
@@ -64,9 +55,7 @@ export default class MyApp extends App {
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         </Head>
-        <CookiesProvider cookies={cookies}>
-          <Component {...pageProps} />
-        </CookiesProvider>
+        <Component {...pageProps} />
       </>
     );
   }
