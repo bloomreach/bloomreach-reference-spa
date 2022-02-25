@@ -18,7 +18,7 @@ import React from 'react';
 import { Image } from 'react-bootstrap';
 import { BrManageContentButton } from '@bloomreach/react-sdk';
 import { Document, ImageSet, Page } from '@bloomreach/spa-sdk';
-import { BrRichTextContent } from '..';
+import { BrRichTextContent } from '../BrRichTextContent';
 
 import styles from './ErrorPageContent.module.scss';
 

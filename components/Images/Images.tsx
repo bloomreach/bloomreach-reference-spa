@@ -58,7 +58,7 @@ export function Images({ component, page }: BrProps): React.ReactElement | null 
       )}
       <Row className="no-gutters mw-container mx-auto my-4">
         {images.map((image, index) =>
-          isImageSet(image) ? (
+          (isImageSet(image) ? (
             <Col key={image.getId()} md={Math.max(12 / images.length, 6)} lg={Math.max(12 / images.length, 3)}>
               <div className={`${styles.images__container} position-relative h-0`}>
                 <Image
@@ -73,8 +73,7 @@ export function Images({ component, page }: BrProps): React.ReactElement | null 
             <Alert key={index} variant="danger" className="mt-3 mx-3">
               Image referred by this component cannot be loaded
             </Alert>
-          ),
-        )}
+          )))}
       </Row>
     </Container>
   );

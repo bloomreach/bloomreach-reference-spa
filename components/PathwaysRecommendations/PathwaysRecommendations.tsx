@@ -31,7 +31,7 @@ import { ProductsPlaceholder } from '../ProductGrid/ProductsPlaceholder';
 
 export const DOCUMENTS_PER_SLIDE = 4;
 
-export interface PathwaysRecommendationsParameters {
+interface PathwaysRecommendationsParameters {
   interval?: number;
   limit: number;
   showDescription: boolean;
@@ -41,7 +41,7 @@ export interface PathwaysRecommendationsParameters {
   title?: string;
 }
 
-export interface PathwaysRecommendationsCompound {
+interface PathwaysRecommendationsCompound {
   categoryCompound?: { categoryid: string };
   keyword?: string;
   productCompound?: [{ productid: string }];
@@ -57,8 +57,12 @@ export interface PathwaysRecommendationsCompound {
 export function PathwaysRecommendations({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const { interval, limit, title } = component.getParameters<PathwaysRecommendationsParameters>();
 
-  const { categoryCompound, keyword, productCompound, widgetCompound } =
-    getContainerItemContent<PathwaysRecommendationsCompound>(component, page) ?? {};
+  const {
+    categoryCompound,
+    keyword,
+    productCompound,
+    widgetCompound,
+  } = getContainerItemContent<PathwaysRecommendationsCompound>(component, page) ?? {};
   const { categoryid: category } = categoryCompound ?? {};
   const pids = productCompound?.map(({ productid }) => {
     const [, id, code] = productid.match(/id=([\w\d._=-]+[\w\d=]?)?;code=([\w\d._=/-]+[\w\d=]?)?/i) ?? [];
@@ -163,7 +167,7 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
     <div className={`${styles['pathways-and-recommendations']} mw-container mx-auto`}>
       {title && <h4 className="mb-4">{title}</h4>}
       {!loading && results?.items ? (
-        <Products products={results.items.filter(notEmpty)} interval={interval} />
+        <Products products={results.items.filter(notEmpty)} interval={interval} maxProducts={DOCUMENTS_PER_SLIDE} />
       ) : (
         <ProductsPlaceholder size={1} />
       )}

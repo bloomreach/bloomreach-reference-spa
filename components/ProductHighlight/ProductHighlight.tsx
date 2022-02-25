@@ -29,8 +29,11 @@ interface ProductHighlightCompound {
 
 export function ProductHighlight({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const [error, setError] = useState<Error>();
-  const { title, connectorid, commerceProductCompound } =
-    getContainerItemContent<ProductHighlightCompound>(component, page) ?? {};
+  const {
+    title,
+    connectorid,
+    commerceProductCompound,
+  } = getContainerItemContent<ProductHighlightCompound>(component, page) ?? {};
   const connectorId = connectorid?.selectionValues[0].key;
   const productRefs = useMemo(
     () =>

@@ -20,7 +20,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { ItemFragment } from '@bloomreach/connector-components-react';
 
-import { DOCUMENTS_PER_SLIDE } from './PathwaysRecommendations';
 import { Product } from './Product';
 
 import styles from './Products.module.scss';
@@ -28,17 +27,18 @@ import styles from './Products.module.scss';
 interface ProductsProps {
   products: ItemFragment[];
   interval?: number;
+  maxProducts: number;
 }
 
-export function Products({ products, interval }: ProductsProps): React.ReactElement | null {
+export function Products({ products, interval, maxProducts }: ProductsProps): React.ReactElement | null {
   const slides = useMemo(() => {
     const result = [];
     const productsCpy = [...products];
     while (productsCpy.length) {
-      result.push(productsCpy.splice(0, DOCUMENTS_PER_SLIDE));
+      result.push(productsCpy.splice(0, maxProducts));
     }
     return result;
-  }, [products]);
+  }, [products, maxProducts]);
 
   if (!slides.length) {
     return (

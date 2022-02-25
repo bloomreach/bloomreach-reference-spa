@@ -29,6 +29,7 @@ export interface BrPixelProps {
 }
 
 export function BrPixel(props: BrPixelProps): React.ReactElement | null {
+  // eslint-disable-next-line prefer-destructuring
   const setCookie = useCookies(['_br_uid_2'])[1];
   useEffect(() => {
     if (/^\d+$/.test(props.accountId)) {
@@ -56,6 +57,7 @@ export function BrPixel(props: BrPixelProps): React.ReactElement | null {
             ?.split('=')[1];
           setCookie('_br_uid_2', brUid2, { path: '/' });
         });
+        // eslint-disable-next-line prefer-destructuring
         const s = document.getElementsByTagName('script')[0];
         s.parentNode?.insertBefore(brtrk, s);
       }

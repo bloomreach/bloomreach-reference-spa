@@ -16,24 +16,8 @@
 
 import React from 'react';
 import { PageModel } from '@bloomreach/spa-sdk';
-
-import { loadCommerceConfig } from '../src/utils';
 import { CommerceApiClientFactory } from '@bloomreach/connector-components-react';
-
-export interface CommerceConfig {
-  graphqlServiceUrl: string;
-  connector: string;
-  smAccountId?: string;
-  smAuthKey?: string;
-  smDomainKey?: string;
-  smViewId?: string;
-  smCatalogViews?: string;
-  smCustomAttrFields?: string[];
-  smCustomVarAttrFields?: string[];
-  smCustomVarListPriceField?: string;
-  smCustomVarPurchasePriceField?: string;
-  brEnvType?: string;
-}
+import { loadCommerceConfig } from '../src/utils';
 
 interface CommerceContextProps {
   connector?: string;
@@ -58,7 +42,11 @@ interface CommerceContextInputProps {
 
 export const CommerceContext = React.createContext<CommerceContextProps>({});
 export const CommerceContextConsumer = CommerceContext.Consumer;
-export function CommerceContextProvider({ page, commerceClientFactory, children }: React.PropsWithChildren<CommerceContextInputProps>): React.ReactElement {
+export function CommerceContextProvider({
+  page,
+  commerceClientFactory,
+  children,
+}: React.PropsWithChildren<CommerceContextInputProps>): React.ReactElement {
   const {
     connector,
     smViewId,

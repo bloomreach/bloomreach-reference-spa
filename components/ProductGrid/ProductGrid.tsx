@@ -248,6 +248,7 @@ function ProductGridProcessor({
   useEffect(() => setFilters(filters), [filters]);
   useEffect(() => {
     const pathAndSearch = router.asPath.split('?');
+    // eslint-disable-next-line prefer-destructuring
     const pathname = pathAndSearch[0];
     const search = new URLSearchParams(pathAndSearch[1] ?? '');
     const current = search.toString();
@@ -267,8 +268,7 @@ function ProductGridProcessor({
     allowedFilters?.forEach((filter) => search.delete(`${id}:filter:${filter}`));
 
     filtersState.forEach(({ id: facetId, values }) =>
-      values.filter(notEmpty).forEach((value) => search.append(`${id}:filter:${facetId}`, value)),
-    );
+      values.filter(notEmpty).forEach((value) => search.append(`${id}:filter:${facetId}`, value)));
 
     if (current !== search.toString()) {
       const searchStr = search.toString() ? `?${search.toString()}` : '';
@@ -333,8 +333,8 @@ function ProductGridProcessor({
         {effectiveTitle}
         <Row className="align-items-center">
           <Col sm="auto" className="flex-fill">
-            {isStats &&
-              (results?.items ? (
+            {isStats
+              && (results?.items ? (
                 <Stats offset={results.offset} size={results.count} total={results.total} />
               ) : (
                 <StatsPlaceholder />

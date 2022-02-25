@@ -14,8 +14,23 @@
  * limitations under the License.
  */
 
-import { PageModel } from '@bloomreach/spa-sdk';
-import { CommerceConfig } from '../components/CommerceContext';
+import { Configuration, PageModel } from '@bloomreach/spa-sdk';
+import { ParsedUrlQuery } from 'querystring';
+
+interface CommerceConfig {
+  graphqlServiceUrl: string;
+  connector: string;
+  smAccountId?: string;
+  smAuthKey?: string;
+  smDomainKey?: string;
+  smViewId?: string;
+  smCatalogViews?: string;
+  smCustomAttrFields?: string[];
+  smCustomVarAttrFields?: string[];
+  smCustomVarListPriceField?: string;
+  smCustomVarPurchasePriceField?: string;
+  brEnvType?: string;
+}
 
 export const DUMMY_BR_UID_2_FOR_PREVIEW = 'uid%3D0000000000000%3Av%3D11.5%3Ats%3D1428617911187%3Ahc%3D55';
 
@@ -58,4 +73,17 @@ export function deleteUndefined(obj: Record<string, any> | undefined): void {
       }
     });
   }
+}
+
+export function buildConfiguration(path: string, query: ParsedUrlQuery): Omit<Configuration, 'httpClient'> {
+  const endpointQueryParameter = 'endpoint';
+  const configuration: Record<string, any> = {
+    endpointQueryParameter,
+    path,
+  };
+  const endpoint = query[endpointQueryParameter];
+  if (!endpoint) {
+    configuration.endpoint = process.env.BRXM_ENDPOINT;
+  }
+  return configuration;
 }

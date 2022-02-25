@@ -29,21 +29,21 @@ interface MenuModels {
 export function Menu(): React.ReactElement | null {
   const component = React.useContext(BrComponentContext);
   const page = React.useContext(BrPageContext);
-  // if (!component || !page) {
-  //   return null;
-  // }
+  if (!component || !page) {
+    return null;
+  }
 
-  const { menu: menuRef } = component?.getModels<MenuModels>();
-  const menu = menuRef && page?.getContent<BrMenu>(menuRef);
-  
-  // if (!isMenu(menu)) {
-  //   return null;
-  // }
+  const { menu: menuRef } = component.getModels<MenuModels>();
+  const menu = menuRef && page.getContent<BrMenu>(menuRef);
+
+  if (!isMenu(menu)) {
+    return null;
+  }
   return (
     <Nav as="ul" navbar className={`w-100 ${page!.isPreview() ? 'has-edit-button' : ''}`}>
       <BrManageMenuButton menu={menu} />
       {menu?.getItems().map((item) =>
-        item.getChildren().length ? (
+        (item.getChildren().length ? (
           <Dropdown as="li" key={item.getName()}>
             <Dropdown.Toggle as={MenuItem} item={item} />
 
@@ -59,8 +59,7 @@ export function Menu(): React.ReactElement | null {
           <Nav.Item as="li" key={item.getName()}>
             <MenuItem item={item} />
           </Nav.Item>
-        ),
-      )}
+        )))}
     </Nav>
   );
 }

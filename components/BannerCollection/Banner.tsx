@@ -20,7 +20,7 @@ import { Document, ImageSet } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrPageContext } from '@bloomreach/react-sdk';
 
 import { Link } from '../Link';
-import { BrRichTextContent } from '..';
+import { BrRichTextContent } from '../BrRichTextContent';
 import styles from './Banner.module.scss';
 
 interface BannerProps extends React.ComponentPropsWithoutRef<'a'> {

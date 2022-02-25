@@ -25,7 +25,7 @@ interface StatsProps {
 export function Stats({ offset, size, total }: StatsProps): React.ReactElement {
   return (
     <div className="text-muted mb-4">
-      {total && offset < total ? `${offset + 1}-${offset + size} of ${total} products` : `0 products`}
+      {total && offset < total ? `${offset + 1}-${offset + size} of ${total} products` : '0 products'}
     </div>
   );
 }

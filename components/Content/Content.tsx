@@ -18,18 +18,13 @@ import React from 'react';
 import { Image } from 'react-bootstrap';
 import { ContainerItem, Document, ImageSet } from '@bloomreach/spa-sdk';
 import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
-import { BrRichTextContent } from '..';
+import { BrRichTextContent } from '../BrRichTextContent';
 import { ErrorPageContent } from './ErrorPageContent';
-import { ErrorContext, ErrorCode } from '../../src/ErrorContext';
-
 
 import styles from './Content.module.scss';
 
-export const ERROR_PAGE_PATH_MAP = {
-  [ErrorCode.NOT_FOUND]: '/404',
-  [ErrorCode.INTERNAL_SERVER_ERROR]: '/500',
-  [ErrorCode.GENERAL_ERROR]: '/_error',
-};
+const errorPages = ['/404', '/500', '/_error'];
+
 export function Content({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const document = page.getDocument<Document>();
   const pageUrl = page.getUrl() ?? '';
@@ -38,7 +33,7 @@ export function Content({ component, page }: BrProps<ContainerItem>): React.Reac
     return page.isPreview() ? <div /> : null;
   }
 
-  if (Object.values(ERROR_PAGE_PATH_MAP).some((path) => pageUrl.startsWith(path))) {
+  if (errorPages.some((path) => pageUrl.startsWith(path))) {
     return <ErrorPageContent document={document} page={page} />;
   }
 

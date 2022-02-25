@@ -20,11 +20,11 @@ import NextLink from 'next/link';
 
 export const Link = React.forwardRef(
   ({ href, ...props }: React.ComponentPropsWithoutRef<'a'>, ref: React.Ref<HTMLAnchorElement>) =>
-    href ? (
+    (href ? (
       <NextLink href={href}>
         <a ref={ref} {...props} />
       </NextLink>
     ) : (
       <a ref={ref} {...props} />
-    ),
+    )),
 );

@@ -19,11 +19,17 @@ import { Image } from 'react-bootstrap';
 import { BrComponentContext, BrPageContext } from '@bloomreach/react-sdk';
 import { ItemFragment } from '@bloomreach/connector-components-react';
 
-import { PathwaysRecommendationsParameters } from './PathwaysRecommendations';
 import { Link } from '../Link';
 import { notEmpty } from '../../src/utils';
 
 import styles from './Product.module.scss';
+
+interface PathwaysRecommendationsParameters {
+  showDescription: boolean;
+  showPid: boolean;
+  showPrice: boolean;
+  showTitle: boolean;
+}
 
 interface ProductProps extends React.ComponentPropsWithoutRef<typeof Link> {
   product: ItemFragment;
@@ -35,8 +41,12 @@ export function Product({ product }: ProductProps): React.ReactElement | null {
   const page = React.useContext(BrPageContext);
   const component = React.useContext(BrComponentContext);
   const ref = React.useRef<HTMLAnchorElement>(null);
-  const { showDescription, showPid, showPrice, showTitle } =
-    component?.getParameters<PathwaysRecommendationsParameters>() ?? {};
+  const {
+    showDescription,
+    showPid,
+    showPrice,
+    showTitle,
+  } = component?.getParameters<PathwaysRecommendationsParameters>() ?? {};
   const { itemId, listPrice, purchasePrice, displayName, description, imageSet, customAttrs } = product;
   const customAttributes = useMemo(
     () =>

@@ -19,7 +19,7 @@ import { Button, Container, Jumbotron, Row } from 'react-bootstrap';
 import { ContainerItem, Document, getContainerItemContent, Reference } from '@bloomreach/spa-sdk';
 import { BrProps } from '@bloomreach/react-sdk';
 import { Link } from '../Link';
-import { BrRichTextContent } from '..';
+import { BrRichTextContent } from '../BrRichTextContent';
 import styles from './BannerCTA.module.scss';
 
 interface BannerCTACompound {

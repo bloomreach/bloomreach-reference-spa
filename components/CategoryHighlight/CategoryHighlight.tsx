@@ -29,8 +29,11 @@ interface CategoryHighlightCompound {
 
 export function CategoryHighlight({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const [error, setError] = useState<Error>();
-  const { title, connectorid, commerceCategoryCompound } =
-    getContainerItemContent<CategoryHighlightCompound>(component, page) ?? {};
+  const {
+    title,
+    connectorid,
+    commerceCategoryCompound,
+  } = getContainerItemContent<CategoryHighlightCompound>(component, page) ?? {};
   const connectorId = connectorid?.selectionValues[0].key;
   // Reset error when no items configured
   useEffect(() => {

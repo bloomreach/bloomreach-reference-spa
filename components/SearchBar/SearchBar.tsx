@@ -22,6 +22,7 @@ import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ContainerItem, Document, Reference } from '@bloomreach/spa-sdk';
 import { ProductSearchSuggestionInputProps, useProductSearchSuggestion } from '@bloomreach/connector-components-react';
 import { BrPageContext, BrProps } from '@bloomreach/react-sdk';
+import Image from 'next/image';
 import { CommerceContextConsumer } from '../CommerceContext';
 import { Link } from '../Link';
 
@@ -199,7 +200,7 @@ function ProductSuggestion({
           onClick={() => setKeyword('')}
         >
           <div>
-            <img
+            <Image
               src={item?.imageSet?.thumbnail?.link?.href ?? ''}
               alt={item?.displayName ?? item?.itemId.id}
               className="text-truncate"
@@ -210,8 +211,8 @@ function ProductSuggestion({
               <div className="pl-0">
                 {item?.listPrice?.moneyAmounts
                   ?.filter((entry) => entry?.amount && entry.amount > 0)
-                  .map((entry) => (
-                    <del className="text-muted mr-2">
+                  .map((entry, index) => (
+                    <del key={index} className="text-muted mr-2">
                       {entry?.currency ?? '$'} {entry?.amount}
                     </del>
                   ))}

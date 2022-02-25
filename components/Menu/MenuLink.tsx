@@ -18,16 +18,17 @@ import React from 'react';
 import { MenuItem, TYPE_LINK_EXTERNAL } from '@bloomreach/spa-sdk';
 
 import { Link } from '../Link';
+
 interface MenuLinkProps extends React.ComponentPropsWithoutRef<'a'> {
   to: MenuItem;
 }
 
 export const MenuLink = React.forwardRef(
   ({ to, href = to.getUrl(), ...props }: MenuLinkProps, ref: React.Ref<HTMLAnchorElement>) =>
-    to.getLink()?.type === TYPE_LINK_EXTERNAL ? (
+    (to.getLink()?.type === TYPE_LINK_EXTERNAL ? (
       // eslint-disable-next-line jsx-a11y/anchor-has-content
       <a ref={ref} href={href} role="button" {...props} />
     ) : (
       <Link ref={ref} href={href} {...props} />
-    ),
+    )),
 );
