@@ -189,8 +189,6 @@ function Common({
   accountEnvId,
   apolloState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-  // console.log('>>>> pageeeeeee', page);
-
   return (
     <CommerceConnectorProvider
       graphqlServiceUrl={graphqlServiceUrl}

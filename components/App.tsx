@@ -19,6 +19,8 @@ import { BrComponent, BrPage, BrPageContext } from '@bloomreach/react-sdk';
 import { PageModel } from '@bloomreach/spa-sdk';
 import axios from 'axios';
 import { Container, Navbar, Image, Row, Col } from 'react-bootstrap';
+import { getCookieConsentValue } from 'react-cookie-consent';
+import { useState } from 'react';
 
 import {
   BannerCollection,
@@ -54,6 +56,7 @@ interface AppProps {
 }
 
 export function App({ configuration, page }: AppProps): JSX.Element {
+  const [, setCookieConsentVal] = useState<boolean>();
   const mapping = {
     BannerCollection,
     BannerCTA,
@@ -74,6 +77,10 @@ export function App({ configuration, page }: AppProps): JSX.Element {
     SearchBar,
     TitleAndText,
     Video,
+  };
+
+  const updateCookieConsentVal = (val: boolean): void => {
+    setCookieConsentVal(val);
   };
 
   return (
@@ -102,7 +109,7 @@ export function App({ configuration, page }: AppProps): JSX.Element {
 
                   <CommerceContextConsumer>
                     {({ smAccountId, smDomainKey }) => (
-                      <BrPixel
+                      getCookieConsentValue() && <BrPixel
                         accountId={smAccountId ?? ''}
                         domainKey={smDomainKey ?? ''}
                         page={contextPage!}
@@ -167,6 +174,7 @@ export function App({ configuration, page }: AppProps): JSX.Element {
                 </Col>
               </Row>
             </Container>
+            {!contextPage?.isPreview() && <BrCookieConsent csUpdate={updateCookieConsentVal} />}
           </footer>
         </BrComponent>
         </>)}
