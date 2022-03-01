@@ -11,7 +11,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --ext js,ts,tsx src"
+    "lint": "eslint --ext js,ts,tsx ."
   },
   "dependencies": {
     "@bloomreach/connector-components-react": "0.9.0-beta3",

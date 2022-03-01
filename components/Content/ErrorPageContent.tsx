@@ -16,24 +16,22 @@
 
 import React from 'react';
 import { Image } from 'react-bootstrap';
-import { BrManageContentButton } from '@bloomreach/react-sdk';
-import { Document, ImageSet, Page } from '@bloomreach/spa-sdk';
+import { ImageSet, Page } from '@bloomreach/spa-sdk';
 import { BrRichTextContent } from '../BrRichTextContent';
 
 import styles from './ErrorPageContent.module.scss';
 
 interface ErrorPageContentProps {
   page: Page;
-  document: Document;
+  document: ContentDocument;
 }
 
 export function ErrorPageContent({ document, page }: ErrorPageContentProps): React.ReactElement | null {
-  const { content, image: imageRef, title } = document.getData<ContentDocument>();
+  const { content, image: imageRef, title } = document;
   const image = imageRef && page.getContent<ImageSet>(imageRef)?.getOriginal();
 
   return (
-    <article className={`${page.isPreview() ? 'has-edit-button' : ''} ${styles['error-page']}`}>
-      <BrManageContentButton content={document} />
+    <article className={styles['error-page']}>
       {title && <h1>{title}</h1>}
       {content?.value && (
         <BrRichTextContent page={page!} content={{ html: content.value }} className={styles['error-text']} />

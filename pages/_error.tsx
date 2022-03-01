@@ -34,7 +34,7 @@ enum ErrorCode {
 const ERROR_PAGE_PATH_MAP = {
   [ErrorCode.NOT_FOUND]: '/404',
   [ErrorCode.INTERNAL_SERVER_ERROR]: '/500',
-  [ErrorCode.GENERAL_ERROR]: '/_error',
+  [ErrorCode.GENERAL_ERROR]: '/error',
 };
 
 interface ErrorProps {
@@ -123,6 +123,7 @@ Error.getInitialProps = async ({ req: request, res: response, err, asPath, query
   }
   const path = `${ERROR_PAGE_PATH_MAP[errorCode] ?? ERROR_PAGE_PATH_MAP[ErrorCode.GENERAL_ERROR]}${search}`;
   const configuration = buildConfiguration(path, query);
+  console.log('[_error]: path=', path);
   try {
     const page = await initialize({ ...configuration, request, httpClient: axios });
     return { configuration, page: page.toJSON() };

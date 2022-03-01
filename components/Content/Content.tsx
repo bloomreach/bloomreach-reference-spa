@@ -16,17 +16,17 @@
 
 import React from 'react';
 import { Image } from 'react-bootstrap';
-import { ContainerItem, Document, ImageSet } from '@bloomreach/spa-sdk';
-import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
+import { ContainerItem, getContainerItemContent, ImageSet } from '@bloomreach/spa-sdk';
+import { BrProps } from '@bloomreach/react-sdk';
 import { BrRichTextContent } from '../BrRichTextContent';
 import { ErrorPageContent } from './ErrorPageContent';
 
 import styles from './Content.module.scss';
 
-const errorPages = ['/404', '/500', '/_error'];
+const errorPages = ['/404', '/500', '/error'];
 
 export function Content({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
-  const document = page.getDocument<Document>();
+  const document = getContainerItemContent<ContentDocument>(component, page);
   const pageUrl = page.getUrl() ?? '';
 
   if (!document || component.isHidden()) {
@@ -37,12 +37,11 @@ export function Content({ component, page }: BrProps<ContainerItem>): React.Reac
     return <ErrorPageContent document={document} page={page} />;
   }
 
-  const { content, image: imageRef, title } = document.getData<ContentDocument>();
+  const { content, image: imageRef, title } = document;
   const image = imageRef && page?.getContent<ImageSet>(imageRef)?.getOriginal();
 
   return (
-    <article className={`${page.isPreview() ? 'has-edit-button' : ''} mw-container mx-auto`}>
-      <BrManageContentButton content={document} />
+    <article className="mw-container mx-auto">
       {title && <h1 className="mb-4">{title}</h1>}
       {image && (
         <div className={`${styles['content__image-container']} mb-4`}>
