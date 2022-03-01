@@ -45,11 +45,11 @@ export default class MyApp extends App {
       <>
         <Head>
           <meta charSet="utf-8" />
-          <meta name="description" content="Example React SPA for brX SaaS" />
+          <meta key="description" name="description" content="Example React SPA for brX SaaS" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="theme-color" content="#00b2db" />
 
-          <title>Pacific Nuts & Bolts</title>
+          <title key="title">Pacific Nuts & Bolts</title>
 
           <link rel="apple-touch-icon" href="/logo@2x.png" />
           <link rel="manifest" href="/manifest.json" />

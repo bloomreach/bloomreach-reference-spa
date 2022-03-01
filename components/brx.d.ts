@@ -62,3 +62,18 @@ interface ResourceBundle {
 interface SelectionType {
   selectionValues: { key: string; label: string }[];
 }
+
+interface OpenGraphCompound {
+  description: string;
+  image?: import('@bloomreach/spa-sdk').Reference;
+  type: string;
+  locale: string;
+  url: string;
+}
+
+interface PageDocument {
+  title: string;
+  description: string;
+  preventIndexing: boolean;
+  ogCompound: OpenGraphCompound;
+}
