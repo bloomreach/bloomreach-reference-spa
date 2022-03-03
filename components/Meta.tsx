@@ -15,13 +15,18 @@
  */
 
 import Head from 'next/head';
-import { BrProps } from '@bloomreach/react-sdk';
-import { ImageSet } from '@bloomreach/spa-sdk';
+import { Document, ImageSet, Page } from '@bloomreach/spa-sdk';
 
-export function Meta({ page }: BrProps): JSX.Element {
-  const { title, description, preventIndexing, ogCompound } = page.getDocument<PageDocument>() ?? {};
-  const { description: ogDescription, locale, type, url = page.getUrl(), image: imageRef } = ogCompound ?? {};
+interface MetaProps {
+  page: Page;
+}
+
+export function Meta({ page }: MetaProps): JSX.Element {
+  const document = page.getDocument<Document>();
+  const { title, description, preventIndexing, ogCompound } = document?.getData<PageDocument>() ?? {};
+  const { description: ogDescription, locale, type, url, image: imageRef } = ogCompound ?? {};
   const image = imageRef && page.getContent<ImageSet>(imageRef);
+  const canonicalUrl = url || page.getUrl();
 
   return (
     <Head>
@@ -35,10 +40,9 @@ export function Meta({ page }: BrProps): JSX.Element {
         {ogDescription && <meta property="og:description" content={ogDescription} />}
         {locale && <meta property="og:locale" content={locale} />}
         {type && <meta property="og:type" content={type} />}
-        {url && <meta property="og:url" content={url} />}
+        {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
         {image && <meta property="og:image" content={image.getOriginal()?.getUrl()} />}
       </>)}
     </Head>
   );
-
 }

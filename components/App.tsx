@@ -49,6 +49,7 @@ import {
 import { CommerceContextConsumer } from './CommerceContext';
 
 import styles from './App.module.scss';
+import { Meta } from './Meta';
 
 interface AppProps {
   configuration: Record<string, any>;
@@ -87,6 +88,7 @@ export function App({ configuration, page }: AppProps): JSX.Element {
     <BrPage configuration={{ ...configuration, httpClient: axios }} mapping={mapping} page={page}>
       <BrPageContext.Consumer>
         {(contextPage) => (<>
+          <Meta page={contextPage!} />
           <header>
             <Navbar bg="light" expand="lg" sticky="top" className="py-2 py-lg-3">
               <Container className="justify-content-start px-sm-3">
