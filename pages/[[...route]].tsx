@@ -69,7 +69,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const pageProps = { pageProps: { ...props } };
   const apolloData = await commerceClientFactory.getDataFromTree(<MyApp.AppTree {...pageProps} />);
   // console.log('[getServerSideProps]: apolloData=', apolloData);
-  props = { ...props, ...apolloData.stateProp, apolloContent: apolloData.content };
+  props = { ...props, ...apolloData.stateProp };
 
   // eslint-disable-next-line max-len
   // Hack needed to avoid JSON-Serialization validation error from Next.js https://github.com/zeit/next.js/discussions/11209
@@ -89,14 +89,9 @@ export default function Index({
   smDomainKey,
   smAccountId,
   [APOLLO_STATE_PROP_NAME]: apolloState,
-  apolloContent,
   cookies,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const ssrMode = typeof window === 'undefined';
-
-  if (apolloContent && ssrMode) {
-    return <div dangerouslySetInnerHTML={{ __html: apolloContent }} />;
-  }
 
   return (
     <>
@@ -111,17 +106,15 @@ export default function Index({
           cookies={cookies}
         />
       ) : (
-        <div>
-          <CSR
-            configuration={configuration}
-            page={page}
-            graphqlServiceUrl={graphqlServiceUrl}
-            connector={connector}
-            smDomainKey={smDomainKey}
-            smAccountId={smAccountId}
-            apolloState={apolloState}
-          />
-        </div>
+        <CSR
+          configuration={configuration}
+          page={page}
+          graphqlServiceUrl={graphqlServiceUrl}
+          connector={connector}
+          smDomainKey={smDomainKey}
+          smAccountId={smAccountId}
+          apolloState={apolloState}
+        />
       )}
     </>
   );
