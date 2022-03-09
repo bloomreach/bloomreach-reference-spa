@@ -16,13 +16,12 @@
 
 import React, { useRef, useState, Dispatch, SetStateAction, FocusEvent, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { Alert, Button, Form } from 'react-bootstrap';
+import { Alert, Button, Form, Image } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ContainerItem, Document, Reference } from '@bloomreach/spa-sdk';
 import { ProductSearchSuggestionInputProps, useProductSearchSuggestion } from '@bloomreach/connector-components-react';
 import { BrPageContext, BrProps } from '@bloomreach/react-sdk';
-import Image from 'next/image';
 import { CommerceContextConsumer } from '../CommerceContext';
 import { Link } from '../Link';
 
