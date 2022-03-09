@@ -24,9 +24,7 @@ class MyDocument extends Document {
       <Html>
         <Head />
         <body>
-          <div className="d-flex flex-column vh-100">
-            <Main />
-          </div>
+          <Main />
           <NextScript />
         </body>
       </Html>
