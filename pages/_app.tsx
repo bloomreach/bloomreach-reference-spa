@@ -55,7 +55,9 @@ export default class MyApp extends App {
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         </Head>
-        <Component {...pageProps} />
+        <div className="d-flex flex-column vh-100">
+          <Component {...pageProps} />
+        </div>
       </>
     );
   }
