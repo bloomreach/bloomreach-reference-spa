@@ -24,7 +24,7 @@ import { ProductGridWidgetInputProps, useProductGridWidget } from '@bloomreach/c
 
 import { CommerceContext } from '../CommerceContext';
 import { Products } from './Products';
-import { DUMMY_BR_UID_2_FOR_PREVIEW, notEmpty } from '../../src/utils';
+import { DUMMY_BR_UID_2_FOR_PREVIEW, isLoading, notEmpty } from '../../src/utils';
 
 import styles from './PathwaysRecommendations.module.scss';
 import { ProductsPlaceholder } from '../ProductGrid/ProductsPlaceholder';
@@ -166,7 +166,7 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
   return (
     <div className={`${styles['pathways-and-recommendations']} mw-container mx-auto`}>
       {title && <h4 className="mb-4">{title}</h4>}
-      {!loading && results?.items ? (
+      {!isLoading(loading) && results?.items ? (
         <Products products={results.items.filter(notEmpty)} interval={interval} maxProducts={DOCUMENTS_PER_SLIDE} />
       ) : (
         <ProductsPlaceholder size={1} />

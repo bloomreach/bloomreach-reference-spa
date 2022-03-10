@@ -87,3 +87,9 @@ export function buildConfiguration(path: string, query: ParsedUrlQuery): Omit<Co
   }
   return configuration;
 }
+
+export function isLoading(loading: boolean): boolean {
+  const ssrMode = typeof window === 'undefined';
+  // In SSR phase, ignore the `loading` param returned by Apollo client's hooks.
+  return ssrMode ? false : loading;
+}

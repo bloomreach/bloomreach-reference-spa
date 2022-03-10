@@ -28,7 +28,7 @@ import {
 } from '@bloomreach/connector-components-react';
 import { useRouter } from 'next/router';
 import { CommerceContext } from '../CommerceContext';
-import { notEmpty } from '../../src/utils';
+import { isLoading, notEmpty } from '../../src/utils';
 import { Stats } from './Stats';
 import { StatsPlaceholder } from './StatsPlaceholder';
 import { Filters } from './Filters';
@@ -400,7 +400,7 @@ function ProductGridProcessor({
             This widget is not working properly. Try again later.
           </Alert>
         )}
-        {!loading && results?.items ? (
+        {!isLoading(loading) && results?.items ? (
           <Products products={results.items.filter(notEmpty)} />
         ) : (
           <ProductsPlaceholder size={limit} />

@@ -21,7 +21,7 @@ import { BrPageContext } from '@bloomreach/react-sdk';
 import { ItemIdModel, ProductDetailInputProps, useProductDetail } from '@bloomreach/connector-components-react';
 import { CommerceContext } from '../CommerceContext';
 import styles from './ProductHighlight.module.scss';
-import { notEmpty } from '../../src/utils';
+import { isLoading, notEmpty } from '../../src/utils';
 
 import { Link } from '../Link';
 
@@ -104,7 +104,7 @@ export function ProductHighlightItem({ connectorId, itemId, setError }: ProductH
   const displayPrice = sale ?? price;
   const thumbnail = useMemo(() => imageSet?.original?.link?.href, [imageSet]);
 
-  if (!item || loading) {
+  if (!item || isLoading(loading)) {
     return <div />;
   }
 
