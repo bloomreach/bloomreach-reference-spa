@@ -42,7 +42,7 @@ export function TitleAndText({ component, page }: BrProps<ContainerItem>): React
   }
 
   const { titlesize = 'H3', textalignment = 'center', style = 'style1' } = component.getParameters();
-  const sectionStyle = styles[style];
+  const sectionStyle = (style == 'style1' ? 'bg-white text-dark' : 'bg-primary text-white');
 
   return (
     <section className={`${sectionStyle} pt-4 text-${textalignment}`}>
