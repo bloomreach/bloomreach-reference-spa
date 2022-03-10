@@ -8,7 +8,7 @@
     "npm": "7"
   },
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
+    "resolution": "npx npm-force-resolutions",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
