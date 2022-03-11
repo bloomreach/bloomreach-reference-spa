@@ -21,6 +21,7 @@ export * from './BrPixel';
 export * from './BrRichTextContent';
 export * from './CategoryHighlight';
 export * from './Content';
+export * from './ContentPage';
 export * from './Link';
 export * from './Images';
 export * from './Map';
