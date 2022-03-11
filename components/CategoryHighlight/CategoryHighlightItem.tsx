@@ -21,6 +21,7 @@ import { BrPageContext } from '@bloomreach/react-sdk';
 import { CategoryInputProps, useCategory } from '@bloomreach/connector-components-react';
 import { Link } from '../Link';
 import { CommerceContext } from '../CommerceContext';
+import { isLoading } from '../../src/utils';
 
 interface CategoryHighlightItemProps extends React.ComponentPropsWithoutRef<'a'> {
   connectorId: string | undefined;
@@ -81,7 +82,7 @@ export function CategoryHighlightItem({ connectorId, categoryId, setError }: Cat
   }, [error]);
   const { displayName } = category ?? {};
 
-  if (!category || loading) {
+  if (!category || isLoading(loading)) {
     return <div />;
   }
 

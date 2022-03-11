@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { Alert, Col, Image, Row, Table } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { ContainerItem, Document, Reference } from '@bloomreach/spa-sdk';
@@ -25,7 +25,7 @@ import { useRouter } from 'next/router';
 import { Placeholder } from './Placeholder';
 import styles from './Product.module.scss';
 import { CommerceContext } from '../CommerceContext';
-import { notEmpty } from '../../src/utils';
+import { isLoading, notEmpty } from '../../src/utils';
 import { ProductNotFoundError } from './ProductNotFoundError';
 
 interface ProductModels {
@@ -115,6 +115,13 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
       .filter(({ value }) => !!value && value !== 'undefined');
   }, [customAttributes, keys, messages]);
 
+  // Ensure this check only happening on the client side
+  useEffect(() => {
+    if (!loading && !itemId) {
+      throw new ProductNotFoundError(pid);
+    }
+  }, [loading, itemId, pid]);
+
   // To fix ENT-3089
   if (!pid) {
     return null;
@@ -135,7 +142,7 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
     );
   }
 
-  if (loading) {
+  if (isLoading(loading)) {
     return (
       <div className="mw-container mx-auto">
         <Placeholder />
@@ -144,7 +151,7 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
   }
 
   if (!itemId) {
-    throw new ProductNotFoundError(pid);
+    return null;
   }
 
   return (
