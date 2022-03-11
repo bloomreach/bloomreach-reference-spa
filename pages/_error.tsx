@@ -22,7 +22,7 @@ import { Link, ProductNotFoundError } from '../components';
 
 import styles from './ErrorPage.module.scss';
 import errorImage from './error.gif';
-import { buildConfiguration } from '../src/utils';
+import { buildConfiguration, CommerceConfig, loadCommerceConfig } from '../src/utils';
 import { App } from '../components/App';
 
 enum ErrorCode {
@@ -40,11 +40,12 @@ const ERROR_PAGE_PATH_MAP = {
 interface ErrorProps {
   configuration?: Record<string, any>;
   page?: PageModel;
+  commerceConfig?: CommerceConfig;
 }
 
-const Error: NextPage<ErrorProps> = ({ configuration, page }) => {
+const Error: NextPage<ErrorProps> = ({ configuration, page, commerceConfig }) => {
   if (configuration && page) {
-    return <App configuration={configuration} page={page} />;
+    return <App configuration={configuration} page={page} commerceConfig={commerceConfig!} />;
   }
   return (
     <>
@@ -126,7 +127,9 @@ Error.getInitialProps = async ({ req: request, res: response, err, asPath, query
   // console.log('[_error]: path=', path);
   try {
     const page = await initialize({ ...configuration, request, httpClient: axios });
-    return { configuration, page: page.toJSON() };
+    const pageJson = page.toJSON();
+    const commerceConfig = loadCommerceConfig(pageJson);
+    return { configuration, page: page.toJSON(), commerceConfig };
   } catch (e) {
     return {};
   }

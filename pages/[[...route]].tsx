@@ -15,21 +15,14 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import axios from 'axios';
 import cookie from 'cookie';
 import { initialize } from '@bloomreach/spa-sdk';
 import { relevance } from '@bloomreach/spa-sdk/lib/express';
-import {
-  APOLLO_STATE_PROP_NAME,
-  CommerceApiClientFactory,
-  CommerceConnectorProvider,
-} from '@bloomreach/connector-components-react';
-import { Cookies, CookiesProvider } from 'react-cookie';
+import { APOLLO_STATE_PROP_NAME, CommerceApiClientFactory } from '@bloomreach/connector-components-react';
 import MyApp from './_app';
 import { buildConfiguration, deleteUndefined, loadCommerceConfig } from '../src/utils';
-import { CommerceContextProvider } from '../components/CommerceContext';
 import { App } from '../components/App';
 
 let commerceClientFactory: CommerceApiClientFactory;
@@ -48,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
 
   const commerceConfig = loadCommerceConfig(props.page);
 
-  props = { ...props, ...commerceConfig };
+  props = { ...props, commerceConfig };
 
   const { graphqlServiceUrl, connector, smAccountId, smDomainKey } = commerceConfig;
   const accountEnvId = `${smAccountId}_${smDomainKey}`;
@@ -84,127 +77,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
 export default function Index({
   configuration,
   page,
-  graphqlServiceUrl,
-  connector,
-  smDomainKey,
-  smAccountId,
+  commerceConfig,
   [APOLLO_STATE_PROP_NAME]: apolloState,
   cookies,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-  const ssrMode = typeof window === 'undefined';
-
-  return (
-    <>
-      {ssrMode ? (
-        <SSR
-          configuration={configuration}
-          page={page}
-          graphqlServiceUrl={graphqlServiceUrl}
-          connector={connector}
-          smDomainKey={smDomainKey}
-          smAccountId={smAccountId}
-          cookies={cookies}
-        />
-      ) : (
-        <CSR
-          configuration={configuration}
-          page={page}
-          graphqlServiceUrl={graphqlServiceUrl}
-          connector={connector}
-          smDomainKey={smDomainKey}
-          smAccountId={smAccountId}
-          apolloState={apolloState}
-        />
-      )}
-    </>
-  );
-}
-
-function CSR({
-  configuration,
-  page,
-  graphqlServiceUrl,
-  connector,
-  smDomainKey,
-  smAccountId,
-  apolloState,
-}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-  const accountEnvId = `${smAccountId}_${smDomainKey}`;
-  const defaultRequestHeaders = undefined;
-  const defaultAnonymousCredentials = undefined;
-  const factory = useMemo(() => {
-    return new CommerceApiClientFactory(
-      graphqlServiceUrl,
-      connector,
-      accountEnvId,
-      defaultRequestHeaders,
-      defaultAnonymousCredentials,
-      false,
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [graphqlServiceUrl, connector, accountEnvId, defaultRequestHeaders, defaultAnonymousCredentials]);
-
-  return (
-    <Common
-      configuration={configuration}
-      page={page}
-      graphqlServiceUrl={graphqlServiceUrl}
-      connector={connector}
-      clientCommerceFactory={factory}
-      accountEnvId={accountEnvId}
-      apolloState={apolloState}
-    />
-  );
-}
-
-function SSR({
-  configuration,
-  page,
-  graphqlServiceUrl,
-  connector,
-  smDomainKey,
-  smAccountId,
-  cookies,
-}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-  const accountEnvId = `${smAccountId}_${smDomainKey}`;
-
-  return (
-    <Common
-      configuration={configuration}
-      page={page}
-      graphqlServiceUrl={graphqlServiceUrl}
-      connector={connector}
-      clientCommerceFactory={commerceClientFactory}
-      accountEnvId={accountEnvId}
-      cookies={cookies}
-    />
-  );
-}
-
-function Common({
-  configuration,
-  page,
-  graphqlServiceUrl,
-  connector,
-  clientCommerceFactory,
-  accountEnvId,
-  apolloState,
-  cookies,
-}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-  const reactCookies = cookies ? new Cookies(cookies) : undefined;
-  return (
-    <CookiesProvider cookies={reactCookies}>
-      <CommerceConnectorProvider
-        graphqlServiceUrl={graphqlServiceUrl}
-        connector={connector}
-        accountEnvId={accountEnvId}
-        commerceClientFactory={clientCommerceFactory}
-        apolloState={apolloState}
-      >
-        <CommerceContextProvider page={page} commerceClientFactory={clientCommerceFactory}>
-          <App configuration={configuration} page={page} />
-        </CommerceContextProvider>
-      </CommerceConnectorProvider>
-    </CookiesProvider>
-  );
+  return <App
+    configuration={configuration}
+    page={page}
+    commerceConfig={commerceConfig}
+    apolloState={apolloState}
+    commerceClientFactory={commerceClientFactory}
+    cookies={cookies}
+  />;
 }

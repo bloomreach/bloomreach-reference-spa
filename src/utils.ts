@@ -17,7 +17,7 @@
 import { Configuration, PageModel } from '@bloomreach/spa-sdk';
 import { ParsedUrlQuery } from 'querystring';
 
-interface CommerceConfig {
+export interface CommerceConfig {
   graphqlServiceUrl: string;
   connector: string;
   smAccountId?: string;
@@ -83,7 +83,7 @@ export function buildConfiguration(path: string, query: ParsedUrlQuery): Omit<Co
   };
   const endpoint = query[endpointQueryParameter];
   if (!endpoint) {
-    configuration.endpoint = process.env.BRXM_ENDPOINT;
+    configuration.endpoint = process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
   }
   return configuration;
 }

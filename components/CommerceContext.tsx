@@ -15,9 +15,8 @@
  */
 
 import React from 'react';
-import { PageModel } from '@bloomreach/spa-sdk';
 import { CommerceApiClientFactory } from '@bloomreach/connector-components-react';
-import { loadCommerceConfig } from '../src/utils';
+import { CommerceConfig } from '../src/utils';
 
 interface CommerceContextProps {
   connector?: string;
@@ -36,14 +35,14 @@ interface CommerceContextProps {
 }
 
 interface CommerceContextInputProps {
-  page: PageModel;
+  commerceConfig: CommerceConfig;
   commerceClientFactory: CommerceApiClientFactory;
 }
 
 export const CommerceContext = React.createContext<CommerceContextProps>({});
 export const CommerceContextConsumer = CommerceContext.Consumer;
 export function CommerceContextProvider({
-  page,
+  commerceConfig,
   commerceClientFactory,
   children,
 }: React.PropsWithChildren<CommerceContextInputProps>): React.ReactElement {
@@ -59,7 +58,7 @@ export function CommerceContextProvider({
     smCustomVarListPriceField,
     smCustomVarPurchasePriceField,
     brEnvType,
-  } = loadCommerceConfig(page);
+  } = commerceConfig;
   return (
     <CommerceContext.Provider
       value={{
