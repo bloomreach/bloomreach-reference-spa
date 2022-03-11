@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-// @import '~bootstrap';
+ @import '~bootstrap/scss/functions';
+ @import '~bootstrap/scss/variables';
+ @import '~bootstrap/scss/mixins';
+ @import '~bootstrap/scss/utilities';
 
-// .style1 {
-//   @extend .bg-white;
-//   @extend .text-dark;
-// }
+.style1 {
+  @extend .bg-white;
+  @extend .text-dark;
+}
 
-// .style2 {
-//   @extend .bg-primary;
-//   @extend .text-white;
-// }
+.style2 {
+  @extend .bg-primary;
+  @extend .text-white;
+}
