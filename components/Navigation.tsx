@@ -63,7 +63,7 @@ export function Navigation({ component, page }: BrProps): React.ReactElement | n
         {documents.map((document) => (
           <Nav.Item key={document.getId()} as="li">
             <Nav.Link as={Link} href={document.getUrl()} className="text-reset">
-              {document.getData<ContentDocument>().title}
+              {document.getData().displayName}
             </Nav.Link>
           </Nav.Item>
         ))}

@@ -16,17 +16,19 @@
 
 import Head from 'next/head';
 import { Document, ImageSet, Page } from '@bloomreach/spa-sdk';
+import { useRouter } from 'next/router';
 
 interface MetaProps {
   page: Page;
 }
 
 export function Meta({ page }: MetaProps): JSX.Element {
+  const router = useRouter();
   const document = page.getDocument<Document>();
   const { title, description, preventIndexing, ogCompound } = document?.getData<PageDocument>() ?? {};
   const { description: ogDescription, locale, type, url, image: imageRef } = ogCompound ?? {};
   const image = imageRef && page.getContent<ImageSet>(imageRef);
-  const canonicalUrl = url || page.getUrl();
+  const canonicalUrl = url || router.asPath;
 
   return (
     <Head>
