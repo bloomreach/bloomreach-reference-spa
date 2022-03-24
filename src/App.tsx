@@ -98,7 +98,7 @@ export default function App(): ReactElement | null {
   const endpointQueryParameter = 'endpoint';
   const configuration: Configuration = {
     endpointQueryParameter,
-    httpClient: axios,
+    httpClient: axios as any,
     path,
   };
 
