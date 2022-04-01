@@ -128,7 +128,7 @@ export function App({
         apolloState={apolloState}
       >
         <CommerceContextProvider commerceConfig={commerceConfig} commerceClientFactory={factory}>
-          <BrPage configuration={{ ...configuration, httpClient: axios }} mapping={mapping} page={page}>
+          <BrPage configuration={{ ...configuration, httpClient: axios as any }} mapping={mapping} page={page}>
             <BrPageContext.Consumer>
               {(contextPage) => (<>
                 <Meta page={contextPage!} />

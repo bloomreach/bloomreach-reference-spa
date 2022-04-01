@@ -126,7 +126,7 @@ Error.getInitialProps = async ({ req: request, res: response, err, asPath, query
   const configuration = buildConfiguration(path, query);
   // console.log('[_error]: path=', path);
   try {
-    const page = await initialize({ ...configuration, request, httpClient: axios });
+    const page = await initialize({ ...configuration, request, httpClient: axios as any });
     const pageJson = page.toJSON();
     const commerceConfig = loadCommerceConfig(pageJson);
     return { configuration, page: page.toJSON(), commerceConfig };

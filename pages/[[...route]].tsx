@@ -34,7 +34,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   relevance(request, response);
 
   const configuration = buildConfiguration(path, query);
-  const page = await initialize({ ...configuration, request, httpClient: axios });
+  const page = await initialize({ ...configuration, request, httpClient: axios as any });
   const cookies = cookie.parse(request.headers.cookie ?? '');
 
   let props: Record<string, any> = { configuration, page: page.toJSON(), cookies };
