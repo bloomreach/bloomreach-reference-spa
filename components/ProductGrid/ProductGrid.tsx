@@ -116,6 +116,7 @@ function ProductGridProcessor({
     smCustomVarAttrFields,
     smCustomVarListPriceField,
     smCustomVarPurchasePriceField,
+    brEnvType,
   } = useContext(CommerceContext);
   const [cookies] = useCookies(['_br_uid_2']);
   const router = useRouter();
@@ -172,6 +173,7 @@ function ProductGridProcessor({
       offset: limit * (page - 1),
       brUid2: cookies._br_uid_2,
       smViewId: view || smViewId,
+      brEnvType,
     };
     if (searchType === 'category') {
       return {
@@ -203,6 +205,7 @@ function ProductGridProcessor({
     searchType,
     query,
     categoryId,
+    brEnvType,
   ]);
 
   const [pageState, setPageState] = useState(page);
@@ -432,6 +435,7 @@ function CategoryName({ categoryId, title }: { categoryId: string; title?: strin
     smCustomVarPurchasePriceField,
     smDomainKey,
     smViewId,
+    brEnvType,
   } = useContext(CommerceContext);
   const [cookies] = useCookies(['_br_uid_2']);
   const params: CategoryInputProps = useMemo(
@@ -447,6 +451,7 @@ function CategoryName({ categoryId, title }: { categoryId: string; title?: strin
       smAuthKey,
       smDomainKey,
       smViewId,
+      brEnvType,
     }),
     [
       categoryId,
@@ -460,6 +465,7 @@ function CategoryName({ categoryId, title }: { categoryId: string; title?: strin
       smCustomVarPurchasePriceField,
       smDomainKey,
       smViewId,
+      brEnvType,
     ],
   );
   const [category] = useCategory(params);

@@ -17,9 +17,10 @@
 /* eslint-disable camelcase */
 
 interface ChannelParameters {
-  smAccountId: string;
-  smDomainKey?: string;
-  smEndpoint: string;
+  discoveryAccountId: string;
+  discoveryDomainKey?: string;
+  discoveryViewId?: string;
+  discoveryRealm: string;
   graphql_baseurl?: string;
 }
 

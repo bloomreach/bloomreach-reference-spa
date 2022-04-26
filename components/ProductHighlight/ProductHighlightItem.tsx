@@ -46,6 +46,7 @@ export function ProductHighlightItem({ connectorId, itemId, setError }: ProductH
     smCustomVarPurchasePriceField,
     smDomainKey,
     smViewId,
+    brEnvType,
   } = useContext(CommerceContext);
   const [cookies] = useCookies(['_br_uid_2']);
   const params: ProductDetailInputProps = useMemo(
@@ -61,6 +62,7 @@ export function ProductHighlightItem({ connectorId, itemId, setError }: ProductH
       smAuthKey,
       smDomainKey,
       smViewId,
+      brEnvType,
     }),
     [
       itemId,
@@ -75,6 +77,7 @@ export function ProductHighlightItem({ connectorId, itemId, setError }: ProductH
       smDomainKey,
       smViewId,
       connectorId,
+      brEnvType,
     ],
   );
   const [item, loading, error] = useProductDetail(params);

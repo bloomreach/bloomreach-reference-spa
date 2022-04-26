@@ -42,6 +42,7 @@ export function CategoryHighlightItem({ connectorId, categoryId, setError }: Cat
     smCustomVarPurchasePriceField,
     smDomainKey,
     smViewId,
+    brEnvType,
   } = useContext(CommerceContext);
   const [cookies] = useCookies(['_br_uid_2']);
   const params: CategoryInputProps = useMemo(
@@ -57,6 +58,7 @@ export function CategoryHighlightItem({ connectorId, categoryId, setError }: Cat
       smAuthKey,
       smDomainKey,
       smViewId,
+      brEnvType,
     }),
     [
       categoryId,
@@ -71,6 +73,7 @@ export function CategoryHighlightItem({ connectorId, categoryId, setError }: Cat
       smDomainKey,
       smViewId,
       connectorId,
+      brEnvType,
     ],
   );
   const [category, loading, error] = useCategory(params);

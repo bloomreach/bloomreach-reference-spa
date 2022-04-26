@@ -96,7 +96,7 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
       />
       {showSuggestions && (
         <CommerceContextConsumer>
-          {({ smConnector, smAccountId, smAuthKey, smCatalogViews, smDomainKey, smViewId }) => (
+          {({ smConnector, smAccountId, smAuthKey, smCatalogViews, smDomainKey, smViewId, brEnvType }) => (
             <ProductSuggestion
               connector={smConnector}
               text={keyword}
@@ -108,6 +108,7 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
               setKeyword={setKeyword}
               handleSubmit={handleSubmit}
               suggestionsLimit={suggestionsLimit ?? 5}
+              brEnvType={brEnvType}
             />
           )}
         </CommerceContextConsumer>
@@ -150,6 +151,7 @@ function ProductSuggestion({
   setKeyword,
   handleSubmit,
   suggestionsLimit,
+  brEnvType,
 }: SuggestionsProps): React.ReactElement | null {
   const [result, , error] = useProductSearchSuggestion({
     text,
@@ -160,6 +162,7 @@ function ProductSuggestion({
     smAuthKey,
     smDomainKey,
     smCatalogViews,
+    brEnvType,
   });
   const { terms, items } = result ?? {};
   const page = React.useContext(BrPageContext);
