@@ -75,6 +75,7 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
     smCustomVarAttrFields,
     smCustomVarListPriceField,
     smCustomVarPurchasePriceField,
+    brEnvType,
   } = useContext(CommerceContext);
   const [cookies] = useCookies(['_br_uid_2']);
   const brUid2 = cookies._br_uid_2 || (page.isPreview() ? DUMMY_BR_UID_2_FOR_PREVIEW : undefined);
@@ -98,6 +99,7 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
       customVariantAttrFields: smCustomVarAttrFields,
       customVariantListPriceField: smCustomVarListPriceField,
       customVariantPurchasePriceField: smCustomVarPurchasePriceField,
+      brEnvType,
     };
   }, [
     category,
@@ -116,6 +118,7 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
     smViewId,
     widgetAlgo,
     widgetId,
+    brEnvType,
   ]);
   const [, results, loading, apolloError] = useProductGridWidget(params);
   const error = useMemo(() => {

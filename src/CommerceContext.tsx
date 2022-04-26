@@ -30,6 +30,7 @@ export interface CommerceConfig {
   smCustomVarAttrFields?: string[];
   smCustomVarListPriceField?: string;
   smCustomVarPurchasePriceField?: string;
+  brEnvType?: string;
 }
 
 interface CommerceContextProps {
@@ -45,6 +46,7 @@ interface CommerceContextProps {
   smCustomVarListPriceField?: string;
   smCustomVarPurchasePriceField?: string;
   currentToken?: string;
+  brEnvType?: string;
 }
 
 export const CommerceContext = React.createContext<CommerceContextProps>({});
@@ -62,6 +64,7 @@ export function CommerceContextProvider({ children }: React.PropsWithChildren<un
     smCustomVarAttrFields,
     smCustomVarListPriceField,
     smCustomVarPurchasePriceField,
+    brEnvType,
   } = loadCommerceConfig();
   const existingToken = ''; // TODO
   return (
@@ -86,6 +89,7 @@ export function CommerceContextProvider({ children }: React.PropsWithChildren<un
               smCustomVarListPriceField,
               smCustomVarPurchasePriceField,
               currentToken,
+              brEnvType,
             }}
           >
             {children}

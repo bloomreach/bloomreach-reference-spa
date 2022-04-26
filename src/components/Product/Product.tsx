@@ -53,6 +53,7 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
     smCustomVarPurchasePriceField,
     smDomainKey,
     smViewId,
+    brEnvType,
   } = useContext(CommerceContext);
 
   const { keys = [], messages = [] } = specificationsBundle?.getData<ResourceBundle>() ?? {};
@@ -75,6 +76,7 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
       smAuthKey,
       smDomainKey,
       smViewId,
+      brEnvType,
     }),
     [
       cookies._br_uid_2,
@@ -88,6 +90,7 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
       smCustomVarPurchasePriceField,
       smDomainKey,
       smViewId,
+      brEnvType,
     ],
   );
   const [item, loading, error] = useProductDetail(params);
