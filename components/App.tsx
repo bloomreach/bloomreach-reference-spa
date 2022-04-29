@@ -16,7 +16,7 @@
  */
 
 import { BrComponent, BrPage, BrPageContext } from '@bloomreach/react-sdk';
-import { PageModel } from '@bloomreach/spa-sdk';
+import { Configuration, PageModel } from '@bloomreach/spa-sdk';
 import axios from 'axios';
 import { Container, Navbar, Image, Row, Col } from 'react-bootstrap';
 import { getCookieConsentValue } from 'react-cookie-consent';
@@ -55,7 +55,7 @@ import { Meta } from './Meta';
 import { CommerceConfig } from '../src/utils';
 
 interface AppProps {
-  configuration: Record<string, any>;
+  configuration: Omit<Configuration, 'httpClient'>;
   page: PageModel;
   commerceConfig: CommerceConfig;
   commerceClientFactory?: CommerceApiClientFactory;
