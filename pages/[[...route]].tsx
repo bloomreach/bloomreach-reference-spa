@@ -21,7 +21,6 @@ import cookie from 'cookie';
 import { Configuration, initialize, PageModel } from '@bloomreach/spa-sdk';
 import { relevance } from '@bloomreach/spa-sdk/lib/express';
 import { APOLLO_STATE_PROP_NAME, CommerceApiClientFactory } from '@bloomreach/connector-components-react';
-import MyApp from './_app';
 import { buildConfiguration, CommerceConfig, deleteUndefined, loadCommerceConfig } from '../src/utils';
 import { App } from '../components/App';
 
@@ -60,7 +59,7 @@ Index.getInitialProps = async ({ req: request, res: response, asPath: path, quer
   const page = await initialize({ ...configuration, request, httpClient: axios as any });
   const pageJson = page.toJSON();
   const commerceConfig = loadCommerceConfig(pageJson);
-  let props: IndexPageProps = { configuration, commerceConfig, page: pageJson };
+  const props: IndexPageProps = { configuration, commerceConfig, page: pageJson };
 
   if (!request || !response) {
     return props;
@@ -86,10 +85,10 @@ Index.getInitialProps = async ({ req: request, res: response, asPath: path, quer
   );
   // Apollo client will go thru all components on the page and perform queries necessary.
   // The results will be stored in the cache for client-side rendering.
-  const pageProps = { pageProps: { ...props } };
-  const apolloData = await commerceClientFactory.getDataFromTree(<MyApp.AppTree {...pageProps} />);
+  // const pageProps = { pageProps: { ...props } };
+  // const apolloData = await commerceClientFactory.getDataFromTree(<MyApp.AppTree {...pageProps} />);
   // console.log('[getServerSideProps]: apolloData=', apolloData);
-  props = { ...props, ...apolloData.stateProp };
+  // props = { ...props, ...apolloData.stateProp };
 
   // eslint-disable-next-line max-len
   // Hack needed to avoid JSON-Serialization validation error from Next.js https://github.com/zeit/next.js/discussions/11209
