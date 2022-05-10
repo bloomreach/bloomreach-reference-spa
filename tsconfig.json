@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "lib": [
       "dom",
       "dom.iterable",
@@ -20,12 +20,16 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "incremental": true,
+    "useUnknownInCatchVariables": false
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
-    "src"
-  ]
+    "next-env.d.ts",
+    "components",
+    "pages",
+    "src"]
 }

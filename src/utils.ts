@@ -14,31 +14,44 @@
  * limitations under the License.
  */
 
-import { useContext } from 'react';
-import { BrPageContext } from '@bloomreach/react-sdk';
-import { CommerceConfig } from './CommerceContext';
+import { Configuration, PageModel } from '@bloomreach/spa-sdk';
+import { ParsedUrlQuery } from 'querystring';
+
+export interface CommerceConfig {
+  graphqlServiceUrl: string;
+  connector: string;
+  smAccountId?: string;
+  smAuthKey?: string;
+  smDomainKey?: string;
+  smViewId?: string;
+  smCatalogViews?: string;
+  smCustomAttrFields?: string[];
+  smCustomVarAttrFields?: string[];
+  smCustomVarListPriceField?: string;
+  smCustomVarPurchasePriceField?: string;
+  brEnvType?: string;
+}
 
 export const DUMMY_BR_UID_2_FOR_PREVIEW = 'uid%3D0000000000000%3Av%3D11.5%3Ats%3D1428617911187%3Ahc%3D55';
 
-export function loadCommerceConfig(): CommerceConfig {
-  const channelParams = useContext(BrPageContext)?.getChannelParameters<ChannelParameters>();
+export function loadCommerceConfig(page: PageModel): CommerceConfig {
+  const channelParams = page.channel?.info.props as ChannelParameters | undefined;
   const commerceConfig: CommerceConfig = {
     graphqlServiceUrl:
-      channelParams?.graphql_baseurl || process.env.REACT_APP_GRAPHQL_SERVICE_URL || 'http://localhost:4000',
-    connector: process.env.REACT_APP_DEFAULT_CONNECTOR ?? '',
-    smAccountId: channelParams?.discoveryAccountId || process.env.REACT_APP_DEFAULT_SM_ACCOUNT_ID,
-    smAuthKey: process.env.REACT_APP_DEFAULT_SM_AUTH_KEY,
-    smDomainKey: channelParams?.discoveryDomainKey || process.env.REACT_APP_DEFAULT_SM_DOMAIN_KEY,
-    smViewId: channelParams?.discoveryViewId || process.env.REACT_APP_DEFAULT_SM_VIEW_ID,
-    smCatalogViews: process.env.REACT_APP_DEFAULT_SM_CATALOG_VIEWS,
-    smCustomAttrFields: process.env.REACT_APP_SM_CUSTOM_ATTR_FIELDS?.split(','),
-    smCustomVarAttrFields: process.env.REACT_APP_SM_CUSTOM_VARIANT_ATTR_FIELDS?.split(','),
-    smCustomVarListPriceField: process.env.REACT_APP_SM_CUSTOM_VARIANT_LIST_PRICE_FIELD,
-    smCustomVarPurchasePriceField: process.env.REACT_APP_SM_CUSTOM_VARIANT_PURCHASE_PRICE_FIELD,
-    brEnvType:
-      channelParams?.discoveryRealm === 'PRODUCTION'
-        ? undefined
-        : channelParams?.discoveryRealm || process.env.REACT_APP_BR_ENV_TYPE,
+      channelParams?.graphql_baseurl || process.env.NEXT_PUBLIC_APOLLO_SERVER_URI || 'http://localhost:4000',
+    connector: process.env.NEXT_PUBLIC_DEFAULT_CONNECTOR ?? '',
+    smAccountId: channelParams?.discoveryAccountId || process.env.NEXT_PUBLIC_BRSM_ACCOUNT_ID,
+    smAuthKey: process.env.NEXT_PUBLIC_BRSM_AUTH_KEY,
+    smDomainKey: channelParams?.discoveryDomainKey || process.env.NEXT_PUBLIC_BRSM_DOMAIN_KEY,
+    smViewId: channelParams?.discoveryViewId || process.env.NEXT_PUBLIC_BRSM_VIEW_ID,
+    smCatalogViews: process.env.NEXT_PUBLIC_BRSM_CATALOG_VIEWS,
+    smCustomAttrFields: process.env.NEXT_PUBLIC_BRSM_CUSTOM_ATTR_FIELDS?.split(','),
+    smCustomVarAttrFields: process.env.NEXT_PUBLIC_BRSM_CUSTOM_VARIANT_ATTR_FIELDS?.split(','),
+    smCustomVarListPriceField: process.env.NEXT_PUBLIC_BRSM_CUSTOM_VARIANT_LIST_PRICE_FIELD,
+    smCustomVarPurchasePriceField: process.env.NEXT_PUBLIC_BRSM_CUSTOM_VARIANT_PURCHASE_PRICE_FIELD,
+    brEnvType: channelParams?.discoveryRealm === 'PRODUCTION'
+      ? undefined
+      : channelParams?.discoveryRealm || process.env.NEXT_PUBLIC_BR_ENV_TYPE,
   };
 
   return commerceConfig;
@@ -46,4 +59,39 @@ export function loadCommerceConfig(): CommerceConfig {
 
 export function notEmpty<T>(value: T | null | undefined): value is T {
   return !!value;
+}
+
+// eslint-disable-next-line max-len
+// Hack needed to avoid JSON-Serialization validation error from Next.js https://github.com/zeit/next.js/discussions/11209
+// >>> Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value all together.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function deleteUndefined(obj: Record<string, any> | undefined): void {
+  if (obj) {
+    Object.keys(obj).forEach((key: string) => {
+      if (obj[key] && typeof obj[key] === 'object') {
+        deleteUndefined(obj[key]);
+      } else if (typeof obj[key] === 'undefined') {
+        delete obj[key]; // eslint-disable-line no-param-reassign
+      }
+    });
+  }
+}
+
+export function buildConfiguration(path: string, query: ParsedUrlQuery): Omit<Configuration, 'httpClient'> {
+  const endpointQueryParameter = 'endpoint';
+  const configuration: Record<string, any> = {
+    endpointQueryParameter,
+    path,
+  };
+  const endpoint = query[endpointQueryParameter];
+  if (!endpoint) {
+    configuration.endpoint = process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
+  }
+  return configuration;
+}
+
+export function isLoading(loading: boolean): boolean {
+  const ssrMode = typeof window === 'undefined';
+  // In SSR phase, ignore the `loading` param returned by Apollo client's hooks.
+  return ssrMode ? false : loading;
 }
