@@ -8,9 +8,9 @@
     "npm": "7"
   },
   "scripts": {
-    "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
+    "build": "react-scripts build",
     "lint": "eslint src/",
-    "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start"
+    "start": "react-scripts start"
   },
   "dependencies": {
     "@bloomreach/connector-components-react": "^0.9.0-saas",
