@@ -8,65 +8,44 @@
     "npm": "7"
   },
   "scripts": {
-    "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
-    "lint": "eslint src/",
-    "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start"
+    "resolution": "npx npm-force-resolutions",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint --dir ."
   },
   "dependencies": {
-    "@bloomreach/connector-components-react": "^0.9.0-saas",
-    "@bloomreach/react-sdk": "15.4.1",
-    "@bloomreach/spa-sdk": "15.4.1",
-    "@fortawesome/fontawesome-svg-core": "^1.2",
+    "@bloomreach/connector-components-react": "0.10.0-saas",
+    "@bloomreach/react-sdk": "15.4.3-react17-1",
+    "@bloomreach/spa-sdk": "15.4.3-react17-1",
+    "@fortawesome/fontawesome-svg-core": "~1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15",
     "@fortawesome/react-fontawesome": "^0.1",
     "@react-google-maps/api": "^2.2.0",
     "axios": "^0.22.0",
     "bootstrap": "^4.5",
+    "cookie": "^0.4.1",
+    "next": "^12.1.0",
     "path-parse": "^1.0.7",
-    "react": "^16.14",
+    "react": "^17.0.2",
     "react-bootstrap": "^1.4",
     "react-cookie": "^4.0.3",
     "react-cookie-consent": "^7.2.1",
-    "react-dom": "^16.14",
-    "react-player": "^2.6",
-    "react-router-dom": "^5.2"
+    "react-dom": "^17.0.2",
+    "react-player": "^2.6"
   },
   "devDependencies": {
-    "@bloomreach/eslint-config": "^0.1",
+    "@bloomreach/eslint-config-base": "^1.0.7",
+    "@rushstack/eslint-patch": "^1.1.0",
     "@types/googlemaps": "^3.43",
     "@types/markerclustererplus": "^2.1",
-    "@types/react": "^16.9",
-    "@types/react-dom": "^16.9",
-    "@types/react-router-dom": "^5.1",
-    "eslint": "^7.12",
-    "node-sass": "^4.14",
-    "react-scripts": "4.0.0",
-    "typescript": "~4.0"
-  },
-  "eslintConfig": {
-    "extends": "@bloomreach/eslint-config",
-    "overrides": [
-      {
-        "files": [
-          "*.tsx"
-        ],
-        "rules": {
-          "react/require-default-props": "off"
-        }
-      }
-    ],
-    "rules": {
-      "react/jsx-props-no-spreading": "off",
-      "react/no-danger": "off",
-      "no-underscore-dangle": [
-        "error",
-        {
-          "allow": [
-            "_br_uid_2"
-          ]
-        }
-      ]
-    }
+    "@types/node": "^17.0.18",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.2",
+    "eslint": "^7.32.0",
+    "eslint-config-next": "^12.1.4",
+    "sass": "^1.49.9",
+    "typescript": "~4.5"
   },
   "browserslist": {
     "production": [
@@ -79,5 +58,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "resolutions": {
+    "eslint-plugin-import": "^2.25.4"
   }
 }

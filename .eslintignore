@@ -1,6 +1,5 @@
-/.env
 /build
 /node_modules
 /node
+/target
 .next
-/next-env.d.ts
