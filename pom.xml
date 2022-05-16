@@ -164,6 +164,7 @@
                 <exclude>**/ADDITIONAL-LICENSES.yml</exclude>
                 <exclude>build/**</exclude>
                 <exclude>public/_redirects</exclude>
+                <exclude>netlify.toml</exclude>
               </excludes>
             </configuration>
           </plugin>
