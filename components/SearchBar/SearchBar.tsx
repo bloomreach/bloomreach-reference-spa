@@ -96,15 +96,23 @@ export function SearchBar({ component, page }: BrProps<ContainerItem>): React.Re
       />
       {showSuggestions && (
         <CommerceContextConsumer>
-          {({ smConnector, smAccountId, smAuthKey, smCatalogViews, smDomainKey, smViewId, brEnvType }) => (
+          {({
+            discoveryConnector,
+            discoveryAccountId,
+            discoveryAuthKey,
+            discoveryCatalogViews,
+            discoveryDomainKey,
+            discoveryViewId,
+            brEnvType,
+          }) => (
             <ProductSuggestion
-              connector={smConnector}
+              connector={discoveryConnector}
               text={keyword}
-              smAccountId={smAccountId}
-              smAuthKey={smAuthKey}
-              smCatalogViews={smCatalogViews}
-              smDomainKey={smDomainKey}
-              smViewId={smViewId}
+              discoveryAccountId={discoveryAccountId}
+              discoveryAuthKey={discoveryAuthKey}
+              discoveryCatalogViews={discoveryCatalogViews}
+              discoveryDomainKey={discoveryDomainKey}
+              discoveryViewId={discoveryViewId}
               setKeyword={setKeyword}
               handleSubmit={handleSubmit}
               suggestionsLimit={suggestionsLimit ?? 5}
@@ -143,11 +151,11 @@ function ProductSuggestion({
   connector,
   text,
   brUid2,
-  smAccountId,
-  smAuthKey,
-  smCatalogViews,
-  smDomainKey,
-  smViewId,
+  discoveryAccountId,
+  discoveryAuthKey,
+  discoveryCatalogViews,
+  discoveryDomainKey,
+  discoveryViewId,
   setKeyword,
   handleSubmit,
   suggestionsLimit,
@@ -156,12 +164,12 @@ function ProductSuggestion({
   const [result, , error] = useProductSearchSuggestion({
     text,
     connector,
-    smViewId,
+    discoveryViewId,
     brUid2,
-    smAccountId,
-    smAuthKey,
-    smDomainKey,
-    smCatalogViews,
+    discoveryAccountId,
+    discoveryAuthKey,
+    discoveryDomainKey,
+    discoveryCatalogViews,
     brEnvType,
   });
   const { terms, items } = result ?? {};

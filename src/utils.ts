@@ -20,15 +20,15 @@ import { ParsedUrlQuery } from 'querystring';
 export interface CommerceConfig {
   graphqlServiceUrl: string;
   connector: string;
-  smAccountId?: string;
-  smAuthKey?: string;
-  smDomainKey?: string;
-  smViewId?: string;
-  smCatalogViews?: string;
-  smCustomAttrFields?: string[];
-  smCustomVarAttrFields?: string[];
-  smCustomVarListPriceField?: string;
-  smCustomVarPurchasePriceField?: string;
+  discoveryAccountId?: string;
+  discoveryAuthKey?: string;
+  discoveryDomainKey?: string;
+  discoveryViewId?: string;
+  discoveryCatalogViews?: string;
+  discoveryCustomAttrFields?: string[];
+  discoveryCustomVarAttrFields?: string[];
+  discoveryCustomVarListPriceField?: string;
+  discoveryCustomVarPurchasePriceField?: string;
   brEnvType?: string;
 }
 
@@ -40,15 +40,15 @@ export function loadCommerceConfig(page: PageModel): CommerceConfig {
     graphqlServiceUrl:
       channelParams?.graphql_baseurl || process.env.NEXT_PUBLIC_APOLLO_SERVER_URI || 'http://localhost:4000',
     connector: process.env.NEXT_PUBLIC_DEFAULT_CONNECTOR ?? '',
-    smAccountId: channelParams?.discoveryAccountId || process.env.NEXT_PUBLIC_BRSM_ACCOUNT_ID,
-    smAuthKey: process.env.NEXT_PUBLIC_BRSM_AUTH_KEY,
-    smDomainKey: channelParams?.discoveryDomainKey || process.env.NEXT_PUBLIC_BRSM_DOMAIN_KEY,
-    smViewId: channelParams?.discoveryViewId || process.env.NEXT_PUBLIC_BRSM_VIEW_ID,
-    smCatalogViews: process.env.NEXT_PUBLIC_BRSM_CATALOG_VIEWS,
-    smCustomAttrFields: process.env.NEXT_PUBLIC_BRSM_CUSTOM_ATTR_FIELDS?.split(','),
-    smCustomVarAttrFields: process.env.NEXT_PUBLIC_BRSM_CUSTOM_VARIANT_ATTR_FIELDS?.split(','),
-    smCustomVarListPriceField: process.env.NEXT_PUBLIC_BRSM_CUSTOM_VARIANT_LIST_PRICE_FIELD,
-    smCustomVarPurchasePriceField: process.env.NEXT_PUBLIC_BRSM_CUSTOM_VARIANT_PURCHASE_PRICE_FIELD,
+    discoveryAccountId: channelParams?.discoveryAccountId || process.env.NEXT_PUBLIC_DISCOVERY_ACCOUNT_ID,
+    discoveryAuthKey: process.env.NEXT_PUBLIC_DISCOVERY_AUTH_KEY,
+    discoveryDomainKey: channelParams?.discoveryDomainKey || process.env.NEXT_PUBLIC_DISCOVERY_DOMAIN_KEY,
+    discoveryViewId: channelParams?.discoveryViewId || process.env.NEXT_PUBLIC_DISCOVERY_VIEW_ID,
+    discoveryCatalogViews: process.env.NEXT_PUBLIC_DISCOVERY_CATALOG_VIEWS,
+    discoveryCustomAttrFields: process.env.NEXT_PUBLIC_DISCOVERY_CUSTOM_ATTR_FIELDS?.split(','),
+    discoveryCustomVarAttrFields: process.env.NEXT_PUBLIC_DISCOVERY_CUSTOM_VARIANT_ATTR_FIELDS?.split(','),
+    discoveryCustomVarListPriceField: process.env.NEXT_PUBLIC_DISCOVERY_CUSTOM_VARIANT_LIST_PRICE_FIELD,
+    discoveryCustomVarPurchasePriceField: process.env.NEXT_PUBLIC_DISCOVERY_CUSTOM_VARIANT_PURCHASE_PRICE_FIELD,
     brEnvType: channelParams?.discoveryRealm === 'PRODUCTION'
       ? undefined
       : channelParams?.discoveryRealm || process.env.NEXT_PUBLIC_BR_ENV_TYPE,

@@ -20,16 +20,16 @@ import { CommerceConfig } from '../src/utils';
 
 interface CommerceContextProps {
   connector?: string;
-  smConnector?: string;
-  smAccountId?: string;
-  smAuthKey?: string;
-  smDomainKey?: string;
-  smViewId?: string;
-  smCatalogViews?: string;
-  smCustomAttrFields?: string[];
-  smCustomVarAttrFields?: string[];
-  smCustomVarListPriceField?: string;
-  smCustomVarPurchasePriceField?: string;
+  discoveryConnector?: string;
+  discoveryAccountId?: string;
+  discoveryAuthKey?: string;
+  discoveryDomainKey?: string;
+  discoveryViewId?: string;
+  discoveryCatalogViews?: string;
+  discoveryCustomAttrFields?: string[];
+  discoveryCustomVarAttrFields?: string[];
+  discoveryCustomVarListPriceField?: string;
+  discoveryCustomVarPurchasePriceField?: string;
   commerceClientFactory?: CommerceApiClientFactory;
   brEnvType?: string;
 }
@@ -48,31 +48,31 @@ export function CommerceContextProvider({
 }: React.PropsWithChildren<CommerceContextInputProps>): React.ReactElement {
   const {
     connector,
-    smViewId,
-    smAccountId,
-    smAuthKey,
-    smDomainKey,
-    smCatalogViews,
-    smCustomAttrFields,
-    smCustomVarAttrFields,
-    smCustomVarListPriceField,
-    smCustomVarPurchasePriceField,
+    discoveryViewId,
+    discoveryAccountId,
+    discoveryAuthKey,
+    discoveryDomainKey,
+    discoveryCatalogViews,
+    discoveryCustomAttrFields,
+    discoveryCustomVarAttrFields,
+    discoveryCustomVarListPriceField,
+    discoveryCustomVarPurchasePriceField,
     brEnvType,
   } = commerceConfig;
   return (
     <CommerceContext.Provider
       value={{
         connector,
-        smConnector: 'brsm',
-        smViewId,
-        smAccountId,
-        smAuthKey,
-        smDomainKey,
-        smCatalogViews,
-        smCustomAttrFields,
-        smCustomVarAttrFields,
-        smCustomVarListPriceField,
-        smCustomVarPurchasePriceField,
+        discoveryConnector: 'brsm',
+        discoveryViewId,
+        discoveryAccountId,
+        discoveryAuthKey,
+        discoveryDomainKey,
+        discoveryCatalogViews,
+        discoveryCustomAttrFields,
+        discoveryCustomVarAttrFields,
+        discoveryCustomVarListPriceField,
+        discoveryCustomVarPurchasePriceField,
         commerceClientFactory,
         brEnvType,
       }}

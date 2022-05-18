@@ -44,52 +44,52 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
   const [cookies] = useCookies(['_br_uid_2']);
 
   const {
-    smAccountId,
-    smAuthKey,
-    smConnector,
-    smCustomAttrFields,
-    smCustomVarAttrFields,
-    smCustomVarListPriceField,
-    smCustomVarPurchasePriceField,
-    smDomainKey,
-    smViewId,
+    discoveryAccountId,
+    discoveryAuthKey,
+    discoveryConnector,
+    discoveryCustomAttrFields,
+    discoveryCustomVarAttrFields,
+    discoveryCustomVarListPriceField,
+    discoveryCustomVarPurchasePriceField,
+    discoveryDomainKey,
+    discoveryViewId,
     brEnvType,
   } = useContext(CommerceContext);
 
   const { keys = [], messages = [] } = specificationsBundle?.getData<ResourceBundle>() ?? {};
   const customAttrFields = useMemo(() => {
-    const result = [...(smCustomAttrFields ?? [])];
+    const result = [...(discoveryCustomAttrFields ?? [])];
     keys.filter((key) => !result.includes(key)).forEach((key) => result.push(key));
     return result;
-  }, [keys, smCustomAttrFields]);
+  }, [keys, discoveryCustomAttrFields]);
 
   const params: ProductDetailInputProps = useMemo(
     () => ({
       itemId: pid,
       brUid2: cookies._br_uid_2,
-      connector: smConnector,
+      connector: discoveryConnector,
       customAttrFields,
-      customVariantAttrFields: smCustomVarAttrFields,
-      customVariantListPriceField: smCustomVarListPriceField,
-      customVariantPurchasePriceField: smCustomVarPurchasePriceField,
-      smAccountId,
-      smAuthKey,
-      smDomainKey,
-      smViewId,
+      customVariantAttrFields: discoveryCustomVarAttrFields,
+      customVariantListPriceField: discoveryCustomVarListPriceField,
+      customVariantPurchasePriceField: discoveryCustomVarPurchasePriceField,
+      discoveryAccountId,
+      discoveryAuthKey,
+      discoveryDomainKey,
+      discoveryViewId,
       brEnvType,
     }),
     [
       cookies._br_uid_2,
       customAttrFields,
       pid,
-      smAccountId,
-      smAuthKey,
-      smConnector,
-      smCustomVarAttrFields,
-      smCustomVarListPriceField,
-      smCustomVarPurchasePriceField,
-      smDomainKey,
-      smViewId,
+      discoveryAccountId,
+      discoveryAuthKey,
+      discoveryConnector,
+      discoveryCustomVarAttrFields,
+      discoveryCustomVarListPriceField,
+      discoveryCustomVarPurchasePriceField,
+      discoveryDomainKey,
+      discoveryViewId,
       brEnvType,
     ],
   );

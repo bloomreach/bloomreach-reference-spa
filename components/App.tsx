@@ -99,8 +99,8 @@ export function App({
     setCookieConsentVal(val);
   };
 
-  const { graphqlServiceUrl, connector, smAccountId, smDomainKey } = commerceConfig;
-  const accountEnvId = `${smAccountId}_${smDomainKey}`;
+  const { graphqlServiceUrl, connector, discoveryAccountId, discoveryDomainKey } = commerceConfig;
+  const accountEnvId = `${discoveryAccountId}_${discoveryDomainKey}`;
   const defaultRequestHeaders = undefined;
   const defaultAnonymousCredentials = undefined;
 
@@ -152,8 +152,8 @@ export function App({
                           className="d-block d-sm-none"
                         />
                         {getCookieConsentValue() && <BrPixel
-                          accountId={smAccountId ?? ''}
-                          domainKey={smDomainKey ?? ''}
+                          accountId={discoveryAccountId ?? ''}
+                          domainKey={discoveryDomainKey ?? ''}
                           page={contextPage!}
                           pageType="search"
                           pageLabels="pacific,nut,bolt,commerce"

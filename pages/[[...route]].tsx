@@ -69,8 +69,8 @@ Index.getInitialProps = async ({ req: request, res: response, asPath: path, quer
   const cookies = cookie.parse(request.headers.cookie ?? '');
   props.cookies = cookies;
 
-  const { graphqlServiceUrl, connector, smAccountId, smDomainKey } = commerceConfig;
-  const accountEnvId = `${smAccountId}_${smDomainKey}`;
+  const { graphqlServiceUrl, connector, discoveryAccountId, discoveryDomainKey } = commerceConfig;
+  const accountEnvId = `${discoveryAccountId}_${discoveryDomainKey}`;
   const defaultRequestHeaders = undefined;
   const defaultAnonymousCredentials = undefined;
 
