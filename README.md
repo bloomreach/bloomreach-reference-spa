@@ -1,4 +1,4 @@
-# brX SaaS + React = ♥️
+# Bloomreach Content + React = ♥️
 
 Reference SPA using the Bloomreach Experience [React SDK](https://www.npmjs.com/package/@bloomreach/react-sdk).
 The app is created using [Next.js](https://nextjs.org/).
