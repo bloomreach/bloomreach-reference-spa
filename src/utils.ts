@@ -30,11 +30,12 @@ export interface CommerceConfig {
   discoveryCustomVarListPriceField?: string;
   discoveryCustomVarPurchasePriceField?: string;
   brEnvType?: string;
+  brAccountName?: string;
 }
 
 export const DUMMY_BR_UID_2_FOR_PREVIEW = 'uid%3D0000000000000%3Av%3D11.5%3Ats%3D1428617911187%3Ahc%3D55';
 
-export function loadCommerceConfig(page: PageModel): CommerceConfig {
+export function loadCommerceConfig(page: PageModel, query?: ParsedUrlQuery): CommerceConfig {
   const channelParams = page.channel?.info.props as ChannelParameters | undefined;
   const commerceConfig: CommerceConfig = {
     graphqlServiceUrl:
@@ -52,6 +53,7 @@ export function loadCommerceConfig(page: PageModel): CommerceConfig {
     brEnvType: channelParams?.discoveryRealm === 'PRODUCTION'
       ? undefined
       : channelParams?.discoveryRealm || process.env.NEXT_PUBLIC_BR_ENV_TYPE,
+    brAccountName: getBrAccountName(page, query),
   };
 
   return commerceConfig;
@@ -94,4 +96,18 @@ export function isLoading(loading: boolean): boolean {
   const ssrMode = typeof window === 'undefined';
   // In SSR phase, ignore the `loading` param returned by Apollo client's hooks.
   return ssrMode ? false : loading;
+}
+
+function getBrAccountName(pageModel: PageModel, query?: ParsedUrlQuery): string | undefined {
+  const { discoveryDomainKey } = pageModel.channel?.info.props as ChannelParameters;
+  if (discoveryDomainKey) {
+    return discoveryDomainKey.toLowerCase().replace('_', '-');
+  }
+
+  const endpoint = query?.endpoint ?? process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
+  if (!endpoint) {
+    return undefined;
+  }
+  const endpointValue = Array.isArray(endpoint) ? endpoint[0] : endpoint;
+  return new URL(endpointValue).hostname.split('.')[0];
 }
