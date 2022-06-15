@@ -99,6 +99,10 @@ export function isLoading(loading: boolean): boolean {
 }
 
 function getBrAccountName(pageModel: PageModel, query?: ParsedUrlQuery): string | undefined {
+  if (process.env.NEXT_PUBLIC_BR_ACCOUNT_NAME) {
+    return process.env.NEXT_PUBLIC_BR_ACCOUNT_NAME;
+  }
+
   const { discoveryDomainKey } = pageModel.channel?.info.props as ChannelParameters;
   if (discoveryDomainKey) {
     return discoveryDomainKey.toLowerCase().replace('_', '-');
