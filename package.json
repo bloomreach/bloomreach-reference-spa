@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@bloomreach/connector-components-react": "0.12.0-saas",
-    "@bloomreach/react-sdk": "15.4.3-react17-1",
-    "@bloomreach/spa-sdk": "15.4.3-react17-1",
+    "@bloomreach/react-sdk": "15.5.0",
+    "@bloomreach/spa-sdk": "15.5.0",
     "@fortawesome/fontawesome-svg-core": "~1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15",
     "@fortawesome/react-fontawesome": "^0.1",
@@ -44,9 +44,9 @@
     "@types/react-dom": "^17.0.2",
     "eslint": "^7.32.0",
     "eslint-config-next": "^12.1.4",
+    "eslint-plugin-import": "^2.25.4",
     "sass": "^1.49.9",
-    "typescript": "~4.5",
-    "eslint-plugin-import": "^2.25.4"
+    "typescript": "~4.5"
   },
   "browserslist": {
     "production": [
