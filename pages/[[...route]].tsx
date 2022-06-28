@@ -58,7 +58,7 @@ Index.getInitialProps = async ({ req: request, res: response, asPath: path, quer
   const configuration = buildConfiguration(path ?? '/', query);
   const page = await initialize({ ...configuration, request, httpClient: axios as any });
   const pageJson = page.toJSON();
-  const commerceConfig = loadCommerceConfig(pageJson);
+  const commerceConfig = loadCommerceConfig(pageJson, query);
   const props: IndexPageProps = { configuration, commerceConfig, page: pageJson };
 
   if (!request || !response) {
@@ -69,8 +69,7 @@ Index.getInitialProps = async ({ req: request, res: response, asPath: path, quer
   const cookies = cookie.parse(request.headers.cookie ?? '');
   props.cookies = cookies;
 
-  const { graphqlServiceUrl, connector, discoveryAccountId, discoveryDomainKey } = commerceConfig;
-  const accountEnvId = `${discoveryAccountId}_${discoveryDomainKey}`;
+  const { graphqlServiceUrl, connector, brAccountName: accountEnvId } = commerceConfig;
   const defaultRequestHeaders = undefined;
   const defaultAnonymousCredentials = undefined;
 

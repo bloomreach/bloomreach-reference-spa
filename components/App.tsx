@@ -99,8 +99,13 @@ export function App({
     setCookieConsentVal(val);
   };
 
-  const { graphqlServiceUrl, connector, discoveryAccountId, discoveryDomainKey } = commerceConfig;
-  const accountEnvId = `${discoveryAccountId}_${discoveryDomainKey}`;
+  const {
+    graphqlServiceUrl,
+    connector,
+    discoveryAccountId,
+    discoveryDomainKey,
+    brAccountName: accountEnvId,
+  } = commerceConfig;
   const defaultRequestHeaders = undefined;
   const defaultAnonymousCredentials = undefined;
 
