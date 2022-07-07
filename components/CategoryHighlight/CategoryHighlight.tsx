@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Alert, Col, Row } from 'react-bootstrap';
+import { useCookies } from 'react-cookie';
 import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem, getContainerItemContent } from '@bloomreach/spa-sdk';
+import { useCategories, CategoriesInputProps } from '@bloomreach/connector-components-react';
 import styles from './CategoryHighlight.module.scss';
+import { CommerceContext } from '../CommerceContext';
 import { CategoryHighlightItem } from './CategoryHighlightItem';
+import { isLoading } from '../../src/utils';
 
 interface CategoryHighlightCompound {
   title: string;
@@ -28,21 +32,68 @@ interface CategoryHighlightCompound {
 }
 
 export function CategoryHighlight({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
-  const [error, setError] = useState<Error>();
   const {
     title,
     connectorid,
     commerceCategoryCompound,
   } = getContainerItemContent<CategoryHighlightCompound>(component, page) ?? {};
   const connectorId = connectorid?.selectionValues[0].key;
-  // Reset error when no items configured
-  useEffect(() => {
-    if (!commerceCategoryCompound?.length) {
-      setError(undefined);
-    }
-  }, [commerceCategoryCompound]);
+  const categoryIds: string[] = useMemo(
+    () =>
+      commerceCategoryCompound?.map(({ categoryid }) => {
+        return categoryid;
+      }),
+    [commerceCategoryCompound],
+  )!;
 
-  if (error) {
+  const {
+    discoveryAccountId,
+    discoveryAuthKey,
+    discoveryConnector,
+    discoveryCustomAttrFields,
+    discoveryCustomVarAttrFields,
+    discoveryCustomVarListPriceField,
+    discoveryCustomVarPurchasePriceField,
+    discoveryDomainKey,
+    discoveryViewId,
+    brEnvType,
+  } = useContext(CommerceContext);
+
+  const [cookies] = useCookies(['_br_uid_2']);
+  const params: CategoriesInputProps = useMemo(
+    () => ({
+      categoryIds,
+      brUid2: cookies._br_uid_2,
+      connector: connectorId ?? discoveryConnector,
+      customAttrFields: discoveryCustomAttrFields,
+      customVariantAttrFields: discoveryCustomVarAttrFields,
+      customVariantListPriceField: discoveryCustomVarListPriceField,
+      customVariantPurchasePriceField: discoveryCustomVarPurchasePriceField,
+      discoveryAccountId,
+      discoveryAuthKey,
+      discoveryDomainKey,
+      discoveryViewId,
+      brEnvType,
+    }),
+    [
+      categoryIds,
+      cookies._br_uid_2,
+      discoveryCustomAttrFields,
+      discoveryAccountId,
+      discoveryAuthKey,
+      discoveryConnector,
+      discoveryCustomVarAttrFields,
+      discoveryCustomVarListPriceField,
+      discoveryCustomVarPurchasePriceField,
+      discoveryDomainKey,
+      discoveryViewId,
+      connectorId,
+      brEnvType,
+    ],
+  );
+  const [categories, loading, apiError] = useCategories(params);
+
+  if (apiError) {
     return (
       <Alert variant="danger" className="mt-3 mb-3">
         This widget is not working properly. Try again later.
@@ -54,17 +105,14 @@ export function CategoryHighlight({ component, page }: BrProps<ContainerItem>): 
     <div className={`${styles.highlight} mw-container mx-auto`}>
       <div className={styles.grid__header}>{title && <h4 className="mb-4">{title}</h4>}</div>
       <Row>
-        {commerceCategoryCompound
-          ?.filter(({ categoryid }) => !!categoryid)
-          ?.map(({ categoryid }) => (
+        {!isLoading(loading) && categories
+          ?.map((category) => (
             <Col
-              key={`${categoryid}`}
+              key={`${category?.id}`}
               as={CategoryHighlightItem}
               md="3"
               className="mb-4"
-              categoryId={categoryid}
-              connectorId={connectorId}
-              setError={setError}
+              category={category}
             />
           ))}
       </Row>
