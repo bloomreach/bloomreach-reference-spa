@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useContext, ComponentPropsWithoutRef } from 'react';
 import { Button } from 'react-bootstrap';
 import { BrPageContext } from '@bloomreach/react-sdk';
 import { CategoryFragment } from '@bloomreach/connector-components-react';
 import { Link } from '../Link';
 
-interface CategoryHighlightItemProps extends React.ComponentPropsWithoutRef<'a'> {
+interface CategoryHighlightItemProps extends ComponentPropsWithoutRef<'a'> {
   category: CategoryFragment | null;
 }
 
 export function CategoryHighlightItem({ category }: CategoryHighlightItemProps): JSX.Element {
-  const page = React.useContext(BrPageContext);
+  const page = useContext(BrPageContext);
 
   if (!category) {
     return <div />;
