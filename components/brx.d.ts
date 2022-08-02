@@ -22,6 +22,7 @@ interface ChannelParameters {
   discoveryViewId?: string;
   discoveryRealm: string;
   graphql_baseurl?: string;
+  graphqlTenantName?: string;
 }
 
 interface Content {
