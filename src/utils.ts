@@ -103,9 +103,9 @@ function getBrAccountName(pageModel: PageModel, query?: ParsedUrlQuery): string 
     return process.env.NEXT_PUBLIC_BR_ACCOUNT_NAME;
   }
 
-  const { discoveryDomainKey } = pageModel.channel?.info.props as ChannelParameters;
-  if (discoveryDomainKey) {
-    return discoveryDomainKey.toLowerCase().replace('_', '-');
+  const { graphqlTenantName } = pageModel.channel?.info.props as ChannelParameters;
+  if (graphqlTenantName) {
+    return graphqlTenantName.toLowerCase();
   }
 
   const endpoint = query?.endpoint ?? process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
