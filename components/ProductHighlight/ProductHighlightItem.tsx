@@ -14,84 +14,28 @@
  * limitations under the License.
  */
 
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Image } from 'react-bootstrap';
-import { useCookies } from 'react-cookie';
 import { BrPageContext } from '@bloomreach/react-sdk';
-import { ItemIdModel, ProductDetailInputProps, useProductDetail } from '@bloomreach/connector-components-react';
-import { CommerceContext } from '../CommerceContext';
+import { ItemIdModel, ItemsByIds_findItemsByIds_items as ItemDetail } from '@bloomreach/connector-components-react';
 import styles from './ProductHighlight.module.scss';
-import { isLoading, notEmpty } from '../../src/utils';
+import { notEmpty } from '../../src/utils';
 
 import { Link } from '../Link';
 
 interface ProductHighlightItemProps extends React.ComponentPropsWithoutRef<'a'> {
-  connectorId?: string;
-  itemId: ItemIdModel;
-  setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
+  itemDetail: ItemDetail | null;
 }
 
 type Attribute = Record<string, string>;
 
-export function ProductHighlightItem({ connectorId, itemId, setError }: ProductHighlightItemProps): JSX.Element {
+export function ProductHighlightItem({ itemDetail }: ProductHighlightItemProps): JSX.Element {
   const page = React.useContext(BrPageContext);
-
-  const {
-    discoveryAccountId,
-    discoveryAuthKey,
-    discoveryConnector,
-    discoveryCustomAttrFields,
-    discoveryCustomVarAttrFields,
-    discoveryCustomVarListPriceField,
-    discoveryCustomVarPurchasePriceField,
-    discoveryDomainKey,
-    discoveryViewId,
-    brEnvType,
-  } = useContext(CommerceContext);
-  const [cookies] = useCookies(['_br_uid_2']);
-  const params: ProductDetailInputProps = useMemo(
-    () => ({
-      itemId,
-      brUid2: cookies._br_uid_2,
-      connector: connectorId ?? discoveryConnector,
-      customAttrFields: discoveryCustomAttrFields,
-      customVariantAttrFields: discoveryCustomVarAttrFields,
-      customVariantListPriceField: discoveryCustomVarListPriceField,
-      customVariantPurchasePriceField: discoveryCustomVarPurchasePriceField,
-      discoveryAccountId,
-      discoveryAuthKey,
-      discoveryDomainKey,
-      discoveryViewId,
-      brEnvType,
-    }),
-    [
-      itemId,
-      cookies._br_uid_2,
-      discoveryCustomAttrFields,
-      discoveryAccountId,
-      discoveryAuthKey,
-      discoveryConnector,
-      discoveryCustomVarAttrFields,
-      discoveryCustomVarListPriceField,
-      discoveryCustomVarPurchasePriceField,
-      discoveryDomainKey,
-      discoveryViewId,
-      connectorId,
-      brEnvType,
-    ],
-  );
-  const [item, loading, error] = useProductDetail(params);
-  useEffect(() => {
-    if (error) {
-      setError(error);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error]);
-  const selectedItemId = params.itemId as ItemIdModel;
-  const selectedVariant = item?.variants?.find(
+  const selectedItemId = itemDetail?.itemId as ItemIdModel;
+  const selectedVariant = itemDetail?.variants?.find(
     (variant) => variant?.itemId.id === selectedItemId.id && variant?.itemId.code === selectedItemId.code,
   );
-  const { listPrice, purchasePrice, displayName, imageSet, customAttrs } = selectedVariant ?? item ?? {};
+  const { listPrice, purchasePrice, displayName, imageSet, customAttrs } = selectedVariant ?? itemDetail ?? {};
   const customAttributes = useMemo(
     () =>
       customAttrs
@@ -107,13 +51,12 @@ export function ProductHighlightItem({ connectorId, itemId, setError }: ProductH
   const displayPrice = sale ?? price;
   const thumbnail = useMemo(() => imageSet?.original?.link?.href, [imageSet]);
 
-  if (!item || isLoading(loading)) {
+  if (!itemDetail) {
     return <div />;
   }
-
   return (
     <Link
-      href={page?.getUrl(`/products/${item?.itemId.code ?? item?.itemId.id}`)}
+      href={page?.getUrl(`/products/${itemDetail?.itemId.code ?? itemDetail?.itemId.id}`)}
       className="col-sm-3 mb4 text-reset text-decoration-none"
     >
       {thumbnail && (
@@ -121,9 +64,9 @@ export function ProductHighlightItem({ connectorId, itemId, setError }: ProductH
           <Image src={thumbnail} alt={displayName ?? ''} />
         </div>
       )}
-      <div className={`${styles.name} d-block h4 text-truncate mb-3`}>{item?.displayName}</div>
+      <div className={`${styles.name} d-block h4 text-truncate mb-3`}>{itemDetail?.displayName}</div>
       <div className={`${styles['product-number']} text-muted`}>
-        Product No. <span className="text-primary ml-1">{item.itemId.code}</span>
+        Product No. <span className="text-primary ml-1">{itemDetail.itemId.code}</span>
       </div>
       <div className={`${styles.manufacturer} text-muted`}>
         Manufacturer <span className="text-primary ml-1">{customAttributes?.brand}</span>

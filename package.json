@@ -15,7 +15,7 @@
     "lint": "next lint --dir ."
   },
   "dependencies": {
-    "@bloomreach/connector-components-react": "0.12.0-saas",
+    "@bloomreach/connector-components-react": "0.15.0-saas",
     "@bloomreach/react-sdk": "15.5.0",
     "@bloomreach/spa-sdk": "15.5.0",
     "@fortawesome/fontawesome-svg-core": "~1.2.36",

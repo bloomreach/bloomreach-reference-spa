@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Alert, Col, Row } from 'react-bootstrap';
+import { useCookies } from 'react-cookie';
 import { BrProps } from '@bloomreach/react-sdk';
 import { ContainerItem, getContainerItemContent } from '@bloomreach/spa-sdk';
+import { ProductsByIdsInputProps, useProductsByIds } from '@bloomreach/connector-components-react';
+import { CommerceContext } from '../CommerceContext';
 import styles from './ProductHighlight.module.scss';
 import { ProductHighlightItem } from './ProductHighlightItem';
+import { isLoading } from '../../src/utils';
 
 interface ProductHighlightCompound {
   title: string;
@@ -28,31 +32,74 @@ interface ProductHighlightCompound {
 }
 
 export function ProductHighlight({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
-  const [error, setError] = useState<Error>();
   const {
     title,
     connectorid,
     commerceProductCompound,
   } = getContainerItemContent<ProductHighlightCompound>(component, page) ?? {};
   const connectorId = connectorid?.selectionValues[0].key;
-  const productRefs = useMemo(
+  const productRefs: string[] = useMemo(
     () =>
       commerceProductCompound?.map(({ productid, variantid }) => {
         const selectedId = variantid?.length ? variantid : productid;
         const [, id, code] = selectedId.match(/id=([\w\d._=-]+[\w\d=]?)?;code=([\w\d._=/-]+[\w\d=]?)?/i) ?? [];
-        return { id, code };
+        if (code) {
+          return `${id}___${code}`;
+        }
+        return `${id}___${id}`;
       }),
     [commerceProductCompound],
+  )!;
+
+  const {
+    discoveryAccountId,
+    discoveryAuthKey,
+    discoveryConnector,
+    discoveryCustomAttrFields,
+    discoveryCustomVarAttrFields,
+    discoveryCustomVarListPriceField,
+    discoveryCustomVarPurchasePriceField,
+    discoveryDomainKey,
+    discoveryViewId,
+    brEnvType,
+  } = useContext(CommerceContext);
+
+  const [cookies] = useCookies(['_br_uid_2']);
+  const params: ProductsByIdsInputProps = useMemo(
+    () => ({
+      itemIds: productRefs,
+      brUid2: cookies._br_uid_2,
+      connector: connectorId ?? discoveryConnector,
+      customAttrFields: discoveryCustomAttrFields,
+      customVariantAttrFields: discoveryCustomVarAttrFields,
+      customVariantListPriceField: discoveryCustomVarListPriceField,
+      customVariantPurchasePriceField: discoveryCustomVarPurchasePriceField,
+      discoveryAccountId,
+      discoveryAuthKey,
+      discoveryDomainKey,
+      discoveryViewId,
+      brEnvType,
+    }),
+    [
+      productRefs,
+      cookies._br_uid_2,
+      discoveryCustomAttrFields,
+      discoveryAccountId,
+      discoveryAuthKey,
+      discoveryConnector,
+      discoveryCustomVarAttrFields,
+      discoveryCustomVarListPriceField,
+      discoveryCustomVarPurchasePriceField,
+      discoveryDomainKey,
+      discoveryViewId,
+      connectorId,
+      brEnvType,
+    ],
   );
 
-  // Reset error when no items configured
-  useEffect(() => {
-    if (!productRefs?.length) {
-      setError(undefined);
-    }
-  }, [productRefs]);
+  const [, result, loading, apiErr] = useProductsByIds(params);
 
-  if (error) {
+  if (apiErr) {
     return (
       <Alert variant="danger" className="mt-3 mb-3">
         This widget is not working properly. Try again later.
@@ -64,17 +111,14 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
     <div className={`${styles.highlight} mw-container mx-auto`}>
       <div className={styles.grid__header}>{title && <h4 className="mb-4">{title}</h4>}</div>
       <Row>
-        {productRefs
-          ?.filter((productRef) => !!productRef.id || !!productRef.code)
-          ?.map((productRef) => (
+        {!isLoading(loading) && result?.items
+          ?.map((item) => (
             <Col
-              key={`${productRef.id ?? ''}___${productRef.code ?? ''}`}
+              key={`${item?.itemId.id ?? ''}___${item?.itemId.code ?? ''}`}
               as={ProductHighlightItem}
               md="3"
               className="mb-4"
-              itemId={{ id: productRef.id, code: productRef.code }}
-              connectorId={connectorId}
-              setError={setError}
+              itemDetail={item}
             />
           ))}
       </Row>
