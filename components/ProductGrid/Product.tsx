@@ -63,7 +63,7 @@ export const Product = React.forwardRef(
           {displayName}
         </span>
         <small className="text-muted d-block mb-1">
-          Product No. <span className="text-primary ml-1">{itemId.code}</span>
+          Product No. <span className="text-primary ml-1">{itemId.code || itemId.id}</span>
         </small>
         <small className="text-muted d-block mb-2">
           Manufacturer <span className="text-primary ml-1">{customAttributes?.brand}</span>

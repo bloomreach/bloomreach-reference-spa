@@ -77,7 +77,7 @@ export function Product({ product }: ProductProps): React.ReactElement | null {
       )}
       {showPid && (
         <div className={`${styles['product-number']} text-muted`}>
-          Product No. <span className="text-primary ml-1">{itemId.code}</span>
+          Product No. <span className="text-primary ml-1">{itemId.code || itemId.id}</span>
         </div>
       )}
       <div className={`${styles.manufacturer} text-muted`}>

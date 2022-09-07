@@ -163,7 +163,7 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
         <Col md={{ span: 8, order: 1 }}>
           <h2 className="mb-4">{displayName}</h2>
           <div className="text-muted">
-            Product No. <span className="text-primary ml-1">{itemId.code}</span>
+            Product No. <span className="text-primary ml-1">{itemId.code || itemId.id}</span>
           </div>
           <div className="text-muted mb-4">
             Manufacturer <span className="text-primary ml-1">{customAttributes?.brand}</span>

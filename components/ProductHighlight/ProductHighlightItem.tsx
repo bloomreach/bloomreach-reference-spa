@@ -66,7 +66,7 @@ export function ProductHighlightItem({ itemDetail }: ProductHighlightItemProps):
       )}
       <div className={`${styles.name} d-block h4 text-truncate mb-3`}>{itemDetail?.displayName}</div>
       <div className={`${styles['product-number']} text-muted`}>
-        Product No. <span className="text-primary ml-1">{itemDetail.itemId.code}</span>
+        Product No. <span className="text-primary ml-1">{itemDetail.itemId.code || itemDetail.itemId.id}</span>
       </div>
       <div className={`${styles.manufacturer} text-muted`}>
         Manufacturer <span className="text-primary ml-1">{customAttributes?.brand}</span>
