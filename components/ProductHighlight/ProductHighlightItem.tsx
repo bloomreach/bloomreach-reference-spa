@@ -37,26 +37,49 @@ export function ProductHighlightItem({ itemDetail }: ProductHighlightItemProps):
   );
   const { listPrice, purchasePrice, displayName, imageSet, customAttrs } = selectedVariant ?? itemDetail ?? {};
   const customAttributes = useMemo(
-    () =>
-      customAttrs
+    () => {
+      const tempCustAttrs = customAttrs?.length ? customAttrs : itemDetail?.customAttrs;
+      return tempCustAttrs
         ?.filter(notEmpty)
         .reduce(
           (result, attr) => Object.assign(result, { [attr.name]: attr.values?.filter(notEmpty).join(', ') ?? '' }),
           {} as Attribute,
-        ),
-    [customAttrs],
+        );
+    },
+    [customAttrs, itemDetail],
   );
-  const price = useMemo(() => listPrice?.moneyAmounts?.[0], [listPrice]);
-  const sale = useMemo(() => purchasePrice?.moneyAmounts?.[0], [purchasePrice]);
+  const price = useMemo(
+    () =>
+      listPrice
+        ?.moneyAmounts?.[0]?.amount
+      ?? itemDetail
+        ?.listPrice?.moneyAmounts?.[0]?.amount,
+    [listPrice, itemDetail],
+  );
+  const sale = useMemo(
+    () =>
+      purchasePrice
+        ?.moneyAmounts?.[0]?.amount
+      ?? itemDetail
+        ?.purchasePrice?.moneyAmounts?.[0]?.amount,
+    [purchasePrice, itemDetail],
+  );
   const displayPrice = sale ?? price;
-  const thumbnail = useMemo(() => imageSet?.original?.link?.href, [imageSet]);
+  const thumbnail = useMemo(
+    () =>
+      imageSet
+        ?.original?.link?.href
+      ?? itemDetail
+        ?.imageSet?.original?.link?.href,
+    [imageSet, itemDetail],
+  );
 
   if (!itemDetail) {
     return <div />;
   }
   return (
     <Link
-      href={page?.getUrl(`/products/${itemDetail?.itemId.code ?? itemDetail?.itemId.id}`)}
+      href={page?.getUrl(`/products/${itemDetail?.itemId.id ?? ''}___${itemDetail?.itemId.code ?? ''}`)}
       className="col-sm-3 mb4 text-reset text-decoration-none"
     >
       {thumbnail && (
@@ -74,7 +97,7 @@ export function ProductHighlightItem({ itemDetail }: ProductHighlightItemProps):
       <h4 className="mb-4">
         {displayPrice && (
           <div className={`${styles.price}`}>
-            {displayPrice.currency ?? '$'} {displayPrice.amount}
+            $ {(sale ?? price)?.toFixed(2)}
           </div>
         )}
       </h4>
