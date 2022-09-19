@@ -79,15 +79,15 @@ export function deleteUndefined(obj: Record<string, any> | undefined): void {
   }
 }
 
-export function buildConfiguration(path: string, query: ParsedUrlQuery): Omit<Configuration, 'httpClient'> {
+export function buildConfiguration(path: string): Omit<Configuration, 'httpClient'> {
   const endpointQueryParameter = 'endpoint';
   const configuration: Record<string, any> = {
     endpointQueryParameter,
     path,
   };
-  const endpoint = query[endpointQueryParameter];
-  if (!endpoint) {
-    configuration.endpoint = process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
+  const endpoint = process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
+  if (endpoint) {
+    configuration.endpoint = endpoint;
   }
   return configuration;
 }
