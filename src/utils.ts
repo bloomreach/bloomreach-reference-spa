@@ -79,15 +79,19 @@ export function deleteUndefined(obj: Record<string, any> | undefined): void {
   }
 }
 
-export function buildConfiguration(path: string): Omit<Configuration, 'httpClient'> {
-  const endpointQueryParameter = 'endpoint';
+export function buildConfiguration(path: string, query: ParsedUrlQuery): Omit<Configuration, 'httpClient'> {
   const configuration: Record<string, any> = {
-    endpointQueryParameter,
     path,
   };
   const endpoint = process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
   if (endpoint) {
     configuration.endpoint = endpoint;
+    // The else statement below is needed for multi-tenant support
+    // It allows operating the same Reference SPA for different channels in EM using endpoint query parameter in the URL
+    // It's used mainly by BloomReach and is not needed for most customers
+  } else if (process.env.NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT === 'true') {
+    const endpointQueryParameter = 'endpoint';
+    configuration.endpoint = query[endpointQueryParameter];
   }
   return configuration;
 }
