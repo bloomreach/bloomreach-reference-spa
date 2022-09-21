@@ -16,6 +16,7 @@
 
 import { Configuration, PageModel } from '@bloomreach/spa-sdk';
 import { ParsedUrlQuery } from 'querystring';
+import { NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT, NEXT_PUBLIC_BRXM_ENDPOINT } from './constants';
 
 export interface CommerceConfig {
   graphqlServiceUrl: string;
@@ -83,13 +84,12 @@ export function buildConfiguration(path: string, query: ParsedUrlQuery): Omit<Co
   const configuration: Record<string, any> = {
     path,
   };
-  const endpoint = process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
-  if (endpoint) {
-    configuration.endpoint = endpoint;
+  if (NEXT_PUBLIC_BRXM_ENDPOINT) {
+    configuration.endpoint = NEXT_PUBLIC_BRXM_ENDPOINT;
     // The else statement below is needed for multi-tenant support
     // It allows operating the same Reference SPA for different channels in EM using endpoint query parameter in the URL
     // It's used mainly by BloomReach and is not needed for most customers
-  } else if (process.env.NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT === 'true') {
+  } else if (NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT === 'true') {
     const endpointQueryParameter = 'endpoint';
     configuration.endpoint = query[endpointQueryParameter];
   }
