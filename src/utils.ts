@@ -96,7 +96,10 @@ export function buildConfiguration(
     // It's used mainly by BloomReach and is not needed for most customers
   } else if (hasMultiTenantSupport) {
     const endpointQueryParameter = 'endpoint';
-    configuration.endpoint = query[endpointQueryParameter];
+    if (query[endpointQueryParameter]) {
+      configuration.endpoint = query[endpointQueryParameter];
+      configuration.baseUrl = `?${endpointQueryParameter}=${query[endpointQueryParameter]}`;
+    }
   }
   return configuration;
 }
@@ -117,7 +120,7 @@ function getBrAccountName(pageModel: PageModel, query?: ParsedUrlQuery): string 
     return graphqlTenantName.toLowerCase();
   }
 
-  const endpoint = query?.endpoint ?? process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
+  const endpoint = NEXT_PUBLIC_BRXM_ENDPOINT || (NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT ? query?.endpoint : '');
   if (!endpoint) {
     return undefined;
   }
