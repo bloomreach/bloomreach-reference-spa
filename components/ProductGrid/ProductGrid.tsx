@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,6 +69,8 @@ type SearchHookType = typeof useProductGridSearch | typeof useProductGridCategor
 type ProductGridParamsType = Parameters<SearchHookType>[0];
 
 export function ProductGrid({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
+  if (!component || !page) { return null; }
+
   const { title, searchtype, query, category } = getContainerItemContent<ProductGridCompound>(component, page) ?? {};
 
   const searchType = searchtype?.selectionValues[0].key;

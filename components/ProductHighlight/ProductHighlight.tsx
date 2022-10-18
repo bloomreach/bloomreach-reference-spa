@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Bloomreach
+ * Copyright 2021-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,11 +36,12 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
     title,
     connectorid,
     commerceProductCompound,
-  } = getContainerItemContent<ProductHighlightCompound>(component, page) ?? {};
+  } = (component && page
+    && getContainerItemContent<ProductHighlightCompound>(component, page)) ?? {} as ProductHighlightCompound;
   const connectorId = connectorid?.selectionValues[0].key;
   const productRefs: string[] = useMemo(
     () =>
-      commerceProductCompound?.map(({ productid, variantid }) => {
+      commerceProductCompound && commerceProductCompound?.map(({ productid, variantid }) => {
         const selectedId = variantid?.length ? variantid : productid;
         const [, id, code] = selectedId.match(/id=([\w\d._=-]+[\w\d=]?)?;code=([\w\d._=/-]+[\w\d=]?)?/i) ?? [];
         if (code) {

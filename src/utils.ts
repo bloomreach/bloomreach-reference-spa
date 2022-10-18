@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Configuration, PageModel } from '@bloomreach/spa-sdk';
+import { Configuration, PageModel, extractSearchParams } from '@bloomreach/spa-sdk';
 import { ParsedUrlQuery } from 'querystring';
 import { NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT, NEXT_PUBLIC_BRXM_ENDPOINT } from './constants';
 
@@ -33,6 +33,13 @@ export interface CommerceConfig {
   brEnvType?: string;
   brAccountName?: string;
 }
+
+type BuildConfigurationOptions = {
+  endpoint: string | (string | null)[];
+  baseUrl: string;
+};
+
+type ConfigurationBuilder = Omit<Configuration & Partial<BuildConfigurationOptions>, 'httpClient'>;
 
 export const DUMMY_BR_UID_2_FOR_PREVIEW = 'uid%3D0000000000000%3Av%3D11.5%3Ats%3D1428617911187%3Ahc%3D55';
 
@@ -82,11 +89,10 @@ export function deleteUndefined(obj: Record<string, any> | undefined): void {
 
 export function buildConfiguration(
   path: string,
-  query: ParsedUrlQuery,
   endpoint: string = NEXT_PUBLIC_BRXM_ENDPOINT,
   hasMultiTenantSupport: boolean = NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT,
-): Omit<Configuration, 'httpClient'> {
-  const configuration: Record<string, any> = {
+): ConfigurationBuilder {
+  const configuration: ConfigurationBuilder = {
     path,
   };
   if (endpoint) {
@@ -96,11 +102,13 @@ export function buildConfiguration(
     // It's used mainly by BloomReach and is not needed for most customers
   } else if (hasMultiTenantSupport) {
     const endpointQueryParameter = 'endpoint';
-    if (query[endpointQueryParameter]) {
-      configuration.endpoint = query[endpointQueryParameter];
-      configuration.baseUrl = `?${endpointQueryParameter}=${query[endpointQueryParameter]}`;
-    }
+    const { url, searchParams } = extractSearchParams(path, [endpointQueryParameter].filter(Boolean));
+
+    configuration.endpoint = searchParams.get(endpointQueryParameter) ?? '';
+    configuration.baseUrl = `?${endpointQueryParameter}=${searchParams.get(endpointQueryParameter)}`;
+    configuration.path = url;
   }
+  configuration.debug = true;
   return configuration;
 }
 

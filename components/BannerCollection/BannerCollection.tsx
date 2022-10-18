@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,8 @@ interface BannerCollectionParameters {
 }
 
 export function BannerCollection({ component, page }: BrProps): React.ReactElement | null {
+  if (!component || !page) { return null; }
+
   const { title } = component.getParameters<BannerCollectionParameters>();
   const models = component.getModels<BannerCollectionModels>();
   const docParams = getEffectiveMultipleDocumentParameters(page, models, MAX_DOCUMENTS);

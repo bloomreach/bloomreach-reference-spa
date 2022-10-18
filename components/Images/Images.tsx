@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,20 +33,21 @@ interface ImagesModels {
 }
 
 export function Images({ component, page }: BrProps): React.ReactElement | null {
-  const models = component.getModels<ImagesModels>();
-  const params = component.getParameters();
+  const models = component?.getModels<ImagesModels>();
+  const params = component?.getParameters();
   const images = useMemo(() => {
-    return IMAGE_PARAMS.map((model) => models[model as keyof ImagesModels])
-      .map((reference) => reference && page.getContent<ImageSet>(reference))
+    return IMAGE_PARAMS.map((model) => models && models[model as keyof ImagesModels])
+      .map((reference) => reference && page && page.getContent<ImageSet>(reference))
       .filter<ImageSet>(Boolean as any);
   }, [models, page]);
 
   const error = useMemo(() => {
-    return Object.entries(params).filter(([key, value]) => IMAGE_PARAMS.includes(key) && value).length > images.length;
+    return params
+      && Object.entries(params).filter(([key, value]) => IMAGE_PARAMS.includes(key) && value).length > images.length;
   }, [images.length, params]);
 
   if (!images.length && !error) {
-    return page.isPreview() ? <div /> : null;
+    return page?.isPreview() ? <div /> : null;
   }
 
   return (

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /*
- * Copyright 2019-2021 Bloomreach
+ * Copyright 2019-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ Index.getInitialProps = async ({ req: request, res: response, asPath: path, quer
   // console.log('[getServerSideProps]: path=', path);
   // console.log('[getServerSideProps]: query=', query);
 
-  const configuration = buildConfiguration(path ?? '/', query);
+  const configuration = buildConfiguration(path ?? '/');
   const page = await initialize({ ...configuration, request, httpClient: axios as any });
   const pageJson = page.toJSON();
   const commerceConfig = loadCommerceConfig(pageJson, query);

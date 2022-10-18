@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Bloomreach
+ * Copyright 2021-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,12 @@ export interface DocumentParameter {
 }
 
 export function getEffectiveMultipleDocumentParameters(
-  page: Page,
-  models: Record<string, any>,
+  page: Page | undefined,
+  models: Record<string, any> | undefined,
   maxCount: number,
 ): DocumentParameter[] {
+  if (!page || !models) { return []; }
+
   return [...Array(maxCount).keys()]
     .map((n) => {
       const parameterName = `document${n + 1}`;

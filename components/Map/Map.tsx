@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ interface MapParameters {
 }
 
 export function Map({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
+  if (!component || !page) { return null; }
+
   const { token } = component.getParameters<MapParameters>();
 
   if (component.isHidden()) {

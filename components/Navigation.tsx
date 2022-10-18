@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,22 +34,22 @@ interface NavigationModels {
 }
 
 export function Navigation({ component, page }: BrProps): React.ReactElement | null {
-  const models = component.getModels<NavigationModels>();
-  const params = component.getParameters();
+  const models = component?.getModels<NavigationModels>();
+  const params = component?.getParameters();
   const documents = useMemo(() => {
-    return DOCUMENT_PARAMS.map((model) => models[model as keyof NavigationModels])
-      .map((reference) => reference && page.getContent<Document>(reference))
+    return DOCUMENT_PARAMS.map((model) => models && models[model as keyof NavigationModels])
+      .map((reference) => reference && page && page.getContent<Document>(reference))
       .filter<Document>(Boolean as any);
   }, [models, page]);
 
   const error = useMemo(() => {
-    return (
+    return params && (
       Object.entries(params).filter(([key, value]) => DOCUMENT_PARAMS.includes(key) && value).length > documents.length
     );
   }, [documents, params]);
 
   if (!documents.length) {
-    return page.isPreview() ? <div /> : null;
+    return page?.isPreview() ? <div /> : null;
   }
 
   return (

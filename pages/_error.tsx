@@ -103,7 +103,7 @@ const Error: NextPage<ErrorProps> = ({ configuration, page, commerceConfig }) =>
   );
 };
 
-Error.getInitialProps = async ({ req: request, res: response, err, asPath, query }) => {
+Error.getInitialProps = async ({ req: request, res: response, err, asPath }) => {
   let errorCode: ErrorCode;
   if (err) {
     if ((err as AxiosError).isAxiosError) {
@@ -123,7 +123,7 @@ Error.getInitialProps = async ({ req: request, res: response, err, asPath, query
     search = `?${search}`;
   }
   const path = `${ERROR_PAGE_PATH_MAP[errorCode] ?? ERROR_PAGE_PATH_MAP[ErrorCode.GENERAL_ERROR]}${search}`;
-  const configuration = buildConfiguration(path, query);
+  const configuration = buildConfiguration(path);
   // console.log('[_error]: path=', path);
   try {
     const page = await initialize({ ...configuration, request, httpClient: axios as any });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,8 @@ interface MultiBannerCarouselCompound {
 }
 
 export function MultiBannerCarousel({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
+  if (!component || !page) { return null; }
+
   const { interval = 0 } = component.getParameters<MultiBannerCarouselParameters>();
   const { title, banners } = getContainerItemContent<MultiBannerCarouselCompound>(component, page) ?? {};
   const slides = [];
