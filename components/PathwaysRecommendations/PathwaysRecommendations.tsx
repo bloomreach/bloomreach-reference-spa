@@ -44,7 +44,7 @@ interface PathwaysRecommendationsParameters {
 interface PathwaysRecommendationsCompound {
   categoryCompound?: { categoryid: string };
   keyword?: string;
-  productCompound?: [{ productid: string }];
+  productCompound?: [{ productid?: string }];
   widgetCompound?: {
     widgetid: string;
     widgetalgo: {
@@ -65,9 +65,24 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
   } = getContainerItemContent<PathwaysRecommendationsCompound>(component, page) ?? {};
   const { categoryid: category } = categoryCompound ?? {};
   const pids = productCompound?.map(({ productid }) => {
-    const [, id, code] = productid.match(/id=([\w\d._=-]+[\w\d=]?)?;code=([\w\d._=/-]+[\w\d=]?)?/i) ?? [];
+    if (productid) {
+      // new field format as a combination of productid/variantid in JSON
+      try {
+        const { productid: productId } = JSON.parse(productid);
+        const { id, code } = productId ?? {};
+        if (id || code) {
+          return code || id;
+        }
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log('Error parsing itemid as JSON: ', err);
+      }
+    }
+
+    // fall-back to old field format as separated productid and variantid fields
+    const [, id, code] = productid?.match(/id=([\w\d._=-]+[\w\d=]?)?;code=([\w\d._=/-]+[\w\d=]?)?/i) ?? [];
     return code ?? id;
-  });
+  }).filter(Boolean);
   const { widgetid: widgetId = '', widgetalgo: widgetAlgo } = widgetCompound ?? {};
   const {
     discoveryDomainKey,
