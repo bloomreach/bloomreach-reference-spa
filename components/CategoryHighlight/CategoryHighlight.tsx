@@ -34,17 +34,38 @@ interface CategoryHighlightCompound {
 export function CategoryHighlight({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const {
     title,
-    connectorid,
+    connectorid: connectorIdSel,
     commerceCategoryCompound,
   } = getContainerItemContent<CategoryHighlightCompound>(component, page) ?? {};
-  const connectorId = connectorid?.selectionValues[0].key;
-  const categoryIds: string[] = useMemo(
-    () =>
-      commerceCategoryCompound?.map(({ categoryid }) => {
+  const { categoryIds, connectorId } = useMemo(
+    () => {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      let connectorId: string | undefined;
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const categoryIds = commerceCategoryCompound?.map(({ categoryid }) => {
+        // new field format in JSON
+        try {
+          const { categoryid: categoryId, connectorid } = JSON.parse(categoryid);
+          connectorId = connectorId || connectorid;
+          if (categoryId) {
+            return categoryId;
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log('Error parsing categoryid as JSON: ', err);
+        }
+
+        // fall-back to old field format (categoryid as string)
         return categoryid;
-      }),
-    [commerceCategoryCompound],
-  )!;
+      }) ?? [];
+      connectorId = connectorId || connectorIdSel?.selectionValues[0].key;
+      return {
+        categoryIds,
+        connectorId,
+      };
+    },
+    [commerceCategoryCompound, connectorIdSel?.selectionValues],
+  );
 
   const {
     discoveryAccountId,
@@ -93,7 +114,7 @@ export function CategoryHighlight({ component, page }: BrProps<ContainerItem>): 
   );
   const [categories, loading, apiError] = useCategories(params);
 
-  if (apiError) {
+  if (!categories && apiError) {
     return (
       <Alert variant="danger" className="mt-3 mb-3">
         This widget is not working properly. Try again later.

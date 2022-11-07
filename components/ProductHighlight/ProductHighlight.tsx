@@ -34,19 +34,22 @@ interface ProductHighlightCompound {
 export function ProductHighlight({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const {
     title,
-    connectorid,
+    connectorid: connectorIdSel,
     commerceProductCompound,
   } = getContainerItemContent<ProductHighlightCompound>(component, page) ?? {};
-  const connectorId = connectorid?.selectionValues[0].key;
-  const productRefs: string[] = useMemo(
-    () =>
-      commerceProductCompound?.map(({ productid, variantid }) => {
+  const { productRefs, connectorId } = useMemo(
+    () => {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      let connectorId: string | undefined;
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const productRefs: string[] = commerceProductCompound?.map(({ productid, variantid }) => {
         if (!productid) {
           return undefined;
         }
         // new field format as a combination of productid/variantid in JSON
         try {
-          const { productid: productId, variantid: variantId } = JSON.parse(productid);
+          const { productid: productId, variantid: variantId, connectorid } = JSON.parse(productid);
+          connectorId = connectorId || connectorid;
           const selectedId = variantId?.id ? variantId : productId;
           const { id, code } = selectedId;
           if (code) {
@@ -68,8 +71,16 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
           return `${id}___${code}`;
         }
         return `${id}___${id}`;
-      }).filter(Boolean as any),
-    [commerceProductCompound],
+      }).filter(Boolean as any) ?? [];
+
+      connectorId = connectorId || connectorIdSel?.selectionValues[0].key;
+
+      return {
+        productRefs,
+        connectorId,
+      };
+    },
+    [commerceProductCompound, connectorIdSel?.selectionValues],
   )!;
 
   const {
@@ -120,7 +131,7 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
 
   const [, result, loading, apiErr] = useProductsByIds(params);
 
-  if (apiErr) {
+  if (!result && apiErr) {
     return (
       <Alert variant="danger" className="mt-3 mb-3">
         This widget is not working properly. Try again later.
