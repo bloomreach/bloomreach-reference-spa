@@ -28,7 +28,7 @@ import {
 } from '@bloomreach/connector-components-react';
 import { useRouter } from 'next/router';
 import { CommerceContext } from '../CommerceContext';
-import { isLoading, notEmpty } from '../../src/utils';
+import { isLoading, notEmpty, parseCategoryPickerField } from '../../src/utils';
 import { Stats } from './Stats';
 import { StatsPlaceholder } from './StatsPlaceholder';
 import { Filters } from './Filters';
@@ -73,6 +73,8 @@ export function ProductGrid({ component, page }: BrProps<ContainerItem>): React.
 
   const { title, searchtype, query, category } = getContainerItemContent<ProductGridCompound>(component, page) ?? {};
 
+  const categoryId = parseCategoryPickerField(category?.categoryid)?.categoryId;
+
   const searchType = searchtype?.selectionValues[0].key;
 
   if (component.isHidden() || !searchType) {
@@ -83,7 +85,7 @@ export function ProductGrid({ component, page }: BrProps<ContainerItem>): React.
     <ProductGridProcessor
       component={component}
       searchType={searchType}
-      categoryId={category?.categoryid}
+      categoryId={categoryId}
       query={query}
       title={title}
     />

@@ -23,7 +23,7 @@ import { useCategories, CategoriesInputProps } from '@bloomreach/connector-compo
 import styles from './CategoryHighlight.module.scss';
 import { CommerceContext } from '../CommerceContext';
 import { CategoryHighlightItem } from './CategoryHighlightItem';
-import { isLoading } from '../../src/utils';
+import { isLoading, parseCategoryPickerField } from '../../src/utils';
 
 interface CategoryHighlightCompound {
   title: string;
@@ -43,22 +43,11 @@ export function CategoryHighlight({ component, page }: BrProps<ContainerItem>): 
       // eslint-disable-next-line @typescript-eslint/no-shadow
       let connectorId: string | undefined;
       // eslint-disable-next-line @typescript-eslint/no-shadow
-      const categoryIds = commerceCategoryCompound?.map(({ categoryid }) => {
-        // new field format in JSON
-        try {
-          const { categoryid: categoryId, connectorid } = JSON.parse(categoryid);
-          connectorId = connectorId || connectorid;
-          if (categoryId) {
-            return categoryId;
-          }
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.log('Error parsing categoryid as JSON: ', err);
-        }
-
-        // fall-back to old field format (categoryid as string)
-        return categoryid;
-      }) ?? [];
+      const categoryIds: string[] = commerceCategoryCompound?.map(({ categoryid }) => {
+        const { categoryId, connectorId: connId } = parseCategoryPickerField(categoryid) ?? {};
+        connectorId = connectorId || connId;
+        return categoryId;
+      }).filter(Boolean as any) ?? [];
       connectorId = connectorId || connectorIdSel?.selectionValues[0].key;
       return {
         categoryIds,

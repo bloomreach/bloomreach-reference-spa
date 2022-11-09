@@ -135,3 +135,65 @@ function getBrAccountName(pageModel: PageModel, query?: ParsedUrlQuery): string 
   const endpointValue = Array.isArray(endpoint) ? endpoint[0] : endpoint;
   return new URL(endpointValue).hostname.split('.')[0];
 }
+
+export function parseCategoryPickerField(categoryIdValue?: string):
+  { categoryId: string, connectorId?: string} | undefined {
+  if (!categoryIdValue) {
+    return undefined;
+  }
+
+  try {
+    // new field format in JSON
+    const { categoryid: categoryId, connectorid: connectorId } = JSON.parse(categoryIdValue);
+    if (categoryId) {
+      return {
+        categoryId,
+        connectorId,
+      };
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log('Error parsing categoryid as JSON: ', err);
+  }
+
+  // fall-back to old field format (categoryid as string)
+  return { categoryId: categoryIdValue };
+}
+
+export function parseProductPickerField(productIdValue?: string, variantIdValue?: string):
+  { itemId: string, connectorId?: string } | undefined {
+  if (!productIdValue) {
+    return undefined;
+  }
+
+  try {
+    // new field format as a combination of productid/variantid in JSON
+    const { productid: productId, variantid: variantId, connectorid: connectorId } = JSON.parse(productIdValue);
+    const selectedId = variantId?.id ? variantId : productId;
+    const { id, code } = selectedId;
+    if (code) {
+      return {
+        itemId: `${id}___${code}`,
+        connectorId,
+      };
+    }
+
+    if (id) {
+      return {
+        itemId: `${id}___${id}`,
+        connectorId,
+      };
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log('Error parsing itemid as JSON: ', err);
+  }
+
+  // fall-back to old field format as separated productid and variantid fields
+  const selectedId = variantIdValue?.length ? variantIdValue : productIdValue;
+  const [, id, code] = selectedId?.match(/id=([\w\d._=-]+[\w\d=]?)?;code=([\w\d._=/-]+[\w\d=]?)?/i) ?? [];
+  if (code) {
+    return { itemId: `${id}___${code}` };
+  }
+  return { itemId: `${id}___${id}` };
+}

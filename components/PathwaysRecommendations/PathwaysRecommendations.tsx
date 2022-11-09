@@ -24,7 +24,13 @@ import { ProductGridWidgetInputProps, useProductGridWidget } from '@bloomreach/c
 
 import { CommerceContext } from '../CommerceContext';
 import { Products } from './Products';
-import { DUMMY_BR_UID_2_FOR_PREVIEW, isLoading, notEmpty } from '../../src/utils';
+import {
+  DUMMY_BR_UID_2_FOR_PREVIEW,
+  isLoading,
+  notEmpty,
+  parseCategoryPickerField,
+  parseProductPickerField,
+} from '../../src/utils';
 
 import styles from './PathwaysRecommendations.module.scss';
 import { ProductsPlaceholder } from '../ProductGrid/ProductsPlaceholder';
@@ -65,26 +71,15 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
   } = (component && page
     && getContainerItemContent<PathwaysRecommendationsCompound>(component, page))
   ?? {} as PathwaysRecommendationsCompound;
-  const { categoryid: category } = categoryCompound ?? {};
-  const pids = productCompound?.map(({ productid }) => {
-    if (productid) {
-      // new field format as a combination of productid/variantid in JSON
-      try {
-        const { productid: productId } = JSON.parse(productid);
-        const { id, code } = productId ?? {};
-        if (id || code) {
-          return code || id;
-        }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.log('Error parsing itemid as JSON: ', err);
-      }
-    }
+  const category = useMemo(() => parseCategoryPickerField(categoryCompound?.categoryid)?.categoryId,
+    [categoryCompound]);
 
-    // fall-back to old field format as separated productid and variantid fields
-    const [, id, code] = productid?.match(/id=([\w\d._=-]+[\w\d=]?)?;code=([\w\d._=/-]+[\w\d=]?)?/i) ?? [];
-    return code ?? id;
-  }).filter(Boolean);
+  const pids: string[] | undefined = useMemo(() =>
+    productCompound?.map(({ productid }) =>
+      parseProductPickerField(productid)?.itemId?.split('___')?.[1])
+      .filter(Boolean as any),
+  [productCompound]);
+
   const { widgetid: widgetId = '', widgetalgo: widgetAlgo } = widgetCompound ?? {};
   const {
     discoveryDomainKey,

@@ -23,7 +23,7 @@ import { ProductsByIdsInputProps, useProductsByIds } from '@bloomreach/connector
 import { CommerceContext } from '../CommerceContext';
 import styles from './ProductHighlight.module.scss';
 import { ProductHighlightItem } from './ProductHighlightItem';
-import { isLoading } from '../../src/utils';
+import { isLoading, parseProductPickerField } from '../../src/utils';
 
 interface ProductHighlightCompound {
   title: string;
@@ -44,34 +44,9 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
       let connectorId: string | undefined;
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const productRefs: string[] = commerceProductCompound?.map(({ productid, variantid }) => {
-        if (!productid) {
-          return undefined;
-        }
-        // new field format as a combination of productid/variantid in JSON
-        try {
-          const { productid: productId, variantid: variantId, connectorid } = JSON.parse(productid);
-          connectorId = connectorId || connectorid;
-          const selectedId = variantId?.id ? variantId : productId;
-          const { id, code } = selectedId;
-          if (code) {
-            return `${id}___${code}`;
-          }
-
-          if (id) {
-            return `${id}___${id}`;
-          }
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.log('Error parsing itemid as JSON: ', err);
-        }
-
-        // fall-back to old field format as separated productid and variantid fields
-        const selectedId = variantid?.length ? variantid : productid;
-        const [, id, code] = selectedId?.match(/id=([\w\d._=-]+[\w\d=]?)?;code=([\w\d._=/-]+[\w\d=]?)?/i) ?? [];
-        if (code) {
-          return `${id}___${code}`;
-        }
-        return `${id}___${id}`;
+        const { itemId, connectorId: connId } = parseProductPickerField(productid, variantid) ?? {};
+        connectorId = connectorId || connId;
+        return itemId;
       }).filter(Boolean as any) ?? [];
 
       connectorId = connectorId || connectorIdSel?.selectionValues[0].key;
