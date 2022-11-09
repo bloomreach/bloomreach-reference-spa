@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Bloomreach
+ * Copyright 2021-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,8 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
     title,
     connectorid: connectorIdSel,
     commerceProductCompound,
-  } = getContainerItemContent<ProductHighlightCompound>(component, page) ?? {};
+  } = (component && page
+    && getContainerItemContent<ProductHighlightCompound>(component, page)) ?? {} as ProductHighlightCompound;
   const { productRefs, connectorId } = useMemo(
     () => {
       // eslint-disable-next-line @typescript-eslint/no-shadow

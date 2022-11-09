@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Bloomreach
+ * Copyright 2021-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ interface BannerCTACompound {
 }
 
 export function BannerCTA({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
+  if (!component || !page) { return null; }
+
   const { title, content, cta, link } = getContainerItemContent<BannerCTACompound>(component, page) ?? {};
   const document = link && page?.getContent<Document>(link);
 

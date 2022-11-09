@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { Configuration, PageModel } from '@bloomreach/spa-sdk';
+import { Configuration, PageModel, extractSearchParams } from '@bloomreach/spa-sdk';
 import { ParsedUrlQuery } from 'querystring';
+import { NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT, NEXT_PUBLIC_BRXM_ENDPOINT } from './constants';
 
 export interface CommerceConfig {
   graphqlServiceUrl: string;
@@ -32,6 +33,13 @@ export interface CommerceConfig {
   brEnvType?: string;
   brAccountName?: string;
 }
+
+type BuildConfigurationOptions = {
+  endpoint: string | (string | null)[];
+  baseUrl: string;
+};
+
+type ConfigurationBuilder = Omit<Configuration & Partial<BuildConfigurationOptions>, 'httpClient'>;
 
 export const DUMMY_BR_UID_2_FOR_PREVIEW = 'uid%3D0000000000000%3Av%3D11.5%3Ats%3D1428617911187%3Ahc%3D55';
 
@@ -79,16 +87,28 @@ export function deleteUndefined(obj: Record<string, any> | undefined): void {
   }
 }
 
-export function buildConfiguration(path: string, query: ParsedUrlQuery): Omit<Configuration, 'httpClient'> {
-  const endpointQueryParameter = 'endpoint';
-  const configuration: Record<string, any> = {
-    endpointQueryParameter,
+export function buildConfiguration(
+  path: string,
+  endpoint: string = NEXT_PUBLIC_BRXM_ENDPOINT,
+  hasMultiTenantSupport: boolean = NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT,
+): ConfigurationBuilder {
+  const configuration: ConfigurationBuilder = {
     path,
   };
-  const endpoint = query[endpointQueryParameter];
-  if (!endpoint) {
-    configuration.endpoint = process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
+  if (endpoint) {
+    configuration.endpoint = endpoint;
+    // The else statement below is needed for multi-tenant support
+    // It allows operating the same Reference SPA for different channels in EM using endpoint query parameter in the URL
+    // It's used mainly by BloomReach and is not needed for most customers
+  } else if (hasMultiTenantSupport) {
+    const endpointQueryParameter = 'endpoint';
+    const { url, searchParams } = extractSearchParams(path, [endpointQueryParameter].filter(Boolean));
+
+    configuration.endpoint = searchParams.get(endpointQueryParameter) ?? '';
+    configuration.baseUrl = `?${endpointQueryParameter}=${searchParams.get(endpointQueryParameter)}`;
+    configuration.path = url;
   }
+  configuration.debug = true;
   return configuration;
 }
 
@@ -108,7 +128,7 @@ function getBrAccountName(pageModel: PageModel, query?: ParsedUrlQuery): string 
     return graphqlTenantName.toLowerCase();
   }
 
-  const endpoint = query?.endpoint ?? process.env.NEXT_PUBLIC_BRXM_ENDPOINT;
+  const endpoint = NEXT_PUBLIC_BRXM_ENDPOINT || (NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT ? query?.endpoint : '');
   if (!endpoint) {
     return undefined;
   }

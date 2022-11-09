@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@bloomreach/connector-components-react": "0.15.0-saas",
-    "@bloomreach/react-sdk": "15.5.0",
-    "@bloomreach/spa-sdk": "15.5.0",
+    "@bloomreach/react-sdk": "17.0.1",
+    "@bloomreach/spa-sdk": "17.0.1",
     "@fortawesome/fontawesome-svg-core": "~1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15",
     "@fortawesome/react-fontawesome": "^0.1",

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import styles from './Content.module.scss';
 const errorPages = ['/404', '/500', '/error'];
 
 export function Content({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
+  if (!component || !page) { return null; }
+
   const document = getContainerItemContent<ContentDocument>(component, page);
   const pageUrl = page.getUrl() ?? '';
 

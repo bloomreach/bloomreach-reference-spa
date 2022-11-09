@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,13 +35,13 @@ interface ProductModels {
 type Attribute = Record<string, string>;
 
 export function Product({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
-  const { specifications: specificationsRef } = component.getModels<ProductModels>();
-  const specificationsBundle = specificationsRef && page.getContent<Document>(specificationsRef);
-
   const { query } = useRouter();
   const pid = (query.route && query.route[0] === 'products' && query.route[1]) || '';
 
   const [cookies] = useCookies(['_br_uid_2']);
+
+  const { specifications: specificationsRef } = component?.getModels<ProductModels>() ?? {};
+  const specificationsBundle = specificationsRef && page?.getContent<Document>(specificationsRef);
 
   const {
     discoveryAccountId,
@@ -130,8 +130,8 @@ export function Product({ component, page }: BrProps<ContainerItem>): React.Reac
     return null;
   }
 
-  if (component.isHidden()) {
-    return page.isPreview() ? <div /> : null;
+  if (component?.isHidden()) {
+    return page?.isPreview() ? <div /> : null;
   }
 
   if (error) {

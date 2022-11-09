@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,14 +55,16 @@ interface PathwaysRecommendationsCompound {
 }
 
 export function PathwaysRecommendations({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
-  const { interval, limit, title } = component.getParameters<PathwaysRecommendationsParameters>();
+  const { interval, limit, title } = component?.getParameters<PathwaysRecommendationsParameters>() ?? {};
 
   const {
     categoryCompound,
     keyword,
     productCompound,
     widgetCompound,
-  } = getContainerItemContent<PathwaysRecommendationsCompound>(component, page) ?? {};
+  } = (component && page
+    && getContainerItemContent<PathwaysRecommendationsCompound>(component, page))
+  ?? {} as PathwaysRecommendationsCompound;
   const { categoryid: category } = categoryCompound ?? {};
   const pids = productCompound?.map(({ productid }) => {
     if (productid) {
@@ -97,7 +99,7 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
     brEnvType,
   } = useContext(CommerceContext);
   const [cookies] = useCookies(['_br_uid_2']);
-  const brUid2 = cookies._br_uid_2 || (page.isPreview() ? DUMMY_BR_UID_2_FOR_PREVIEW : undefined);
+  const brUid2 = cookies._br_uid_2 || (page?.isPreview() ? DUMMY_BR_UID_2_FOR_PREVIEW : undefined);
   const params: ProductGridWidgetInputProps = useMemo(() => {
     const widgetType = widgetAlgo?.selectionValues?.[0].key.split('.')[0] ?? '';
 
@@ -169,8 +171,8 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
     return message;
   }, [widgetId, params.widgetType, results, apolloError, pids, category, keyword]);
 
-  if (component.isHidden()) {
-    return page.isPreview() ? <div /> : null;
+  if (component?.isHidden()) {
+    return page?.isPreview() ? <div/> : null;
   }
 
   if (error) {
@@ -185,9 +187,9 @@ export function PathwaysRecommendations({ component, page }: BrProps<ContainerIt
     <div className={`${styles['pathways-and-recommendations']} mw-container mx-auto`}>
       {title && <h4 className="mb-4">{title}</h4>}
       {!isLoading(loading) && results?.items ? (
-        <Products products={results.items.filter(notEmpty)} interval={interval} maxProducts={DOCUMENTS_PER_SLIDE} />
+        <Products products={results.items.filter(notEmpty)} interval={interval} maxProducts={DOCUMENTS_PER_SLIDE}/>
       ) : (
-        <ProductsPlaceholder size={1} />
+        <ProductsPlaceholder size={1}/>
       )}
     </div>
   );

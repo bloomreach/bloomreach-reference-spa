@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,8 @@ interface PageCatalogParameters {
 }
 
 export function PageCatalog({ component, page }: BrProps): React.ReactElement | null {
+  if (!component || !page) { return null; }
+
   const { title, total, pagination: isPagination } = component.getParameters<PageCatalogParameters>();
   const { pagination: paginationRef } = component.getModels<PageCatalogModels>();
   const pagination = paginationRef && page.getContent<BrPagination>(paginationRef);

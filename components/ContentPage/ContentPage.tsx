@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import { BrRichTextContent } from '../BrRichTextContent';
 import styles from './ContentPage.module.scss';
 
 export function ContentPage({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
+  if (!component || !page) { return null; }
+
   const document = page.getDocument<Document>();
 
   if (!document || component.isHidden()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Bloomreach
+ * Copyright 2021-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,8 @@ export function CategoryHighlight({ component, page }: BrProps<ContainerItem>): 
     title,
     connectorid: connectorIdSel,
     commerceCategoryCompound,
-  } = getContainerItemContent<CategoryHighlightCompound>(component, page) ?? {};
+  } = (component && page
+    && getContainerItemContent<CategoryHighlightCompound>(component, page)) ?? {} as CategoryHighlightCompound;
   const { categoryIds, connectorId } = useMemo(
     () => {
       // eslint-disable-next-line @typescript-eslint/no-shadow

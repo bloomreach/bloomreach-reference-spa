@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,9 @@ interface SingleBannerCarouselParameters {
 }
 
 export function SingleBannerCarousel({ component, page }: BrProps): React.ReactElement | null {
-  const { interval = 0, ...params } = component.getParameters<SingleBannerCarouselParameters & Record<string, any>>();
-  const models = component.getModels<SingleBannerCarouselModels>();
+  const { interval = 0, ...params } = component?.getParameters<SingleBannerCarouselParameters & Record<string, any>>()
+  || {};
+  const models = component?.getModels<SingleBannerCarouselModels>();
   const docParams = getEffectiveMultipleDocumentParameters(page, models, MAX_DOCUMENTS);
   const error = useMemo(() => {
     return (
@@ -50,7 +51,7 @@ export function SingleBannerCarousel({ component, page }: BrProps): React.ReactE
   }, [docParams.length, params]);
 
   if (!docParams.length && !error) {
-    return page.isPreview() ? (
+    return page?.isPreview() ? (
       <div className="has-edit-button">
         <BrManageContentButton
           documentTemplateQuery="new-banner-document"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Bloomreach
+ * Copyright 2020-2022 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,12 +39,14 @@ interface SearchBarCatalogParameters {
 export function SearchBar({ component, page }: BrProps<ContainerItem>): React.ReactElement | null {
   const ref = useRef<HTMLFormElement>(null);
   const router = useRouter();
-  const { suggestionsEnabled, suggestionsLimit } = component.getParameters<SearchBarCatalogParameters>();
+  const { suggestionsEnabled, suggestionsLimit } = component?.getParameters<SearchBarCatalogParameters>() || {};
   const [keyword, setKeyword] = useState<string>('');
   const [hideSuggestions, setHideSuggestions] = useState<boolean>(true);
   const showSuggestions = useMemo(() => {
     return suggestionsEnabled && keyword && !hideSuggestions;
   }, [suggestionsEnabled, keyword, hideSuggestions]);
+
+  if (!component || !page) { return null; }
 
   if (component.isHidden()) {
     return page.isPreview() ? <div /> : null;
