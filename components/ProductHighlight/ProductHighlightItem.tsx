@@ -17,25 +17,24 @@
 import React, { useMemo } from 'react';
 import { Image } from 'react-bootstrap';
 import { BrPageContext } from '@bloomreach/react-sdk';
-import { ItemIdModel, ItemsByIds_findItemsByIds_items as ItemDetail } from '@bloomreach/connector-components-react';
+import {
+  ItemsByIds_findItemsByIds_items as ItemDetail,
+  ItemsByIds_findItemsByIds_items_variants as ItemVariantDetail,
+} from '@bloomreach/connector-components-react';
 import styles from './ProductHighlight.module.scss';
 import { notEmpty } from '../../src/utils';
 
 import { Link } from '../Link';
 
 interface ProductHighlightItemProps extends React.ComponentPropsWithoutRef<'a'> {
-  itemDetail: ItemDetail | null;
+  itemDetail: ItemDetail | ItemVariantDetail | null;
 }
 
 type Attribute = Record<string, string>;
 
 export function ProductHighlightItem({ itemDetail }: ProductHighlightItemProps): JSX.Element {
   const page = React.useContext(BrPageContext);
-  const selectedItemId = itemDetail?.itemId as ItemIdModel;
-  const selectedVariant = itemDetail?.variants?.find(
-    (variant) => variant?.itemId.id === selectedItemId.id && variant?.itemId.code === selectedItemId.code,
-  );
-  const { listPrice, purchasePrice, displayName, imageSet, customAttrs } = selectedVariant ?? itemDetail ?? {};
+  const { listPrice, purchasePrice, displayName, imageSet, customAttrs } = itemDetail ?? {};
   const customAttributes = useMemo(
     () => {
       const tempCustAttrs = customAttrs?.length ? customAttrs : itemDetail?.customAttrs;

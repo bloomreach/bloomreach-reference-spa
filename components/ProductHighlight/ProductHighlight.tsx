@@ -107,6 +107,39 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
 
   const [, result, loading, apiErr] = useProductsByIds(params);
 
+  // If a variant is selected, retrieve the actual variant from the resultset. Otherwise, return the main product.
+  const items = useMemo(() => {
+    if (!result?.items) {
+      return undefined;
+    }
+    return productRefs.map((selectedItemId) => {
+      for (let i = 0; i < result.items.length; i++) {
+        const item = result.items[i];
+        if (!item) {
+          continue;
+        }
+        const itemId = `${item.itemId.id ?? ''}___${item.itemId.code ?? item.itemId.id ?? ''}`;
+        if (selectedItemId === itemId) {
+          // return the main product if its id/code matches the selection
+          return item;
+        }
+
+        // otherwise, continue searching thru the variants (if any) of the main product to see if there is any match
+        const variant = item.variants?.find((v) => {
+          if (!v) {
+            return false;
+          }
+          const variantId = `${v.itemId.id ?? ''}___${v.itemId.code ?? v.itemId.id ?? ''}`;
+          return selectedItemId === variantId;
+        });
+        if (variant) {
+          return variant;
+        }
+      }
+      return null;
+    }).filter(Boolean);
+  }, [productRefs, result?.items]);
+
   if (!result && apiErr) {
     return (
       <Alert variant="danger" className="mt-3 mb-3">
@@ -119,7 +152,7 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
     <div className={`${styles.highlight} mw-container mx-auto`}>
       <div className={styles.grid__header}>{title && <h4 className="mb-4">{title}</h4>}</div>
       <Row>
-        {!isLoading(loading) && result?.items
+        {!isLoading(loading) && items
           ?.map((item) => (
             <Col
               key={`${item?.itemId.id ?? ''}___${item?.itemId.code ?? ''}`}
