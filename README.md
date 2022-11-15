@@ -10,6 +10,11 @@ Copy `.env.dist` file to `.env` and specify the brX SaaS instance to fetch the p
 NEXT_PUBLIC_BRXM_ENDPOINT=https://brx-saas-eng02.bloomreach.io/delivery/site/v1/channels/brxsaas/pages
 ```
 
+By default, **multi-tenant mode is disabled**. You may enable multi-tenant support by setting the environment variable NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT to true.
+```
+NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT=true
+```
+
 Then, build and run the Next.js app as follows:
 
 ```bash
