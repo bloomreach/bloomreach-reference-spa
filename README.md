@@ -15,6 +15,10 @@ By default, **multi-tenant mode is disabled**. You may enable multi-tenant supp
 NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT=true
 ```
 
+If multi-tenant mode is enabled, then the NEXT_PUBLIC_BRXM_ENDPOINT should not be set:
+```
+#NEXT_PUBLIC_BRXM_ENDPOINT=https://brx-saas-eng02.bloomreach.io/delivery/site/v1/channels/brxsaas/pages
+```
 Then, build and run the Next.js app as follows:
 
 ```bash
