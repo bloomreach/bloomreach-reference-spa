@@ -142,9 +142,11 @@ export function ProductHighlight({ component, page }: BrProps<ContainerItem>): R
 
   if (!result && apiErr) {
     return (
-      <Alert variant="danger" className="mt-3 mb-3">
-        This widget is not working properly. Try again later.
-      </Alert>
+      <div>
+        <Alert variant="danger" className="mt-3 mb-3">
+          This widget is not working properly. Try again later.
+        </Alert>
+      </div>
     );
   }
 
