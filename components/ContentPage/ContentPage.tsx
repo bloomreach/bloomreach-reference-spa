@@ -17,7 +17,7 @@
 import React from 'react';
 import { Image } from 'react-bootstrap';
 import { ContainerItem, Document, ImageSet } from '@bloomreach/spa-sdk';
-import { BrProps } from '@bloomreach/react-sdk';
+import { BrManageContentButton, BrProps } from '@bloomreach/react-sdk';
 import { BrRichTextContent } from '../BrRichTextContent';
 
 import styles from './ContentPage.module.scss';
@@ -35,7 +35,8 @@ export function ContentPage({ component, page }: BrProps<ContainerItem>): React.
   const image = imageRef && page?.getContent<ImageSet>(imageRef)?.getOriginal();
 
   return (
-    <article className="mw-container mx-auto">
+    <article className={`mw-container mx-auto ${page.isPreview() ? 'has-edit-button' : ''}`}>
+      <BrManageContentButton content={document} />
       {title && <h1 className="mb-4">{title}</h1>}
       {image && (
         <div className={`${styles['content__image-container']} mb-4`}>
