@@ -215,7 +215,7 @@ export function App({
                         <BrComponent />
                       </Col>
                       <Col lg="3" xl="2" className="text-center text-lg-right py-lg-2">
-                        &copy; Bloomreach 2021
+                        &copy; Bloomreach 2023
                       </Col>
                     </Row>
                   </Container>
