@@ -53,6 +53,7 @@ import { CommerceContextProvider } from './CommerceContext';
 import styles from './App.module.scss';
 import { Meta } from './Meta';
 import { CommerceConfig } from '../src/utils';
+import { BrPersonalization } from './BrPersonalization';
 
 interface AppProps {
   configuration: Omit<Configuration, 'httpClient'>;
@@ -219,7 +220,10 @@ export function App({
                       </Col>
                     </Row>
                   </Container>
-                  {!contextPage?.isPreview() && <BrCookieConsent csUpdate={updateCookieConsentVal} />}
+                  {!contextPage?.isPreview() && <>
+                    <BrCookieConsent csUpdate={updateCookieConsentVal} />
+                    <BrPersonalization path={configuration.path} />
+                  </>}
                 </footer>
               </BrComponent>
               </>)}
