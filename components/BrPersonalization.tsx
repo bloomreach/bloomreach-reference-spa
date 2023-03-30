@@ -19,7 +19,7 @@ import { getCookieConsentValue } from 'react-cookie-consent';
 import { segmentsSubscription } from '@bloomreach/segmentation';
 import { injectPersonalizationScriptSnippet, runPersonalization } from '../src/personalization';
 
-export interface Props {
+interface Props {
   path?: string;
 }
 

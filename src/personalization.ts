@@ -51,7 +51,7 @@ export const injectPersonalizationScriptSnippet = (): void => {
   injectScript(getPersonalizationSdkSnippet(personalizationProjectToken, personalizationApiUrl));
 };
 
-export const setupPersonalization = () =>
+const setupPersonalization = () =>
   (path = '/'): void => {
     if (isExponeaInitialized()) {
       initializePersonalization({ path });
