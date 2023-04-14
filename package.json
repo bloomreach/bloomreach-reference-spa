@@ -48,7 +48,8 @@
     "eslint-config-next": "12.1.4",
     "eslint-plugin-import": "2.26.0",
     "sass": "1.49.9",
-    "typescript": "4.5.5"
+    "typescript": "4.5.5",
+    "@netlify/plugin-nextjs": "4.32.2"
   },
   "browserslist": {
     "production": [
