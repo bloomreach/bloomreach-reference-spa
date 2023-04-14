@@ -15,7 +15,6 @@
  */
 
 import React, { useEffect } from 'react';
-import { getCookieConsentValue } from 'react-cookie-consent';
 import { segmentsSubscription } from '@bloomreach/segmentation';
 import { injectPersonalizationScriptSnippet, runPersonalization } from '../src/personalization';
 
@@ -24,18 +23,16 @@ interface Props {
 }
 
 export function BrPersonalization({ path }: Props): React.ReactElement | null {
-  const consent = getCookieConsentValue();
-
   useEffect(() => {
-    if (consent !== 'true') {
-      return;
-    }
     injectPersonalizationScriptSnippet();
-    runPersonalization(path);
 
     // eslint-disable-next-line consistent-return
     return segmentsSubscription();
-  }, [consent, path]);
+  }, []);
+
+  useEffect(() => {
+    runPersonalization(path);
+  }, [path]);
 
   return null;
 }

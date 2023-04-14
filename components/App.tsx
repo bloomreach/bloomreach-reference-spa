@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
+import React, { useMemo, useState } from 'react';
 import { BrComponent, BrPage, BrPageContext } from '@bloomreach/react-sdk';
 import { Configuration, PageModel } from '@bloomreach/spa-sdk';
 import axios from 'axios';
 import { Container, Navbar, Image, Row, Col } from 'react-bootstrap';
 import { getCookieConsentValue } from 'react-cookie-consent';
-import { useMemo, useState } from 'react';
 import { CommerceApiClientFactory, CommerceConnectorProvider } from '@bloomreach/connector-components-react';
 import { Cookies, CookiesProvider } from 'react-cookie';
 import {
@@ -72,7 +72,7 @@ export function App({
   apolloState,
   cookies,
 }: AppProps): JSX.Element {
-  const [, setCookieConsentVal] = useState<boolean>();
+  const [cookieConsentVal, setCookieConsentVal] = useState<boolean>(getCookieConsentValue() === 'true');
   const mapping = {
     BannerCollection,
     BannerCTA,
@@ -220,10 +220,9 @@ export function App({
                       </Col>
                     </Row>
                   </Container>
-                  {!contextPage?.isPreview() && <>
-                    <BrCookieConsent csUpdate={updateCookieConsentVal} />
-                    <BrPersonalization path={configuration.path} />
-                  </>}
+                  {!contextPage?.isPreview() && <BrCookieConsent csUpdate={updateCookieConsentVal} />}
+                  {!contextPage?.isPreview() && Boolean(cookieConsentVal)
+                    && <BrPersonalization path={configuration.path} />}
                 </footer>
               </BrComponent>
               </>)}
