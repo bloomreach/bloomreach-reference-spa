@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { Page } from '@bloomreach/spa-sdk';
+import { sanitize } from 'src/utils';
 
 /**
  * The richtext content data abstraction.
@@ -60,7 +61,7 @@ export function BrRichTextContent(props: BrRichTextContentProps): React.ReactEle
   return (
     <Component
       className={className}
-      dangerouslySetInnerHTML={{ __html: page.rewriteLinks(page.sanitize(content.html)) }}
+      dangerouslySetInnerHTML={{ __html: page.rewriteLinks(sanitize(content.html)) }}
     />
   );
 }

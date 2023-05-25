@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import sanitizeHTML from 'sanitize-html';
 import { Configuration, PageModel, extractSearchParams } from '@bloomreach/spa-sdk';
 import { ParsedUrlQuery } from 'querystring';
 import { NEXT_PUBLIC_BR_MULTI_TENANT_SUPPORT, NEXT_PUBLIC_BRXM_ENDPOINT } from './constants';
@@ -136,7 +137,7 @@ function getBrAccountName(pageModel: PageModel, query?: ParsedUrlQuery): string 
 }
 
 export function parseCategoryPickerField(categoryIdValue?: string):
-  { categoryId: string, connectorId?: string} | undefined {
+  { categoryId: string, connectorId?: string; } | undefined {
   if (!categoryIdValue) {
     return undefined;
   }
@@ -160,7 +161,7 @@ export function parseCategoryPickerField(categoryIdValue?: string):
 }
 
 export function parseProductPickerField(productIdValue?: string, variantIdValue?: string):
-  { itemId: string, connectorId?: string } | undefined {
+  { itemId: string, connectorId?: string; } | undefined {
   if (!productIdValue) {
     return undefined;
   }
@@ -195,4 +196,14 @@ export function parseProductPickerField(productIdValue?: string, variantIdValue?
     return { itemId: `${id}___${code}` };
   }
   return { itemId: `${id}___${id}` };
+}
+
+export function sanitize(content: string): string {
+  return sanitizeHTML(content, {
+    allowedAttributes: {
+      a: ['href', 'name', 'target', 'title', 'data-type', 'rel'],
+      img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading'],
+    },
+    allowedTags: sanitizeHTML.defaults.allowedTags.concat(['img']),
+  });
 }

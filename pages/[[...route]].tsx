@@ -19,7 +19,7 @@ import { NextPage } from 'next';
 import axios from 'axios';
 import cookie from 'cookie';
 import { Configuration, initialize, PageModel } from '@bloomreach/spa-sdk';
-import { relevance } from '@bloomreach/spa-sdk/lib/express';
+// import { relevance } from '@bloomreach/spa-sdk/lib/express';
 import { APOLLO_STATE_PROP_NAME, CommerceApiClientFactory } from '@bloomreach/connector-components-react';
 import { buildConfiguration, CommerceConfig, deleteUndefined, loadCommerceConfig } from '../src/utils';
 import { App } from '../components/App';
@@ -65,7 +65,7 @@ Index.getInitialProps = async ({ req: request, res: response, asPath: path, quer
     return props;
   }
 
-  relevance(request, response);
+  // relevance(request, response);
   const cookies = cookie.parse(request.headers.cookie ?? '');
   props.cookies = cookies;
 
