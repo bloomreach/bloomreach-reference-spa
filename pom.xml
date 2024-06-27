@@ -128,7 +128,7 @@
                 <exclude>build/**</exclude>
                 <exclude>public/_redirects</exclude>
                 <exclude>netlify.toml</exclude>
-                <exclude>dyno.lock</exclude>
+                <exclude>deno.lock</exclude>
               </excludes>
             </configuration>
           </plugin>
