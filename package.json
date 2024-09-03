@@ -4,8 +4,8 @@
   "version": "0.3.0-saas",
   "private": true,
   "engines": {
-    "node": "16",
-    "npm": "8 || 9"
+    "node": "18",
+    "npm": "10"
   },
   "scripts": {
     "resolution": "npx npm-force-resolutions",
